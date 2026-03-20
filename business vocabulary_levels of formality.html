@@ -74,7 +74,7 @@
                     </div>
                     <div class="text-right">
                         <span class="text-xs uppercase tracking-widest text-slate-500">Total Score</span>
-                        <div id="score-display" class="text-2xl font-mono font-bold text-blue-400">0</div>
+                        <div id="score-display" class="text-2xl font-mono font-bold text-blue-400">0/700</div>
                     </div>
                 </header>
 
@@ -87,7 +87,7 @@
                         </div>
                         <h2 class="text-3xl font-bold">Business English Formality</h2>
                         <p class="text-lg text-slate-600 max-w-lg mx-auto leading-relaxed">
-                            Navigate the complexities of professional tone. Based on <strong>Purdue OWL</strong> standards, we'll cover audience analysis, contextual choices, and vocabulary.
+                            Learn how to choose the right tone for any professional situation. We'll cover formal, semi-formal, and informal styles — and when to use each one.
                         </p>
                         <button onclick="jumpToStage('learn')" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-bold transition-all flex items-center gap-2 mx-auto shadow-lg hover:scale-105">
                             Start Activity <i class="fas fa-chevron-right"></i>
@@ -106,7 +106,7 @@
                             <!-- Injected via JS -->
                         </div>
                         <button onclick="jumpToStage('vocabList')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-colors mt-6">
-                            I've Mastered the Styles: View Vocabulary
+                            Continue to Vocabulary →
                         </button>
                     </section>
 
@@ -132,13 +132,25 @@
                             <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase text-center">1. Phrase Sorting</span>
                             <p id="sorting-progress" class="text-sm text-slate-500 mt-2"></p>
                         </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2">
+                            <div id="sorting-progress-bar" class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width:0%"></div>
+                        </div>
                         <div class="bg-slate-50 border-2 border-dashed border-slate-200 p-8 rounded-2xl text-center min-h-[120px] flex items-center justify-center">
                             <p id="sorting-text" class="text-xl font-medium italic text-slate-800"></p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="sorting-buttons">
                             <button onclick="handleSortingChoice('Formal')" class="p-4 border-2 rounded-xl text-center font-bold hover:bg-slate-50 transition-all">Formal</button>
                             <button onclick="handleSortingChoice('Semi-formal')" class="p-4 border-2 rounded-xl text-center font-bold hover:bg-slate-50 transition-all">Semi-formal</button>
                             <button onclick="handleSortingChoice('Informal')" class="p-4 border-2 rounded-xl text-center font-bold hover:bg-slate-50 transition-all">Informal</button>
+                        </div>
+                        <div id="sorting-feedback-panel" class="hidden rounded-xl p-4 space-y-3">
+                            <div class="flex items-start gap-3">
+                                <i id="sorting-feedback-icon" class="fas text-lg mt-0.5 flex-shrink-0"></i>
+                                <p id="sorting-feedback-text" class="text-sm leading-relaxed font-medium"></p>
+                            </div>
+                            <button onclick="advanceSorting()" id="sorting-next-btn" class="w-full py-3 rounded-xl font-bold text-white transition-colors">
+                                Next →
+                            </button>
                         </div>
                     </section>
 
@@ -147,6 +159,9 @@
                         <div class="text-center">
                             <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase">2. Contextual Choice</span>
                             <p id="quiz-progress" class="text-sm text-slate-500 mt-2"></p>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2">
+                            <div id="quiz-progress-bar" class="bg-purple-500 h-2 rounded-full transition-all duration-300" style="width:0%"></div>
                         </div>
                         <div class="bg-slate-900 text-white p-6 rounded-2xl">
                             <h4 class="text-blue-400 font-bold mb-1 uppercase text-xs tracking-wider">The Situation:</h4>
@@ -159,6 +174,15 @@
                         <div id="quiz-options" class="space-y-3">
                             <!-- Injected via JS -->
                         </div>
+                        <div id="quiz-feedback-panel" class="hidden rounded-xl p-4 space-y-3">
+                            <div class="flex items-start gap-3">
+                                <i id="quiz-feedback-icon" class="fas text-lg mt-0.5 flex-shrink-0"></i>
+                                <p id="quiz-feedback-text" class="text-sm leading-relaxed font-medium"></p>
+                            </div>
+                            <button onclick="advanceQuiz()" id="quiz-next-btn" class="w-full py-3 rounded-xl font-bold text-white transition-colors">
+                                Next →
+                            </button>
+                        </div>
                     </section>
 
                     <!-- Section: Challenge 3 (Audience) -->
@@ -167,10 +191,22 @@
                             <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase">3. Audience ID</span>
                             <p id="audience-progress" class="text-sm text-slate-500 mt-2"></p>
                         </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2">
+                            <div id="audience-progress-bar" class="bg-green-500 h-2 rounded-full transition-all duration-300" style="width:0%"></div>
+                        </div>
                         <div id="audience-text" class="bg-green-50 p-6 rounded-2xl border-2 border-green-100 italic text-center text-lg"></div>
                         <p class="font-bold text-center text-slate-600">Who is the most likely audience?</p>
                         <div id="audience-options" class="grid gap-3">
                             <!-- Injected via JS -->
+                        </div>
+                        <div id="audience-feedback-panel" class="hidden rounded-xl p-4 space-y-3">
+                            <div class="flex items-start gap-3">
+                                <i id="audience-feedback-icon" class="fas text-lg mt-0.5 flex-shrink-0"></i>
+                                <p id="audience-feedback-text" class="text-sm leading-relaxed font-medium"></p>
+                            </div>
+                            <button onclick="advanceAudience()" id="audience-next-btn" class="w-full py-3 rounded-xl font-bold text-white transition-colors">
+                                Next →
+                            </button>
                         </div>
                     </section>
 
@@ -180,6 +216,9 @@
                             <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold uppercase">4. Vocab Upgrade</span>
                             <p id="vocab-match-progress" class="text-sm text-slate-500 mt-2"></p>
                         </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2">
+                            <div id="vocab-progress-bar" class="bg-amber-500 h-2 rounded-full transition-all duration-300" style="width:0%"></div>
+                        </div>
                         <div class="flex flex-col items-center gap-6 py-6 overflow-y-auto max-h-[500px] custom-scrollbar">
                             <div>
                                 <span class="text-xs text-slate-400 uppercase">Informal Verb</span>
@@ -187,6 +226,15 @@
                             </div>
                             <div id="vocab-match-options" class="w-full max-w-xs space-y-3 pb-6">
                                 <!-- Injected via JS -->
+                            </div>
+                            <div id="vocab-feedback-panel" class="hidden rounded-xl p-4 space-y-3 w-full max-w-xs text-left">
+                                <div class="flex items-start gap-3">
+                                    <i id="vocab-feedback-icon" class="fas text-lg mt-0.5 flex-shrink-0"></i>
+                                    <p id="vocab-feedback-text" class="text-sm leading-relaxed font-medium"></p>
+                                </div>
+                                <button onclick="advanceVocab()" id="vocab-next-btn" class="w-full py-3 rounded-xl font-bold text-white transition-colors">
+                                    Next →
+                                </button>
                             </div>
                         </div>
                     </section>
@@ -201,14 +249,17 @@
                             <h2 class="text-3xl font-bold text-slate-900">Training Complete!</h2>
                             <p id="result-text" class="text-slate-600 mt-2"></p>
                         </div>
+                        <div id="result-breakdown" class="space-y-4 text-left max-w-md mx-auto bg-slate-50 rounded-xl p-5 border border-slate-100">
+                            <!-- Section breakdown injected via JS -->
+                        </div>
                         <button onclick="resetGame()" class="flex items-center gap-2 mx-auto bg-slate-900 text-white px-8 py-4 rounded-full font-bold hover:bg-slate-800 transition-all shadow-lg">
                             <i class="fas fa-refresh"></i> Restart Course
                         </button>
                     </section>
 
                     <!-- Feedback Popups -->
-                    <div id="feedback-overlay" class="fixed bottom-24 left-1/2 -translate-x-1/2 hidden flex items-center gap-2 px-6 py-3 rounded-full font-bold shadow-2xl z-50 feedback-pop">
-                        <i id="feedback-icon" class="fas"></i>
+                    <div id="feedback-overlay" class="fixed bottom-24 left-1/2 -translate-x-1/2 hidden flex items-start gap-2 px-6 py-3 rounded-2xl font-bold shadow-2xl z-50 feedback-pop max-w-sm text-sm text-center">
+                        <i id="feedback-icon" class="fas mt-0.5 flex-shrink-0"></i>
                         <span id="feedback-message"></span>
                     </div>
 
@@ -273,6 +324,7 @@
         let score = 0;
         let currentQuestion = 0;
         let isProcessing = false;
+        let sectionScores = { sorting: 0, quiz: 0, audience: 0, vocab: 0 };
 
         const categories = [
             { 
@@ -430,21 +482,21 @@
         };
 
         const phrases = [
-            { text: "I am writing to inquire about the status of the project.", level: "Formal" },
-            { text: "Hey! Just checking in on how that project is going.", level: "Informal" },
-            { text: "I'm writing to follow up on the project we discussed yesterday.", level: "Semi-formal" },
-            { text: "Please find the attached document for your review.", level: "Formal" },
-            { text: "Here's the doc you asked for. Hope it helps!", level: "Informal" },
-            { text: "I've attached the file you requested.", level: "Semi-formal" },
-            { text: "We'll get back to you about this soon.", level: "Semi-formal" },
-            { text: "Thanks for your help with the thing.", level: "Informal" },
-            { text: "Should you require further assistance, do not hesitate to contact us.", level: "Formal" },
-            { text: "Could you look into this for me?", level: "Semi-formal" },
-            { text: "I'm sorry for the late reply.", level: "Semi-formal" },
-            { text: "We look forward to receiving your feedback.", level: "Formal" },
-            { text: "It is essential that the deadlines are met.", level: "Formal" },
-            { text: "Can't wait to see the new office!", level: "Informal" },
-            { text: "See you at the meeting.", level: "Informal" }
+            { text: "I am writing to inquire about the status of the project.", level: "Formal", explanation: "Full verb forms ('am writing', 'inquire') and no contractions mark this as formal." },
+            { text: "Hey! Just checking in on how that project is going.", level: "Informal", explanation: "'Hey' and 'checking in' are casual greetings not used in professional writing." },
+            { text: "I'm writing to follow up on the project we discussed yesterday.", level: "Semi-formal", explanation: "The contraction 'I'm' and personal tone make this semi-formal, not fully formal." },
+            { text: "Please find the attached document for your review.", level: "Formal", explanation: "'Please find attached' is a classic formal phrase used in official correspondence." },
+            { text: "Here's the doc you asked for. Hope it helps!", level: "Informal", explanation: "'Doc' is an abbreviation and the exclamation mark signals an informal, casual tone." },
+            { text: "I've attached the file you requested.", level: "Semi-formal", explanation: "Contraction 'I've' makes this semi-formal, though 'requested' keeps it professional." },
+            { text: "We'll get back to you about this soon.", level: "Semi-formal", explanation: "The contraction 'we'll' and vague word 'soon' are typical of semi-formal communication." },
+            { text: "Thanks for your help with the thing.", level: "Informal", explanation: "'The thing' is vague and casual — formal writing uses specific, precise language." },
+            { text: "Should you require further assistance, do not hesitate to contact us.", level: "Formal", explanation: "Inverted conditional ('Should you...') and no contractions are hallmarks of formal style." },
+            { text: "Could you look into this for me?", level: "Semi-formal", explanation: "Polite but direct — 'Could you' is a common semi-formal request form." },
+            { text: "I'm sorry for the late reply.", level: "Semi-formal", explanation: "The contraction 'I'm' and direct apology fit a semi-formal, collegial context." },
+            { text: "We look forward to receiving your feedback.", level: "Formal", explanation: "No contractions and passive-style phrasing ('we look forward to receiving') signals formality." },
+            { text: "It is essential that the deadlines are met.", level: "Formal", explanation: "Full verb form 'It is' and impersonal construction mark this as formal register." },
+            { text: "Can't wait to see the new office!", level: "Informal", explanation: "'Can't wait' is an enthusiastic idiom typical of informal or friendly conversation." },
+            { text: "See you at the meeting.", level: "Informal", explanation: "No greeting, no politeness marker — this is an abrupt, informal closing." }
         ];
 
         const quizQuestions = [
@@ -455,7 +507,8 @@
                     { text: "I'm really hoping you'll hire me because I'm great with customers.", correct: false },
                     { text: "I am applying for the sales position as I believe my experience aligns with your needs.", correct: true },
                     { text: "Give me a shot at the sales job!", correct: false }
-                ]
+                ],
+                explanation: "Unknown senior external contacts require full formal register: no contractions, precise vocabulary, and a structured sentence."
             },
             {
                 scenario: "Emailing a teammate you've worked with for years.",
@@ -464,7 +517,8 @@
                     { text: "I would be grateful if you could provide the report by Friday.", correct: false },
                     { text: "Could you please send over the report by Friday? Thanks!", correct: true },
                     { text: "Send the report Friday or else.", correct: false }
-                ]
+                ],
+                explanation: "With a familiar colleague, semi-formal works best — polite but not stiff. 'I would be grateful' is too formal for someone you know well."
             },
             {
                 scenario: "Replying to a complaint from a long-term client.",
@@ -473,7 +527,8 @@
                     { text: "We apologize for the delay in your shipment and are doing our best to resolve this immediately.", correct: true },
                     { text: "I'm sorry about the delay. We'll get it to you as soon as we can.", correct: false },
                     { text: "My bad! The order is late but we'll fix it ASAP.", correct: false }
-                ]
+                ],
+                explanation: "A client complaint needs formal language to show professionalism: 'We apologize' (not 'I'm sorry'), no contractions, and a clear commitment to resolve."
             },
             {
                 scenario: "Asking a manager for a performance review and pay raise.",
@@ -482,7 +537,8 @@
                     { text: "Give me a raise, I've been doing a lot lately!", correct: false },
                     { text: "I would like to request a formal performance review to discuss my contributions and salary.", correct: true },
                     { text: "I'd like to talk about my pay because I've hit all my targets.", correct: false }
-                ]
+                ],
+                explanation: "Requesting a review from a manager requires formal, professional phrasing. 'I'd like to talk about my pay' is semi-formal and too casual for this request."
             },
             {
                 scenario: "Introducing a new senior partner to the entire team.",
@@ -491,7 +547,8 @@
                     { text: "It is my pleasure to introduce our new Senior Partner, Mr. John Smith.", correct: true },
                     { text: "Please welcome John, he's joining us as a partner today.", correct: false },
                     { text: "Yo, here's John. He's a partner now.", correct: false }
-                ]
+                ],
+                explanation: "Formal introductions of senior staff use full titles, full names, and set phrases like 'It is my pleasure to introduce'."
             },
             {
                 scenario: "Requesting a meeting with a high-level executive from a potential partner.",
@@ -500,7 +557,8 @@
                     { text: "Want to grab coffee and talk about working together?", correct: false },
                     { text: "I'd like to schedule a time to chat about our potential partnership.", correct: false },
                     { text: "I am writing to request an introductory meeting to discuss potential collaboration between our firms.", correct: true }
-                ]
+                ],
+                explanation: "An unknown executive requires full formal register. 'Grab coffee' and 'chat' are too casual. 'I'd like to schedule' uses a contraction, which lowers the register."
             },
             {
                 scenario: "Notifying staff about a minor change in office lunch policy.",
@@ -509,7 +567,8 @@
                     { text: "Please be advised of the new policy regarding lunch break schedules effective Monday.", correct: false },
                     { text: "Just a quick heads up that we're making a small change to the lunch break times.", correct: true },
                     { text: "Lunch is different now. Check the fridge for the new rules.", correct: false }
-                ]
+                ],
+                explanation: "Internal routine updates to colleagues suit a semi-formal, friendly tone. 'Please be advised' is overly formal for a minor office notice."
             },
             {
                 scenario: "Formally responding to a high-level job offer.",
@@ -518,7 +577,8 @@
                     { text: "I am delighted to formally accept the offer for the Director position.", correct: true },
                     { text: "I'm happy to accept the role. When do I start?", correct: false },
                     { text: "I'm in! Can't wait to get started with the team.", correct: false }
-                ]
+                ],
+                explanation: "A formal job offer acceptance uses no contractions, names the position precisely, and uses set phrases like 'I am delighted to formally accept'."
             },
             {
                 scenario: "Informing a colleague you'll be late due to traffic.",
@@ -527,7 +587,8 @@
                     { text: "Please accept my apologies for my late arrival due to unforeseen congestion.", correct: false },
                     { text: "I'm sorry, I'm running 10 minutes late due to heavy traffic.", correct: true },
                     { text: "Stuck in traffic, be there soon!", correct: false }
-                ]
+                ],
+                explanation: "A quick message to a colleague suits semi-formal: apologise briefly and give a specific time. 'Please accept my apologies... unforeseen congestion' is too formal for an internal colleague."
             },
             {
                 scenario: "Emailing a customer about a processed refund.",
@@ -536,21 +597,22 @@
                     { text: "We have successfully processed your refund for order #123.", correct: true },
                     { text: "I've sent your refund through. You should see it in a few days.", correct: false },
                     { text: "Sent the cash back! Check your account.", correct: false }
-                ]
+                ],
+                explanation: "Customer-facing communication should be formal: no contractions, specific details (order number), and a complete sentence structure."
             }
         ];
 
         const audienceQuestions = [
-            { text: "To Whom It May Concern, I am writing to formally request...", options: ["A close coworker", "A Human Resources department", "A project teammate"], correct: 1 },
-            { text: "Hey guys, quick update on lunch tomorrow...", options: ["Board of Directors", "New client", "Internal team group chat"], correct: 2 },
-            { text: "Yo, what's up? Still coming to the pub later?", options: ["Friend or close colleague", "Senior Executive", "New client"], correct: 0 },
-            { text: "I am writing on behalf of the legal department regarding the breach of contract...", options: ["An intern", "An external organization or legal representative", "A project manager"], correct: 1 },
-            { text: "Can you believe that presentation? It was so incredibly boring!", options: ["A close work friend", "The CEO", "A conference audience"], correct: 0 },
-            { text: "We are honored to welcome you to our 25th annual industry conference.", options: ["A small internal team", "A customer support bot", "Event attendees and industry professionals"], correct: 2 },
-            { text: "The results of the Q3 audit indicate a 4% margin of error in operations.", options: ["Board of Directors or senior management", "A childhood friend", "A retail customer"], correct: 0 },
-            { text: "Send me the invoice whenever you get a chance, no rush at all.", options: ["A government tax inspector", "A trusted long-term supplier or teammate", "An unknown external auditor"], correct: 1 },
-            { text: "I regret to inform you that your application for the position was unsuccessful.", options: ["A new hire", "A current business partner", "A job applicant"], correct: 2 },
-            { text: "Please find below the tracking number for your recent purchase. Thank you for choosing us.", options: ["A direct competitor", "A retail customer", "An internal HR manager"], correct: 1 }
+            { text: "To Whom It May Concern, I am writing to formally request...", options: ["A close coworker", "A Human Resources department", "A project teammate"], correct: 1, explanation: "'To Whom It May Concern' is a formal salutation used when you don't know the specific recipient — typical for HR or official departments." },
+            { text: "Hey guys, quick update on lunch tomorrow...", options: ["Board of Directors", "New client", "Internal team group chat"], correct: 2, explanation: "'Hey guys' and 'quick update' are informal signals showing this is an internal, familiar audience." },
+            { text: "Yo, what's up? Still coming to the pub later?", options: ["Friend or close colleague", "Senior Executive", "New client"], correct: 0, explanation: "'Yo' and references to social plans clearly indicate a close personal or collegial relationship." },
+            { text: "I am writing on behalf of the legal department regarding the breach of contract...", options: ["An intern", "An external organization or legal representative", "A project manager"], correct: 1, explanation: "Legal language ('breach of contract', 'on behalf of the legal department') signals formal external communication." },
+            { text: "Can you believe that presentation? It was so incredibly boring!", options: ["A close work friend", "The CEO", "A conference audience"], correct: 0, explanation: "Negative personal opinions expressed this openly are only shared with someone you trust — a close colleague or friend." },
+            { text: "We are honored to welcome you to our 25th annual industry conference.", options: ["A small internal team", "A customer support bot", "Event attendees and industry professionals"], correct: 2, explanation: "'Honored to welcome' and 'annual industry conference' signals a public, formal event context with a professional audience." },
+            { text: "The results of the Q3 audit indicate a 4% margin of error in operations.", options: ["Board of Directors or senior management", "A childhood friend", "A retail customer"], correct: 0, explanation: "Detailed financial audit results are reported upward to senior management or the board, not to external customers." },
+            { text: "Send me the invoice whenever you get a chance, no rush at all.", options: ["A government tax inspector", "A trusted long-term supplier or teammate", "An unknown external auditor"], correct: 1, explanation: "'No rush at all' implies a relaxed, trusting relationship — typical with a familiar supplier or colleague." },
+            { text: "I regret to inform you that your application for the position was unsuccessful.", options: ["A new hire", "A current business partner", "A job applicant"], correct: 2, explanation: "'I regret to inform you' is a set formal phrase used specifically in rejection letters to job applicants." },
+            { text: "Please find below the tracking number for your recent purchase. Thank you for choosing us.", options: ["A direct competitor", "A retail customer", "An internal HR manager"], correct: 1, explanation: "'Thank you for choosing us' and 'tracking number for your recent purchase' clearly identify a retail customer context." }
         ];
 
         const vocabPairs = [
@@ -564,23 +626,27 @@
             { informal: "Help", formal: "Assist" },
             { informal: "Look at", formal: "Examine" },
             { informal: "Think about", formal: "Consider" },
-            { informal: "Start", formal: "Commence" },
+            { informal: "Begin", formal: "Commence" },
             { informal: "Stop", formal: "Cease" },
-            { informal: "Use", formal: "Utilize" },
-            { informal: "End", formal: "Terminate" },
             { informal: "Make sure", formal: "Ensure" },
             { informal: "Show", formal: "Demonstrate" },
             { informal: "Buy", formal: "Purchase" },
             { informal: "Fill in", formal: "Complete" },
             { informal: "Find out", formal: "Determine" },
-            { informal: "Set up", formal: "Establish" }
+            { informal: "Set up", formal: "Establish" },
+            { informal: "End", formal: "Conclude" },
+            { informal: "Agree", formal: "Consent" }
         ];
 
         // --- CORE LOGIC ---
 
+        function getTotalMax() {
+            return (phrases.length * 10) + (quizQuestions.length * 20) + (audienceQuestions.length * 15) + (vocabPairs.length * 10);
+        }
+
         function updateScore(val) {
             score += val;
-            document.getElementById('score-display').innerText = score;
+            document.getElementById('score-display').innerText = `${score}/${getTotalMax()}`;
         }
 
         function jumpToStage(stageId) {
@@ -622,7 +688,7 @@
             icon.className = success ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
             txt.innerText = message;
 
-            setTimeout(() => el.classList.add('hidden'), 1200);
+            setTimeout(() => el.classList.add('hidden'), 3500);
         }
 
         // --- RENDERERS ---
@@ -708,25 +774,65 @@
         function renderSorting() {
             document.getElementById('sorting-progress').innerText = `Item ${currentQuestion + 1} of ${phrases.length}`;
             document.getElementById('sorting-text').innerText = `"${phrases[currentQuestion].text}"`;
+            document.getElementById('sorting-progress-bar').style.width = `${(currentQuestion / phrases.length) * 100}%`;
+            document.getElementById('sorting-feedback-panel').classList.add('hidden');
+            document.querySelectorAll('#sorting-buttons button').forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            });
+        }
+
+        function showInlineFeedback(prefix, isCorrect, explanation, panelId, iconId, textId, nextBtnId) {
+            const panel = document.getElementById(panelId);
+            const icon = document.getElementById(iconId);
+            const text = document.getElementById(textId);
+            const nextBtn = document.getElementById(nextBtnId);
+            panel.classList.remove('hidden', 'bg-green-50', 'bg-red-50');
+            panel.classList.add(isCorrect ? 'bg-green-50' : 'bg-red-50');
+            icon.className = isCorrect
+                ? 'fas fa-check-circle text-green-600 text-lg mt-0.5 flex-shrink-0'
+                : 'fas fa-exclamation-circle text-red-500 text-lg mt-0.5 flex-shrink-0';
+            text.className = isCorrect
+                ? 'text-sm leading-relaxed font-medium text-green-800'
+                : 'text-sm leading-relaxed font-medium text-red-800';
+            text.innerText = (isCorrect ? '✓ Correct. ' : '✗ ' + prefix + ' ') + explanation;
+            nextBtn.className = isCorrect
+                ? 'w-full py-3 rounded-xl font-bold text-white transition-colors bg-green-600 hover:bg-green-700'
+                : 'w-full py-3 rounded-xl font-bold text-white transition-colors bg-slate-700 hover:bg-slate-800';
         }
 
         function handleSortingChoice(choice) {
             if (isProcessing) return;
             isProcessing = true;
-            
-            const correct = phrases[currentQuestion].level === choice;
-            if (correct) updateScore(10);
-            showFeedback(correct, correct ? "Correct!" : `Incorrect. It's ${phrases[currentQuestion].level}.`);
 
-            setTimeout(() => {
-                if (currentQuestion < phrases.length - 1) {
-                    currentQuestion++;
-                    isProcessing = false;
-                    renderSorting();
-                } else {
-                    jumpToStage('quiz');
-                }
-            }, 1200);
+            const correct = phrases[currentQuestion].level === choice;
+            const explanation = phrases[currentQuestion].explanation || '';
+            if (correct) {
+                updateScore(10);
+                sectionScores.sorting += 10;
+            }
+
+            document.querySelectorAll('#sorting-buttons button').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            showInlineFeedback(
+                `It's ${phrases[currentQuestion].level}.`,
+                correct, explanation,
+                'sorting-feedback-panel', 'sorting-feedback-icon',
+                'sorting-feedback-text', 'sorting-next-btn'
+            );
+        }
+
+        function advanceSorting() {
+            if (currentQuestion < phrases.length - 1) {
+                currentQuestion++;
+                isProcessing = false;
+                renderSorting();
+            } else {
+                jumpToStage('quiz');
+            }
         }
 
         function renderQuiz() {
@@ -734,6 +840,8 @@
             document.getElementById('quiz-progress').innerText = `Scenario ${currentQuestion + 1} of ${quizQuestions.length}`;
             document.getElementById('quiz-scenario').innerText = q.scenario;
             document.getElementById('quiz-informal').innerText = q.informal;
+            document.getElementById('quiz-progress-bar').style.width = `${(currentQuestion / quizQuestions.length) * 100}%`;
+            document.getElementById('quiz-feedback-panel').classList.add('hidden');
             
             document.getElementById('quiz-options').innerHTML = q.options.map((opt, i) => `
                 <button onclick="handleQuizChoice(${opt.correct})" class="w-full p-4 border border-slate-200 rounded-xl text-left hover:border-blue-500 hover:bg-blue-50 transition-all flex justify-between items-center group">
@@ -746,25 +854,44 @@
         function handleQuizChoice(isCorrect) {
             if (isProcessing) return;
             isProcessing = true;
-            
-            if (isCorrect) updateScore(20);
-            showFeedback(isCorrect, isCorrect ? "Excellent!" : "Not quite the right tone.");
 
-            setTimeout(() => {
-                if (currentQuestion < quizQuestions.length - 1) {
-                    currentQuestion++;
-                    isProcessing = false;
-                    renderQuiz();
-                } else {
-                    jumpToStage('audience');
-                }
-            }, 1200);
+            const explanation = quizQuestions[currentQuestion].explanation || '';
+            if (isCorrect) {
+                updateScore(20);
+                sectionScores.quiz += 20;
+            }
+
+            document.querySelectorAll('#quiz-options button').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            showInlineFeedback(
+                'Not quite.',
+                isCorrect, explanation,
+                'quiz-feedback-panel', 'quiz-feedback-icon',
+                'quiz-feedback-text', 'quiz-next-btn'
+            );
+        }
+
+        function advanceQuiz() {
+            const panel = document.getElementById('quiz-feedback-panel');
+            panel.classList.add('hidden');
+            if (currentQuestion < quizQuestions.length - 1) {
+                currentQuestion++;
+                isProcessing = false;
+                renderQuiz();
+            } else {
+                jumpToStage('audience');
+            }
         }
 
         function renderAudience() {
             const q = audienceQuestions[currentQuestion];
             document.getElementById('audience-progress').innerText = `Text ${currentQuestion + 1} of ${audienceQuestions.length}`;
             document.getElementById('audience-text').innerText = `"${q.text}"`;
+            document.getElementById('audience-progress-bar').style.width = `${(currentQuestion / audienceQuestions.length) * 100}%`;
+            document.getElementById('audience-feedback-panel').classList.add('hidden');
             document.getElementById('audience-options').innerHTML = q.options.map((opt, i) => `
                 <button onclick="handleAudienceChoice(${i === q.correct})" class="w-full p-4 border border-slate-200 rounded-xl hover:bg-green-50 font-medium transition-colors">
                     ${opt}
@@ -775,28 +902,53 @@
         function handleAudienceChoice(isCorrect) {
             if (isProcessing) return;
             isProcessing = true;
-            if (isCorrect) updateScore(15);
-            showFeedback(isCorrect, isCorrect ? "Spot on!" : "Wrong audience profile.");
+            const explanation = audienceQuestions[currentQuestion].explanation || '';
+            if (isCorrect) {
+                updateScore(15);
+                sectionScores.audience += 15;
+            }
 
-            setTimeout(() => {
-                if (currentQuestion < audienceQuestions.length - 1) {
-                    currentQuestion++;
-                    isProcessing = false;
-                    renderAudience();
-                } else {
-                    jumpToStage('vocab');
-                }
-            }, 1200);
+            document.querySelectorAll('#audience-options button').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            showInlineFeedback(
+                'Not quite.',
+                isCorrect, explanation,
+                'audience-feedback-panel', 'audience-feedback-icon',
+                'audience-feedback-text', 'audience-next-btn'
+            );
+        }
+
+        function advanceAudience() {
+            if (currentQuestion < audienceQuestions.length - 1) {
+                currentQuestion++;
+                isProcessing = false;
+                renderAudience();
+            } else {
+                jumpToStage('vocab');
+            }
         }
 
         function renderVocabMatch() {
             const q = vocabPairs[currentQuestion];
             document.getElementById('vocab-match-progress').innerText = `Verb ${currentQuestion + 1} of ${vocabPairs.length}`;
             document.getElementById('vocab-informal-word').innerText = q.informal;
-            
-            document.getElementById('vocab-match-options').innerHTML = vocabPairs.map(p => `
-                <button onclick="handleVocabChoice('${p.formal}')" class="w-full py-3 px-4 border rounded-lg font-bold hover:bg-slate-50 transition-all">
-                    ${p.formal}
+            document.getElementById('vocab-progress-bar').style.width = `${(currentQuestion / vocabPairs.length) * 100}%`;
+            document.getElementById('vocab-feedback-panel').classList.add('hidden');
+
+            const correct = q.formal;
+            const distractors = vocabPairs
+                .filter(p => p.formal !== correct)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3)
+                .map(p => p.formal);
+            const options = [...distractors, correct].sort(() => Math.random() - 0.5);
+
+            document.getElementById('vocab-match-options').innerHTML = options.map(opt => `
+                <button onclick="handleVocabChoice('${opt}')" class="w-full py-3 px-4 border rounded-lg font-bold hover:bg-slate-50 transition-all">
+                    ${opt}
                 </button>
             `).join('');
         }
@@ -805,30 +957,79 @@
             if (isProcessing) return;
             isProcessing = true;
             const correct = vocabPairs[currentQuestion].formal === choice;
-            if (correct) updateScore(10);
-            showFeedback(correct, correct ? "Correct!" : "Formal equivalent required.");
+            if (correct) {
+                updateScore(10);
+                sectionScores.vocab += 10;
+            }
 
-            setTimeout(() => {
-                if (currentQuestion < vocabPairs.length - 1) {
-                    currentQuestion++;
-                    isProcessing = false;
-                    renderVocabMatch();
-                } else {
-                    jumpToStage('result');
-                }
-            }, 1200);
+            document.querySelectorAll('#vocab-match-options button').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            const explanation = correct
+                ? `"${choice}" is the correct formal equivalent.`
+                : `The formal equivalent of "${vocabPairs[currentQuestion].informal}" is "${vocabPairs[currentQuestion].formal}".`;
+
+            showInlineFeedback(
+                '',
+                correct, explanation,
+                'vocab-feedback-panel', 'vocab-feedback-icon',
+                'vocab-feedback-text', 'vocab-next-btn'
+            );
+        }
+
+        function advanceVocab() {
+            if (currentQuestion < vocabPairs.length - 1) {
+                currentQuestion++;
+                isProcessing = false;
+                renderVocabMatch();
+            } else {
+                jumpToStage('result');
+            }
         }
 
         function renderResult() {
-            const totalPossible = 700; // (15*10) + (10*20) + (10*15) + (20*10) = 150 + 200 + 150 + 200
+            const sortMax = phrases.length * 10;
+            const quizMax = quizQuestions.length * 20;
+            const audMax = audienceQuestions.length * 15;
+            const vocabMax = vocabPairs.length * 10;
+            const totalPossible = sortMax + quizMax + audMax + vocabMax;
             const percentage = Math.round((score / totalPossible) * 100);
             document.getElementById('result-percentage').innerText = `${percentage}%`;
-            document.getElementById('result-text').innerText = `You earned ${score} out of ${totalPossible} possible points. Great work mastering professional tones and business vocabulary!`;
+            document.getElementById('result-text').innerText = `You earned ${score} out of ${totalPossible} possible points.`;
+
+            const sections = [
+                { label: "1. Phrase Sorting", scored: sectionScores.sorting, max: sortMax, color: "bg-blue-500" },
+                { label: "2. Contextual Choice", scored: sectionScores.quiz, max: quizMax, color: "bg-purple-500" },
+                { label: "3. Audience ID", scored: sectionScores.audience, max: audMax, color: "bg-green-500" },
+                { label: "4. Vocab Upgrade", scored: sectionScores.vocab, max: vocabMax, color: "bg-amber-500" },
+            ];
+
+            const breakdown = sections.map(s => {
+                const pct = Math.round((s.scored / s.max) * 100);
+                const label = pct >= 80 ? "Strong" : pct >= 50 ? "Developing" : "Needs practice";
+                const labelColor = pct >= 80 ? "text-green-600" : pct >= 50 ? "text-amber-600" : "text-red-500";
+                return `
+                    <div class="text-left space-y-1">
+                        <div class="flex justify-between text-sm font-medium text-slate-700">
+                            <span>${s.label}</span>
+                            <span class="${labelColor} font-bold">${label} (${s.scored}/${s.max})</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2">
+                            <div class="${s.color} h-2 rounded-full transition-all" style="width:${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('result-breakdown').innerHTML = breakdown;
         }
 
         function resetGame() {
             score = 0;
-            updateScore(0);
+            sectionScores = { sorting: 0, quiz: 0, audience: 0, vocab: 0 };
+            document.getElementById('score-display').innerText = `0/${getTotalMax()}`;
             jumpToStage('intro');
         }
 
@@ -836,6 +1037,7 @@
         window.onload = () => {
             renderFlashcards();
             renderVocab();
+            document.getElementById('score-display').innerText = `0/${getTotalMax()}`;
         };
 
     </script>
