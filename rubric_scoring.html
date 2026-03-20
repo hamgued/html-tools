@@ -137,7 +137,7 @@
 </div>
 
 <div class="instruction">
-  Select <strong>one option per criterion row</strong>. The score updates automatically as a weighted average.
+  Select <strong>one option per criterion row</strong>. The tool calculates the average and shows the final grade automatically.
 </div>
 
 <div class="table-wrap">
@@ -317,7 +317,7 @@ function updateScore() {
   const display = Number.isInteger(avg) ? String(avg) : avg.toFixed(1);
   const rounded = Math.round(avg);
 
-  document.getElementById('infoGrade').textContent = display;
+  document.getElementById('infoGrade').textContent = rounded;
   document.getElementById('infoLabel').textContent = gradeLabels[rounded] ? '(' + gradeLabels[rounded] + ')' : '';
 }
 
