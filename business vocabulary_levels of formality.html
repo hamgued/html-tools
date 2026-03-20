@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Vocabulary and Levels of Formality</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        
+        .flashcard.flipped .inner-card {
+            transform: rotateY(180deg);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        .section-hidden { display: none; }
+        .section-active { display: block; animation: fadeIn 0.4s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback-pop {
+            animation: bounceIn 0.5s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: translate(-50%, 20px) scale(0.8); opacity: 0; }
+            50% { transform: translate(-50%, -10px) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <div class="min-h-screen flex flex-col md:flex-row overflow-hidden">
+        
+        <!-- Main Content -->
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+            <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 min-h-[700px] flex flex-col">
+                
+                <!-- Header -->
+                <header class="bg-slate-900 text-white p-6 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-bold flex items-center gap-2">
+                            <i class="fas fa-graduation-cap text-blue-400"></i>
+                            Levels of Formality
+                        </h1>
+                        <p class="text-xs text-slate-400 mt-1 font-medium">
+                            Created with Gemini, Hamid Guedra
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs uppercase tracking-widest text-slate-500">Total Score</span>
+                        <div id="score-display" class="text-2xl font-mono font-bold text-blue-400">0</div>
+                    </div>
+                </header>
+
+                <div id="content-area" class="p-6 md:p-10 flex-1 relative">
+                    
+                    <!-- Section: Intro -->
+                    <section id="section-intro" class="section-active space-y-6 text-center py-10">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-info-circle text-blue-600 text-4xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold">Business English Formality</h2>
+                        <p class="text-lg text-slate-600 max-w-lg mx-auto leading-relaxed">
+                            Navigate the complexities of professional tone. Based on <strong>Purdue OWL</strong> standards, we'll cover audience analysis, contextual choices, and vocabulary.
+                        </p>
+                        <button onclick="jumpToStage('learn')" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-bold transition-all flex items-center gap-2 mx-auto shadow-lg hover:scale-105">
+                            Start Activity <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </section>
+
+                    <!-- Section: Reference Guide (Flashcards) -->
+                    <section id="section-learn" class="section-hidden space-y-6">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h3 class="text-xl font-bold flex items-center gap-2">
+                                <i class="fas fa-book-open text-blue-500"></i> Style Flashcards
+                            </h3>
+                            <span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Click to Flip</span>
+                        </div>
+                        <div class="grid gap-6" id="flashcard-container">
+                            <!-- Injected via JS -->
+                        </div>
+                        <button onclick="jumpToStage('vocabList')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-colors mt-6">
+                            I've Mastered the Styles: View Vocabulary
+                        </button>
+                    </section>
+
+                    <!-- Section: Vocab List -->
+                    <section id="section-vocabList" class="section-hidden space-y-6">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h3 class="text-xl font-bold flex items-center gap-2">
+                                <i class="fas fa-book text-blue-500"></i> Business Vocabulary
+                            </h3>
+                            <span class="text-[10px] text-slate-400 font-medium uppercase">Hover for B1/B2 Definition</span>
+                        </div>
+                        <div id="vocab-scroll-container" class="space-y-8 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar scroll-smooth">
+                            <!-- Injected via JS -->
+                        </div>
+                        <button onclick="jumpToStage('game')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-colors">
+                            Continue to Challenges
+                        </button>
+                    </section>
+
+                    <!-- Section: Challenge 1 (Sorting) -->
+                    <section id="section-game" class="section-hidden space-y-8 py-4 text-center">
+                        <div>
+                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase text-center">1. Phrase Sorting</span>
+                            <p id="sorting-progress" class="text-sm text-slate-500 mt-2"></p>
+                        </div>
+                        <div class="bg-slate-50 border-2 border-dashed border-slate-200 p-8 rounded-2xl text-center min-h-[120px] flex items-center justify-center">
+                            <p id="sorting-text" class="text-xl font-medium italic text-slate-800"></p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <button onclick="handleSortingChoice('Formal')" class="p-4 border-2 rounded-xl text-center font-bold hover:bg-slate-50 transition-all">Formal</button>
+                            <button onclick="handleSortingChoice('Semi-formal')" class="p-4 border-2 rounded-xl text-center font-bold hover:bg-slate-50 transition-all">Semi-formal</button>
+                            <button onclick="handleSortingChoice('Informal')" class="p-4 border-2 rounded-xl text-center font-bold hover:bg-slate-50 transition-all">Informal</button>
+                        </div>
+                    </section>
+
+                    <!-- Section: Challenge 2 (Scenarios) -->
+                    <section id="section-quiz" class="section-hidden space-y-6">
+                        <div class="text-center">
+                            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase">2. Contextual Choice</span>
+                            <p id="quiz-progress" class="text-sm text-slate-500 mt-2"></p>
+                        </div>
+                        <div class="bg-slate-900 text-white p-6 rounded-2xl">
+                            <h4 class="text-blue-400 font-bold mb-1 uppercase text-xs tracking-wider">The Situation:</h4>
+                            <p id="quiz-scenario" class="text-lg mb-4"></p>
+                            <div class="bg-slate-800 p-3 rounded border border-slate-700">
+                                <span class="text-[10px] text-slate-500 block uppercase">Draft to fix:</span>
+                                <p id="quiz-informal" class="italic text-slate-300"></p>
+                            </div>
+                        </div>
+                        <div id="quiz-options" class="space-y-3">
+                            <!-- Injected via JS -->
+                        </div>
+                    </section>
+
+                    <!-- Section: Challenge 3 (Audience) -->
+                    <section id="section-audience" class="section-hidden space-y-6">
+                        <div class="text-center">
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase">3. Audience ID</span>
+                            <p id="audience-progress" class="text-sm text-slate-500 mt-2"></p>
+                        </div>
+                        <div id="audience-text" class="bg-green-50 p-6 rounded-2xl border-2 border-green-100 italic text-center text-lg"></div>
+                        <p class="font-bold text-center text-slate-600">Who is the most likely audience?</p>
+                        <div id="audience-options" class="grid gap-3">
+                            <!-- Injected via JS -->
+                        </div>
+                    </section>
+
+                    <!-- Section: Challenge 4 (Vocab Match) -->
+                    <section id="section-vocab" class="section-hidden space-y-6 text-center">
+                        <div>
+                            <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold uppercase">4. Vocab Upgrade</span>
+                            <p id="vocab-match-progress" class="text-sm text-slate-500 mt-2"></p>
+                        </div>
+                        <div class="flex flex-col items-center gap-6 py-6 overflow-y-auto max-h-[500px] custom-scrollbar">
+                            <div>
+                                <span class="text-xs text-slate-400 uppercase">Informal Verb</span>
+                                <div id="vocab-informal-word" class="text-4xl font-bold text-slate-800"></div>
+                            </div>
+                            <div id="vocab-match-options" class="w-full max-w-xs space-y-3 pb-6">
+                                <!-- Injected via JS -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section: Results -->
+                    <section id="section-result" class="section-hidden text-center space-y-8 py-10">
+                        <div class="relative inline-block">
+                            <i class="fas fa-trophy text-yellow-500 text-7xl"></i>
+                            <div id="result-percentage" class="absolute -top-2 -right-2 bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl border-4 border-white shadow-lg">0%</div>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-bold text-slate-900">Training Complete!</h2>
+                            <p id="result-text" class="text-slate-600 mt-2"></p>
+                        </div>
+                        <button onclick="resetGame()" class="flex items-center gap-2 mx-auto bg-slate-900 text-white px-8 py-4 rounded-full font-bold hover:bg-slate-800 transition-all shadow-lg">
+                            <i class="fas fa-refresh"></i> Restart Course
+                        </button>
+                    </section>
+
+                    <!-- Feedback Popups -->
+                    <div id="feedback-overlay" class="fixed bottom-24 left-1/2 -translate-x-1/2 hidden flex items-center gap-2 px-6 py-3 rounded-full font-bold shadow-2xl z-50 feedback-pop">
+                        <i id="feedback-icon" class="fas"></i>
+                        <span id="feedback-message"></span>
+                    </div>
+
+                </div>
+
+                <footer class="p-4 bg-slate-50 border-t text-[10px] text-slate-400 text-center">
+                    Source: Purdue Online Writing Lab (OWL). "Levels of Formality."
+                </footer>
+            </div>
+        </main>
+
+        <!-- Sidebar Navigation -->
+        <nav class="w-full md:w-64 bg-slate-900 p-4 flex flex-col gap-4 border-l border-slate-800 shadow-2xl overflow-y-auto custom-scrollbar">
+            <div class="px-2 py-4 mb-4 border-b border-slate-800">
+                <h3 class="text-slate-500 text-[10px] uppercase tracking-widest font-bold">Menu</h3>
+            </div>
+            
+            <button onclick="jumpToStage('intro')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:bg-slate-800 hover:text-white" data-stage="intro">
+                <i class="fas fa-columns"></i> <span>Introduction</span>
+            </button>
+            <button onclick="jumpToStage('learn')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:bg-slate-800 hover:text-white" data-stage="learn">
+                <i class="fas fa-info-circle"></i> <span>Learning Center</span>
+            </button>
+            
+            <div class="space-y-1">
+                <button onclick="jumpToStage('vocabList')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:bg-slate-800 hover:text-white" data-stage="vocabList">
+                    <i class="fas fa-book"></i> <span>Key Vocabulary</span>
+                </button>
+                <div id="sidebar-categories" class="flex flex-col gap-0.5 mt-1 border-l border-slate-800 ml-4">
+                    <!-- Categories injected via JS -->
+                </div>
+            </div>
+            
+            <div class="h-px bg-slate-800 my-2"></div>
+            
+            <button onclick="jumpToStage('game')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:bg-slate-800 hover:text-white" data-stage="game">
+                <i class="fas fa-list-check"></i> <span>1. Sorting</span>
+            </button>
+            <button onclick="jumpToStage('quiz')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:bg-slate-800 hover:text-white" data-stage="quiz">
+                <i class="fas fa-paper-plane"></i> <span>2. Scenarios</span>
+            </button>
+            <button onclick="jumpToStage('audience')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:bg-slate-800 hover:text-white" data-stage="audience">
+                <i class="fas fa-users"></i> <span>3. Audience ID</span>
+            </button>
+            <button onclick="jumpToStage('vocab')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:bg-slate-800 hover:text-white" data-stage="vocab">
+                <i class="fas fa-hashtag"></i> <span>4. Vocabulary</span>
+            </button>
+            
+            <div class="mt-auto pt-4 border-t border-slate-800">
+                <button onclick="jumpToStage('result')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-slate-400 hover:bg-slate-800 hover:text-white" data-stage="result">
+                    <i class="fas fa-trophy"></i> <span>Results</span>
+                </button>
+            </div>
+        </nav>
+
+    </div>
+
+    <script>
+        // --- DATA ---
+        const stages = ['intro', 'learn', 'vocabList', 'game', 'quiz', 'audience', 'vocab', 'result'];
+        let currentStage = 'intro';
+        let score = 0;
+        let currentQuestion = 0;
+        let isProcessing = false;
+
+        const categories = [
+            { 
+                level: 'Formal', 
+                description: 'Used for unknown audiences, senior management, or external clients.', 
+                color: 'bg-blue-50 border-blue-500 text-blue-800', 
+                details: [
+                    "Avoid contractions (e.g., 'We will attend' instead of 'We'll attend').", 
+                    "Use third-person perspective (e.g., 'The department requests' instead of 'I request').", 
+                    "Focus on precise vocabulary (e.g., 'Inquire' instead of 'Ask').", 
+                    "No slang or idioms (e.g., 'A significant achievement' instead of 'A home run')."
+                ] 
+            },
+            { 
+                level: 'Semi-formal', 
+                description: 'Used for colleagues you know well or internal team communication.', 
+                color: 'bg-green-50 border-green-500 text-green-800', 
+                details: [
+                    "Contractions are acceptable (e.g., 'I've received your note').", 
+                    "Polite but personal (e.g., 'I hope you had a productive weekend').", 
+                    "Conversational vocabulary (e.g., 'Let me know' instead of 'Please inform me').", 
+                    "Appropriate for team updates (e.g., 'Hi team, here is the new project schedule')."
+                ] 
+            },
+            { 
+                level: 'Informal', 
+                description: 'Usually avoided in business writing unless communicating with close friends.', 
+                color: 'bg-orange-50 border-orange-500 text-orange-800', 
+                details: [
+                    "Slang and emojis used (e.g., 'That presentation was cool! 👍').", 
+                    "Lacks polite structures (e.g., 'Send it now' instead of 'Could you send it?').", 
+                    "Fragmented sentences (e.g., 'Traffic bad. Late 10 mins.').", 
+                    "For close work-friends (e.g., 'Wanna grab lunch later?')."
+                ] 
+            }
+        ];
+
+        // Definitions for all 100+ terms for accurate display in the list
+        const allVocabDetails = {
+            "Agenda": "A list of items to be discussed at a formal meeting.",
+            "Benchmark": "A standard used to compare performance.",
+            "Buy-in": "Getting agreement or support for a plan.",
+            "Core Competency": "The main strength or skill of a company.",
+            "Deliverable": "A final product for a project.",
+            "Due Diligence": "Doing careful research before making a decision.",
+            "Empowerment": "Giving employees authority and confidence.",
+            "Entrepreneur": "A person starting their own business.",
+            "KPI": "Key Performance Indicator: a measure of success.",
+            "Feasibility Study": "Analysis to see if a project is likely to succeed.",
+            "Innovation": "Creating new methods or products.",
+            "Leverage": "Using something you have to gain an advantage.",
+            "Mission Statement": "A summary of a company's goals and values.",
+            "Outsourcing": "Hiring an external company for specific work.",
+            "Paradigm Shift": "A fundamental change in approach or thinking.",
+            "Scalability": "The ability of a business to grow larger.",
+            "Stakeholder": "A person with an interest in the business.",
+            "Strategic Planning": "Defining a company's direction for the future.",
+            "Synergy": "Extra success created when groups work together.",
+            "USP": "Unique Selling Proposition: what makes you special.",
+            "ROI": "Return on Investment: profit compared to spending.",
+            "Asset": "Something valuable owned by a person or company.",
+            "Budget": "A plan for earning and spending money.",
+            "Cash Flow": "The movement of money in and out of a business.",
+            "Liability": "Money that a person or company owes.",
+            "Audit": "An official examination of financial records.",
+            "Bottom Line": "The final profit or loss shown in a report.",
+            "Capital": "Money used to start or grow a business.",
+            "Equity": "The value of ownership or company shares.",
+            "Expenditure": "The total amount of money spent.",
+            "Fiscal Year": "The 12-month period used for accounting.",
+            "Forecast": "A prediction of future financial trends.",
+            "Gross Profit": "Total profit before costs and taxes are removed.",
+            "Liquidity": "How easily a company can turn assets into cash.",
+            "Net Profit": "Actual profit after all expenses are paid.",
+            "Overhead": "Regular costs like rent that aren't tied to one product.",
+            "Quarterly": "Happening every three months.",
+            "Solvency": "The ability of a company to pay its long-term debts.",
+            "Yield": "The amount of profit produced by an investment.",
+            "B2B": "Business-to-Business sales.",
+            "B2C": "Business-to-Consumer sales.",
+            "Brand Identity": "Visible elements identifying a brand to customers.",
+            "Cold Calling": "Phoning potential customers without previous contact.",
+            "Lead Generation": "Finding people who might want to buy your product.",
+            "Competitive Advantage": "A reason why customers choose you over rivals.",
+            "Conversion Rate": "The percentage of visitors who become customers.",
+            "Customer Acquisition": "The process of bringing in new customers.",
+            "Diversification": "Selling new products or entering new markets.",
+            "Freemium": "Model where basic is free, but extras cost money.",
+            "Globalization": "Operating on an international scale.",
+            "Market Penetration": "Selling more to your current customers.",
+            "Market Research": "Gathering info about what customers want.",
+            "Market Share": "The percentage of total sales held by a company.",
+            "Networking": "Meeting useful professional contacts.",
+            "Public Relations (PR)": "Managing the public image of a company.",
+            "Retention": "The ability of a company to keep its customers.",
+            "Sales Pipeline": "Visual tracking of potential sales stages.",
+            "Target Audience": "The specific group you want to sell to.",
+            "Value Proposition": "A promise of value to be delivered to a customer.",
+            "Backlog": "A list of tasks or orders not yet completed.",
+            "Bottleneck": "A stage in a process that slows everything down.",
+            "Brainstorm": "A meeting to suggest many ideas quickly.",
+            "Capacity": "The maximum amount a factory or office can produce.",
+            "Collaboration": "The act of working together with others.",
+            "Fulfillment": "Receiving, packaging, and shipping orders.",
+            "Growth Hacking": "Creative low-cost strategies for fast growth.",
+            "Infrastructure": "Basic systems like buildings and IT needed for work.",
+            "Inventory": "A list of all goods currently in stock.",
+            "Just-in-Time (JIT)": "Production system to save space and costs.",
+            "Lead Time": "Time between starting a process and finishing it.",
+            "Logistics": "Managing how resources move to where they are needed.",
+            "Optimization": "Making a system as effective as possible.",
+            "Procurement": "The process of buying goods a company needs.",
+            "Quality Assurance (QA)": "Checking products to ensure they meet standards.",
+            "Supply Chain": "Sequence of processes in production and distribution.",
+            "Sustainability": "Using resources without harming the environment.",
+            "Transparency": "Operating in an open and honest way.",
+            "Workflow": "The sequence of steps to finish a piece of work.",
+            "Wholesale": "Selling goods in large quantities to businesses.",
+            "Appraisal": "A performance review meeting with a manager.",
+            "Headhunting": "Actively hiring skilled people from other companies.",
+            "Onboarding": "The process of introducing a new employee.",
+            "Remote Work": "Working from home or outside the office.",
+            "Soft Skills": "Personal qualities like communication and teamwork.",
+            "Attrition": "Natural reduction of staff (e.g. through retirement).",
+            "Corporate Culture": "Shared values and beliefs in a company.",
+            "Incentivize": "Offering rewards to encourage better work.",
+            "Mentorship": "A relationship where an expert helps a beginner.",
+            "Performance Review": "A formal assessment of an employee's work.",
+            "Professional Development": "Learning new skills to help your career.",
+            "Recruitment": "The process of finding and hiring new people.",
+            "Remuneration": "The total pay and benefits an employee receives.",
+            "Resignation": "Act of formally telling your employer you are leaving.",
+            "Severance": "Money paid when a contract is ended by the company.",
+            "Talent Acquisition": "Strategic way of finding people for specific roles.",
+            "Turnover": "The rate at which employees leave and are replaced.",
+            "Workforce": "The total number of people who work for a company.",
+            "Work-Life Balance": "Managing time between work and personal life.",
+            "Workshop": "A short educational program for a small group."
+        };
+
+        const categoriesMap = {
+            "Management & Strategy": ["Agenda", "Benchmark", "Buy-in", "Core Competency", "Deliverable", "Due Diligence", "Empowerment", "Entrepreneur", "KPI", "Feasibility Study", "Innovation", "Leverage", "Mission Statement", "Outsourcing", "Paradigm Shift", "Scalability", "Stakeholder", "Strategic Planning", "Synergy", "USP"],
+            "Finance & Accounting": ["ROI", "Asset", "Budget", "Cash Flow", "Liability", "Audit", "Bottom Line", "Capital", "Equity", "Expenditure", "Fiscal Year", "Forecast", "Gross Profit", "Liquidity", "Net Profit", "Overhead", "Quarterly", "Solvency", "Yield"],
+            "Marketing & Sales": ["B2B", "B2C", "Brand Identity", "Cold Calling", "Lead Generation", "Competitive Advantage", "Conversion Rate", "Customer Acquisition", "Diversification", "Freemium", "Globalization", "Market Penetration", "Market Research", "Market Share", "Networking", "Public Relations (PR)", "Retention", "Sales Pipeline", "Target Audience", "Value Proposition"],
+            "Operations & Workflow": ["Backlog", "Bottleneck", "Brainstorm", "Capacity", "Collaboration", "Fulfillment", "Growth Hacking", "Infrastructure", "Inventory", "Just-in-Time (JIT)", "Lead Time", "Logistics", "Optimization", "Procurement", "Quality Assurance (QA)", "Supply Chain", "Sustainability", "Transparency", "Workflow", "Wholesale"],
+            "Human Resources": ["Appraisal", "Headhunting", "Onboarding", "Remote Work", "Soft Skills", "Attrition", "Corporate Culture", "Incentivize", "Mentorship", "Performance Review", "Professional Development", "Recruitment", "Remuneration", "Resignation", "Severance", "Talent Acquisition", "Turnover", "Workforce", "Work-Life Balance", "Workshop"]
+        };
+
+        const iconsMap = {
+            "Management & Strategy": "fa-briefcase",
+            "Finance & Accounting": "fa-chart-line",
+            "Marketing & Sales": "fa-chart-simple",
+            "Operations & Workflow": "fa-gears",
+            "Human Resources": "fa-user-plus"
+        };
+
+        const phrases = [
+            { text: "I am writing to inquire about the status of the project.", level: "Formal" },
+            { text: "Hey! Just checking in on how that project is going.", level: "Informal" },
+            { text: "I'm writing to follow up on the project we discussed yesterday.", level: "Semi-formal" },
+            { text: "Please find the attached document for your review.", level: "Formal" },
+            { text: "Here's the doc you asked for. Hope it helps!", level: "Informal" },
+            { text: "I've attached the file you requested.", level: "Semi-formal" },
+            { text: "We'll get back to you about this soon.", level: "Semi-formal" },
+            { text: "Thanks for your help with the thing.", level: "Informal" },
+            { text: "Should you require further assistance, do not hesitate to contact us.", level: "Formal" },
+            { text: "Could you look into this for me?", level: "Semi-formal" },
+            { text: "I'm sorry for the late reply.", level: "Semi-formal" },
+            { text: "We look forward to receiving your feedback.", level: "Formal" },
+            { text: "It is essential that the deadlines are met.", level: "Formal" },
+            { text: "Can't wait to see the new office!", level: "Informal" },
+            { text: "See you at the meeting.", level: "Informal" }
+        ];
+
+        const quizQuestions = [
+            {
+                scenario: "Writing to a CEO of another company you've never met.",
+                informal: "I want a job at your place because I'm good at sales.",
+                options: [
+                    { text: "I'm really hoping you'll hire me because I'm great with customers.", correct: false },
+                    { text: "I am applying for the sales position as I believe my experience aligns with your needs.", correct: true },
+                    { text: "Give me a shot at the sales job!", correct: false }
+                ]
+            },
+            {
+                scenario: "Emailing a teammate you've worked with for years.",
+                informal: "Give me that report by Friday.",
+                options: [
+                    { text: "I would be grateful if you could provide the report by Friday.", correct: false },
+                    { text: "Could you please send over the report by Friday? Thanks!", correct: true },
+                    { text: "Send the report Friday or else.", correct: false }
+                ]
+            },
+            {
+                scenario: "Replying to a complaint from a long-term client.",
+                informal: "Sorry your order is late, we are working on it.",
+                options: [
+                    { text: "We apologize for the delay in your shipment and are doing our best to resolve this immediately.", correct: true },
+                    { text: "I'm sorry about the delay. We'll get it to you as soon as we can.", correct: false },
+                    { text: "My bad! The order is late but we'll fix it ASAP.", correct: false }
+                ]
+            },
+            {
+                scenario: "Asking a manager for a performance review and pay raise.",
+                informal: "I want more money because I work hard.",
+                options: [
+                    { text: "Give me a raise, I've been doing a lot lately!", correct: false },
+                    { text: "I would like to request a formal performance review to discuss my contributions and salary.", correct: true },
+                    { text: "I'd like to talk about my pay because I've hit all my targets.", correct: false }
+                ]
+            },
+            {
+                scenario: "Introducing a new senior partner to the entire team.",
+                informal: "Meet John, he's the new guy.",
+                options: [
+                    { text: "It is my pleasure to introduce our new Senior Partner, Mr. John Smith.", correct: true },
+                    { text: "Please welcome John, he's joining us as a partner today.", correct: false },
+                    { text: "Yo, here's John. He's a partner now.", correct: false }
+                ]
+            },
+            {
+                scenario: "Requesting a meeting with a high-level executive from a potential partner.",
+                informal: "Can we meet to talk about business?",
+                options: [
+                    { text: "Want to grab coffee and talk about working together?", correct: false },
+                    { text: "I'd like to schedule a time to chat about our potential partnership.", correct: false },
+                    { text: "I am writing to request an introductory meeting to discuss potential collaboration between our firms.", correct: true }
+                ]
+            },
+            {
+                scenario: "Notifying staff about a minor change in office lunch policy.",
+                informal: "We are changing how you do lunch breaks.",
+                options: [
+                    { text: "Please be advised of the new policy regarding lunch break schedules effective Monday.", correct: false },
+                    { text: "Just a quick heads up that we're making a small change to the lunch break times.", correct: true },
+                    { text: "Lunch is different now. Check the fridge for the new rules.", correct: false }
+                ]
+            },
+            {
+                scenario: "Formally responding to a high-level job offer.",
+                informal: "Yes, I'll take the job, thanks.",
+                options: [
+                    { text: "I am delighted to formally accept the offer for the Director position.", correct: true },
+                    { text: "I'm happy to accept the role. When do I start?", correct: false },
+                    { text: "I'm in! Can't wait to get started with the team.", correct: false }
+                ]
+            },
+            {
+                scenario: "Informing a colleague you'll be late due to traffic.",
+                informal: "Late for meeting, traffic.",
+                options: [
+                    { text: "Please accept my apologies for my late arrival due to unforeseen congestion.", correct: false },
+                    { text: "I'm sorry, I'm running 10 minutes late due to heavy traffic.", correct: true },
+                    { text: "Stuck in traffic, be there soon!", correct: false }
+                ]
+            },
+            {
+                scenario: "Emailing a customer about a processed refund.",
+                informal: "You're getting your money back.",
+                options: [
+                    { text: "We have successfully processed your refund for order #123.", correct: true },
+                    { text: "I've sent your refund through. You should see it in a few days.", correct: false },
+                    { text: "Sent the cash back! Check your account.", correct: false }
+                ]
+            }
+        ];
+
+        const audienceQuestions = [
+            { text: "To Whom It May Concern, I am writing to formally request...", options: ["A close coworker", "A Human Resources department", "A project teammate"], correct: 1 },
+            { text: "Hey guys, quick update on lunch tomorrow...", options: ["Board of Directors", "New client", "Internal team group chat"], correct: 2 },
+            { text: "Yo, what's up? Still coming to the pub later?", options: ["Friend or close colleague", "Senior Executive", "New client"], correct: 0 },
+            { text: "I am writing on behalf of the legal department regarding the breach of contract...", options: ["An intern", "An external organization or legal representative", "A project manager"], correct: 1 },
+            { text: "Can you believe that presentation? It was so incredibly boring!", options: ["A close work friend", "The CEO", "A conference audience"], correct: 0 },
+            { text: "We are honored to welcome you to our 25th annual industry conference.", options: ["A small internal team", "A customer support bot", "Event attendees and industry professionals"], correct: 2 },
+            { text: "The results of the Q3 audit indicate a 4% margin of error in operations.", options: ["Board of Directors or senior management", "A childhood friend", "A retail customer"], correct: 0 },
+            { text: "Send me the invoice whenever you get a chance, no rush at all.", options: ["A government tax inspector", "A trusted long-term supplier or teammate", "An unknown external auditor"], correct: 1 },
+            { text: "I regret to inform you that your application for the position was unsuccessful.", options: ["A new hire", "A current business partner", "A job applicant"], correct: 2 },
+            { text: "Please find below the tracking number for your recent purchase. Thank you for choosing us.", options: ["A direct competitor", "A retail customer", "An internal HR manager"], correct: 1 }
+        ];
+
+        const vocabPairs = [
+            { informal: "Ask for", formal: "Request" },
+            { informal: "Get", formal: "Receive" },
+            { informal: "Talk about", formal: "Discuss" },
+            { informal: "Need", formal: "Require" },
+            { informal: "Check", formal: "Verify" },
+            { informal: "Give", formal: "Provide" },
+            { informal: "Fix", formal: "Resolve" },
+            { informal: "Help", formal: "Assist" },
+            { informal: "Look at", formal: "Examine" },
+            { informal: "Think about", formal: "Consider" },
+            { informal: "Start", formal: "Commence" },
+            { informal: "Stop", formal: "Cease" },
+            { informal: "Use", formal: "Utilize" },
+            { informal: "End", formal: "Terminate" },
+            { informal: "Make sure", formal: "Ensure" },
+            { informal: "Show", formal: "Demonstrate" },
+            { informal: "Buy", formal: "Purchase" },
+            { informal: "Fill in", formal: "Complete" },
+            { informal: "Find out", formal: "Determine" },
+            { informal: "Set up", formal: "Establish" }
+        ];
+
+        // --- CORE LOGIC ---
+
+        function updateScore(val) {
+            score += val;
+            document.getElementById('score-display').innerText = score;
+        }
+
+        function jumpToStage(stageId) {
+            isProcessing = false;
+            currentStage = stageId;
+            currentQuestion = 0;
+            
+            // UI Switch
+            document.querySelectorAll('section').forEach(s => {
+                s.classList.remove('section-active');
+                s.classList.add('section-hidden');
+            });
+            document.getElementById(`section-${stageId}`).classList.add('section-active');
+            document.getElementById(`section-${stageId}`).classList.remove('section-hidden');
+
+            // Nav Update
+            document.querySelectorAll('.nav-item').forEach(n => {
+                const isActive = n.getAttribute('data-stage') === stageId;
+                n.classList.toggle('bg-blue-600', isActive);
+                n.classList.toggle('text-white', isActive);
+                n.classList.toggle('text-slate-400', !isActive);
+            });
+
+            // Init stage specific content
+            if (stageId === 'game') renderSorting();
+            if (stageId === 'quiz') renderQuiz();
+            if (stageId === 'audience') renderAudience();
+            if (stageId === 'vocab') renderVocabMatch();
+            if (stageId === 'result') renderResult();
+        }
+
+        function showFeedback(success, message) {
+            const el = document.getElementById('feedback-overlay');
+            const icon = document.getElementById('feedback-icon');
+            const txt = document.getElementById('feedback-message');
+
+            el.classList.remove('hidden', 'bg-green-600', 'bg-red-600');
+            el.classList.add(success ? 'bg-green-600' : 'bg-red-600');
+            icon.className = success ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            txt.innerText = message;
+
+            setTimeout(() => el.classList.add('hidden'), 1200);
+        }
+
+        // --- RENDERERS ---
+
+        function renderFlashcards() {
+            const container = document.getElementById('flashcard-container');
+            container.innerHTML = categories.map((cat, i) => `
+                <div class="flashcard perspective-1000 h-40 group cursor-pointer" onclick="this.classList.toggle('flipped')">
+                    <div class="inner-card relative w-full h-full transition-transform duration-500 transform-style-3d">
+                        <div class="absolute inset-0 backface-hidden p-6 rounded-xl border-l-8 shadow-md flex flex-col justify-center ${cat.color}">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-black text-2xl uppercase tracking-tight">${cat.level}</h4>
+                                <i class="fas fa-rotate text-slate-400 opacity-50 group-hover:opacity-100 transition-opacity"></i>
+                            </div>
+                            <p class="text-sm mt-2 font-medium opacity-90">${cat.description}</p>
+                        </div>
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 p-6 rounded-xl border-l-8 shadow-md flex flex-col justify-center bg-slate-900 text-white border-slate-700">
+                            <h4 class="text-xs font-bold text-blue-400 uppercase mb-3 tracking-widest">Stylistic Rules:</h4>
+                            <ul class="space-y-1">
+                                ${cat.details.map(d => `<li class="text-[11px] flex items-start gap-2"><i class="fas fa-check text-blue-500 mt-0.5"></i><span>${d}</span></li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderVocab() {
+            const scroll = document.getElementById('vocab-scroll-container');
+            const sideNav = document.getElementById('sidebar-categories');
+            
+            let html = "";
+            let navHtml = "";
+
+            Object.entries(categoriesMap).forEach(([cat, terms]) => {
+                const safeId = cat.replace(/\s+/g, '-');
+                navHtml += `
+                    <button onclick="scrollToCategory('${safeId}')" class="w-full flex items-center gap-2 pl-10 pr-4 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-300 transition-colors">
+                        <i class="fas ${iconsMap[cat]}"></i>
+                        <span class="truncate">${cat.split(' ')[0]}</span>
+                    </button>
+                `;
+
+                html += `
+                    <div id="cat-${safeId}" class="space-y-3 pt-2">
+                        <div class="flex items-center gap-2 text-slate-400 py-1 sticky top-0 bg-white z-10 border-b border-slate-100">
+                            <i class="fas ${iconsMap[cat]} text-blue-500"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-wider">${cat}</h4>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            ${terms.map(t => {
+                                const definition = allVocabDetails[t] || "Professional definition matching the context.";
+                                return `
+                                <div class="group relative bg-white border border-slate-100 p-2 rounded hover:border-blue-300 hover:bg-blue-50 transition-all cursor-default">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-semibold text-slate-700 group-hover:text-blue-800">${t}</span>
+                                        <i class="fas fa-info-circle text-slate-200 group-hover:text-blue-300"></i>
+                                    </div>
+                                    <div class="mt-1 text-[11px] text-slate-500 hidden group-hover:block leading-tight italic">
+                                        ${definition}
+                                    </div>
+                                </div>
+                            `}).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            scroll.innerHTML = html;
+            sideNav.innerHTML = navHtml;
+        }
+
+        function scrollToCategory(id) {
+            jumpToStage('vocabList');
+            setTimeout(() => {
+                const el = document.getElementById(`cat-${id}`);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        // --- CHALLENGES ---
+
+        function renderSorting() {
+            document.getElementById('sorting-progress').innerText = `Item ${currentQuestion + 1} of ${phrases.length}`;
+            document.getElementById('sorting-text').innerText = `"${phrases[currentQuestion].text}"`;
+        }
+
+        function handleSortingChoice(choice) {
+            if (isProcessing) return;
+            isProcessing = true;
+            
+            const correct = phrases[currentQuestion].level === choice;
+            if (correct) updateScore(10);
+            showFeedback(correct, correct ? "Correct!" : `Incorrect. It's ${phrases[currentQuestion].level}.`);
+
+            setTimeout(() => {
+                if (currentQuestion < phrases.length - 1) {
+                    currentQuestion++;
+                    isProcessing = false;
+                    renderSorting();
+                } else {
+                    jumpToStage('quiz');
+                }
+            }, 1200);
+        }
+
+        function renderQuiz() {
+            const q = quizQuestions[currentQuestion];
+            document.getElementById('quiz-progress').innerText = `Scenario ${currentQuestion + 1} of ${quizQuestions.length}`;
+            document.getElementById('quiz-scenario').innerText = q.scenario;
+            document.getElementById('quiz-informal').innerText = q.informal;
+            
+            document.getElementById('quiz-options').innerHTML = q.options.map((opt, i) => `
+                <button onclick="handleQuizChoice(${opt.correct})" class="w-full p-4 border border-slate-200 rounded-xl text-left hover:border-blue-500 hover:bg-blue-50 transition-all flex justify-between items-center group">
+                    <span class="text-sm md:text-base">${opt.text}</span>
+                    <i class="fas fa-chevron-right text-slate-300 group-hover:text-blue-500"></i>
+                </button>
+            `).join('');
+        }
+
+        function handleQuizChoice(isCorrect) {
+            if (isProcessing) return;
+            isProcessing = true;
+            
+            if (isCorrect) updateScore(20);
+            showFeedback(isCorrect, isCorrect ? "Excellent!" : "Not quite the right tone.");
+
+            setTimeout(() => {
+                if (currentQuestion < quizQuestions.length - 1) {
+                    currentQuestion++;
+                    isProcessing = false;
+                    renderQuiz();
+                } else {
+                    jumpToStage('audience');
+                }
+            }, 1200);
+        }
+
+        function renderAudience() {
+            const q = audienceQuestions[currentQuestion];
+            document.getElementById('audience-progress').innerText = `Text ${currentQuestion + 1} of ${audienceQuestions.length}`;
+            document.getElementById('audience-text').innerText = `"${q.text}"`;
+            document.getElementById('audience-options').innerHTML = q.options.map((opt, i) => `
+                <button onclick="handleAudienceChoice(${i === q.correct})" class="w-full p-4 border border-slate-200 rounded-xl hover:bg-green-50 font-medium transition-colors">
+                    ${opt}
+                </button>
+            `).join('');
+        }
+
+        function handleAudienceChoice(isCorrect) {
+            if (isProcessing) return;
+            isProcessing = true;
+            if (isCorrect) updateScore(15);
+            showFeedback(isCorrect, isCorrect ? "Spot on!" : "Wrong audience profile.");
+
+            setTimeout(() => {
+                if (currentQuestion < audienceQuestions.length - 1) {
+                    currentQuestion++;
+                    isProcessing = false;
+                    renderAudience();
+                } else {
+                    jumpToStage('vocab');
+                }
+            }, 1200);
+        }
+
+        function renderVocabMatch() {
+            const q = vocabPairs[currentQuestion];
+            document.getElementById('vocab-match-progress').innerText = `Verb ${currentQuestion + 1} of ${vocabPairs.length}`;
+            document.getElementById('vocab-informal-word').innerText = q.informal;
+            
+            document.getElementById('vocab-match-options').innerHTML = vocabPairs.map(p => `
+                <button onclick="handleVocabChoice('${p.formal}')" class="w-full py-3 px-4 border rounded-lg font-bold hover:bg-slate-50 transition-all">
+                    ${p.formal}
+                </button>
+            `).join('');
+        }
+
+        function handleVocabChoice(choice) {
+            if (isProcessing) return;
+            isProcessing = true;
+            const correct = vocabPairs[currentQuestion].formal === choice;
+            if (correct) updateScore(10);
+            showFeedback(correct, correct ? "Correct!" : "Formal equivalent required.");
+
+            setTimeout(() => {
+                if (currentQuestion < vocabPairs.length - 1) {
+                    currentQuestion++;
+                    isProcessing = false;
+                    renderVocabMatch();
+                } else {
+                    jumpToStage('result');
+                }
+            }, 1200);
+        }
+
+        function renderResult() {
+            const totalPossible = 700; // (15*10) + (10*20) + (10*15) + (20*10) = 150 + 200 + 150 + 200
+            const percentage = Math.round((score / totalPossible) * 100);
+            document.getElementById('result-percentage').innerText = `${percentage}%`;
+            document.getElementById('result-text').innerText = `You earned ${score} out of ${totalPossible} possible points. Great work mastering professional tones and business vocabulary!`;
+        }
+
+        function resetGame() {
+            score = 0;
+            updateScore(0);
+            jumpToStage('intro');
+        }
+
+        // Initialize
+        window.onload = () => {
+            renderFlashcards();
+            renderVocab();
+        };
+
+    </script>
+</body>
+</html>

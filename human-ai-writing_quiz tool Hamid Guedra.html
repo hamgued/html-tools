@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Integrity: Human-AI Writing Spectrum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* Custom Styles for Spectrum Bars */
+        .spectrum-bar {
+            height: 5rem;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+        .spectrum-bar:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Quiz Feedback Styles */
+        .correct-answer {
+            border-color: #10B981 !important;
+        }
+        .incorrect-answer {
+            border-color: #EF4444 !important;
+        }
+        .result-box {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto bg-white shadow-xl rounded-2xl p-6 md:p-10">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Academic Integrity: Human-AI Contribution Scale</h1>
+            <p class="text-lg text-gray-600">AI-Collaboration Levels <span class="text-sm font-semibold">(Generated with Gemini Canvas, Hamid Guedra)</span></p>
+        </header>
+
+        <!-- Main Content Area: Spectrum & Quiz -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+            <!-- 1. Spectrum Display (Based on Image) -->
+            <div class="bg-gray-50 p-6 rounded-xl shadow-inner">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4 border-b pb-2">The Spectrum of Authorship</h2>
+                <p class="text-sm text-gray-500 mb-4 italic">Click the spectrum bars for more information</p>
+                
+                <!-- Spectrum List View (Visible by default) -->
+                <div id="spectrum-list-view" class="space-y-2">
+                    
+                    <!-- Level 1: 100% Human -->
+                    <div class="spectrum-bar bg-green-500 text-white" onclick="showDetails(0)">
+                        <div class="flex-shrink-0 text-3xl mr-4">👩‍🎓</div>
+                        <div>
+                            <p class="font-bold text-xl">100% Human Only</p>
+                            <p class="text-sm">No AI use (except basic proofreading).</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 2: 75% | 25% Human-Led -->
+                    <div class="spectrum-bar bg-lime-500 text-white" onclick="showDetails(1)">
+                        <div class="flex-shrink-0 text-3xl mr-4">💡</div>
+                        <div>
+                            <p class="font-bold text-xl">75% | 25% Human-Led</p>
+                            <p class="text-sm">Author writes core content; AI provides feedback/minor editing.</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 3: 50% | 50% Human-AI Collaboration -->
+                    <div class="spectrum-bar bg-yellow-500 text-white" onclick="showDetails(2)">
+                        <div class="flex-shrink-0 text-3xl mr-4">🤝</div>
+                        <div>
+                            <p class="font-bold text-xl">50% | 50% Human-AI Collaboration</p>
+                            <p class="text-sm">AI generates large parts, but human heavily edits and improves. Risky. Could be considered academic misconduct.</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 4: 25% | 75% AI-Led -->
+                    <div class="spectrum-bar bg-orange-500 text-white" onclick="showDetails(3)">
+                        <div class="flex-shrink-0 text-3xl mr-4">🚨</div>
+                        <div>
+                            <p class="font-bold text-xl">25% | 75% AI-Led</p>
+                            <p class="text-sm">Largely written by AI; Academic misconduct.</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 5: 100% AI Only -->
+                    <div class="spectrum-bar bg-red-500 text-white" onclick="showDetails(4)">
+                        <div class="flex-shrink-0 text-3xl mr-4">🤖</div>
+                        <div>
+                            <p class="font-bold text-xl">100% AI Only</p>
+                            <p class="text-sm">Copied completely from AI; Academic misconduct.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spectrum Details View (Hidden by default, shown on click) -->
+                <div id="details-view" class="p-4 bg-gray-100 rounded-lg shadow-inner hidden">
+                    <button onclick="showListView()" class="mb-4 text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
+                        &larr; Back to Spectrum View
+                    </button>
+                    <h3 id="detail-title" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                    <div id="detail-content" class="space-y-4"></div>
+                </div>
+
+
+                <p class="mt-6 text-sm text-gray-500 italic">
+                    <span class="text-green-600 font-semibold">Goal:</span> Aim for the top two levels (100% or 75%/25%).
+                    <span class="text-red-600 font-semibold">Risk:</span> The bottom two levels (25%/75% and 100%) constitute academic misconduct.
+                </p>
+                
+                <!-- Added Attribution Text -->
+                <p class="mt-4 text-xs text-gray-500">
+                    Inspired by <a href="https://www.linkedin.com/feed/update/urn:li:activity:7385644512616034304/?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7385644512616034304%2C7385807026507116544%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287385807026507116544%2Curn%3Ali%3Aactivity%3A7385644512616034304%29" target="_blank" class="text-indigo-600 hover:text-indigo-800 underline">Jim O’Mahony: “My easy to follow guide for attribution”</a> and Ville Arvola’s GenAI hyödyntämisen tasot (presented at ITK2025).
+                </p>
+            </div>
+
+
+            <!-- 2. Interactive Quiz Section -->
+            <div class="bg-gray-50 p-6 rounded-xl shadow-inner">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-6">Scenario Quiz</h2>
+
+                <div id="quiz-area">
+                    <p id="question-counter" class="text-sm font-medium text-indigo-600 mb-2">Question 1 of 10</p>
+                    
+                    <div class="bg-white p-5 rounded-lg border-2 border-indigo-200 mb-6 shadow-md">
+                        <p id="scenario-text" class="text-lg font-medium text-gray-800">
+                            Scenario text will load here...
+                        </p>
+                    </div>
+
+                    <p class="font-semibold text-gray-700 mb-3">Which level on the spectrum best describes this scenario?</p>
+                    
+                    <div id="options-container" class="space-y-3">
+                        <!-- Options will be dynamically generated -->
+                    </div>
+
+                    <button id="submit-btn" onclick="checkAnswer()" class="w-full mt-6 py-3 px-4 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition duration-300 shadow-lg hidden">
+                        Submit Answer
+                    </button>
+                    <button id="next-btn" onclick="nextQuestion()" class="w-full mt-6 py-3 px-4 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition duration-300 shadow-lg hidden">
+                        Next Scenario &rarr;
+                    </button>
+                    <button id="restart-btn" onclick="restartQuiz()" class="w-full mt-6 py-3 px-4 bg-gray-500 text-white font-bold rounded-lg hover:bg-gray-600 transition duration-300 shadow-lg hidden">
+                        Restart Quiz
+                    </button>
+
+                    <!-- Feedback Area -->
+                    <div id="feedback-area" class="mt-6"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- SPECTRUM DETAILS DATA ---
+        const spectrumData = [
+            {
+                level: '100% Human Only',
+                description: 'This text was written by the author, with no significant use of AI (except possibly for basic proofreading).',
+                context: 'This is typical of many professional, academic and creative writing contexts.',
+                prompt: 'Proofread for spelling, punctuation, and grammar. List any errors using bullet points. Respect authorial voice. Do not rewrite.'
+            },
+            {
+                level: '75% | 25% Human-Led',
+                description: 'This text was written by the author, with some AI support (e.g., AI provided feedback and aided with basic proofreading).',
+                context: 'This is typical of some professional and academic writing contexts.',
+                prompt: 'Proofread for spelling, punctuation, and grammar. Provide feedback on clarity, coherence and transitions. List any errors using bullet points. Do not rewrite.'
+            },
+            {
+                level: '50% | 50% Human-AI Collaboration',
+                description: 'This text was written by the author in collaboration with AI (e.g., AI generated ideas, provided extensive feedback, and helped improve and rewrite large parts of the text).',
+                context: 'This is typical of some professional writing and advertising copy. Generally, avoid writing like this at university.',
+                prompt: 'Rewrite this text to improve clarity, coherence, and engagement. Maintain the original meaning.'
+            },
+            {
+                level: '25% | 75% AI-Led',
+                description: 'This text was largely written by AI. The author checked the content and made some changes where needed.',
+                context: 'This is typical of some commercial writing, advertising copy, and junk mail writing. This style of writing is not acceptable for university coursework and is considered academic misconduct.',
+                prompt: 'Generate a complete paragraph about Topic X. Include examples and cite sources.'
+            },
+            {
+                level: '100% AI Only',
+                description: 'This text was written completely by AI and copied without changes (except to review the AI\'s output).',
+                context: 'This could be typical of some advertising copy and most junk mail writing. This style of writing is not acceptable for university coursework and is considered academic misconduct.',
+                prompt: 'Write an essay on Topic X. Ensure it includes an introduction, body paragraphs, and conclusion.'
+            }
+        ];
+
+        // --- SPECTRUM DISPLAY LOGIC ---
+
+        const spectrumListView = document.getElementById('spectrum-list-view');
+        const detailsView = document.getElementById('details-view');
+        const detailTitle = document.getElementById('detail-title');
+        const detailContent = document.getElementById('detail-content');
+
+        function showDetails(index) {
+            const data = spectrumData[index];
+            
+            // Set the detail panel content
+            detailTitle.textContent = data.level;
+            detailContent.innerHTML = `
+                <p class="text-gray-700">${data.description}</p>
+                <div class="bg-white p-3 rounded-md border border-gray-200">
+                    <p class="text-sm italic">${data.context}</p>
+                </div>
+                <div class="p-3 bg-indigo-50 rounded-md border border-indigo-200">
+                    <p class="text-sm font-semibold text-indigo-700 mb-1">🤖 AI Prompt Example:</p>
+                    <p class="text-sm text-gray-700">${data.prompt}</p>
+                </div>
+            `;
+            
+            // Show details, hide list
+            spectrumListView.classList.add('hidden');
+            detailsView.classList.remove('hidden');
+        }
+
+        function showListView() {
+            // Show list, hide details
+            detailsView.classList.add('hidden');
+            spectrumListView.classList.remove('hidden');
+        }
+
+
+        // --- QUIZ LOGIC ---
+
+        const spectrumLevels = [
+            { level: '100% Human Only', value: '100', color: 'bg-green-500' },
+            { level: '75% | 25% Human-Led', value: '75', color: 'bg-lime-500' },
+            { level: '50% | 50% Human-AI', value: '50', color: 'bg-yellow-500' },
+            { level: '25% | 75% AI-Led', value: '25', color: 'bg-orange-500' },
+            { level: '100% AI Only', value: '0', color: 'bg-red-500' }
+        ];
+
+        const quizScenarios = [
+            {
+                scenario: "A student drafts a complete 20-page Business Strategy Report. They use an AI tool only to check for syntax, readability flow, and grammar errors before submitting.",
+                answer: '75',
+                explanation: "This is Human-Led Writing. The student produced all the core content, research, analysis, and strategic decisions. The AI's role was strictly limited to proofreading and clarity feedback, which is acceptable."
+            },
+            {
+                scenario: "A student is assigned to write a Market Entry Analysis. They copy the prompt into an AI, ask it to 'Generate a complete 1,500-word analysis with key findings,' and submit the text without any changes.",
+                answer: '0',
+                explanation: "This is 100% AI Only Writing. The student provided zero intellectual contribution and submitted copied output directly. This is a clear case of academic misconduct as the analysis and critical work were not performed by the author."
+            },
+            {
+                scenario: "A student is writing a Financial Summary and Analysis. They draft the Executive Summary, then use AI to generate the core text for analyzing the P&L statement. The student then spends two hours heavily rewriting, adding specific internal data points, and restructuring the analysis to support their unique conclusion.",
+                answer: '50',
+                explanation: "This is a true 50% | 50% Human-AI Collaboration. The AI provided large, substantive parts of the text (the initial analysis), but the student engaged in extensive, critical editing and rewriting, making it a shared effort. This level requires caution and transparency in academic settings."
+            },
+            {
+                scenario: "A student needs ideas for a Marketing Plan presentation. They ask the AI to 'Generate three unique campaign slogans and a bullet-point outline for a social media strategy.' The student then writes the entire plan and all supporting content in their own words, using the AI's ideas only for inspiration.",
+                answer: '75',
+                explanation: "This is Human-Led Writing. The AI assisted with brainstorming and non-content generation (outlining, slogans), which is an acceptable use of AI as a tool. The student was responsible for all the final prose and critical development of the plan."
+            },
+            {
+                scenario: "A student needs a section on competitor risks for a Project Proposal. They prompt the AI to 'Generate a 400-word section detailing the top three market risks.' The student copies the text, only changing the names of the competitors and adding a title, and submits it.",
+                answer: '25',
+                explanation: "This is 25% | 75% AI-Led Writing. The AI generated the entire substantive content (the risk analysis), and the student's contribution was minimal and structural (changing names/adding a title). This is typically unacceptable and poses a high risk of academic misconduct because the critical analysis was not performed by the student."
+            },
+            {
+                scenario: "A student is writing a detailed, confidential HR policy document for a class project and chooses not to use AI tools for any part of the process, including proofreading, due to the sensitivity and proprietary nature of the content.",
+                answer: '100',
+                explanation: "This is 100% Human Only Writing. The student maintained complete control over all aspects of the writing process, which is necessary when dealing with highly sensitive or original organizational content."
+            },
+            {
+                scenario: "A student has written a dense paragraph explaining a complex economic model in their report. They use AI to suggest three alternative ways to phrase the topic sentence for improved clarity, and they select and incorporate one of the suggestions.",
+                answer: '75',
+                explanation: "This is Human-Led Writing. The student authored the core content and analysis. The AI's role was limited to stylistic suggestions on a single sentence, enhancing clarity without changing the original academic argument."
+            },
+            {
+                scenario: "A student needs to draft a formal rejection email to a job candidate for a simulated HR assignment. They ask the AI to generate the first draft, then the student spends a significant amount of time customizing the tone, adding specific context, and ensuring compliance with simulated legal standards before submission.",
+                answer: '50',
+                explanation: "This is a 50% | 50% Human-AI Collaboration. The AI generated the foundational communication text, but the student's extensive critical editing, customization, and verification transformed it into a piece of work that reflects the student's effort and judgment."
+            },
+            {
+                scenario: "For a weekly project progress update report, a student provides the AI with five bullet points detailing their completed work and asks the AI to 'Expand these into a formal, 500-word status report.' The student only scans the report for proper formatting before submitting.",
+                answer: '25',
+                explanation: "This is 25% | 75% AI-Led Writing. The AI performed the substantive work of synthesizing the bullets into a formal narrative, while the student's contribution was minimal and focused on input and superficial checks. This is generally unacceptable for graded coursework."
+            },
+            {
+                scenario: "A student is assigned to write a personal reflection and ethical analysis on a business case study. They use AI to generate the entire reflection, including the analysis, personal insights, and conclusion, and submit it directly.",
+                answer: '0',
+                explanation: "This is 100% AI Only Writing. Personal reflection and analysis require the student's own voice and critical thought. Submitting AI-generated insights is academic misconduct because it lacks the required personal intellectual contribution."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let quizHistory = []; 
+
+        const scenarioTextEl = document.getElementById('scenario-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const feedbackAreaEl = document.getElementById('feedback-area');
+        const questionCounterEl = document.getElementById('question-counter');
+        const submitBtn = document.getElementById('submit-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        // Helper to get the level name from its value
+        const getLevelName = (value) => spectrumLevels.find(l => l.value === value)?.level || 'N/A';
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= quizScenarios.length) {
+                showResults();
+                return;
+            }
+
+            const currentScenario = quizScenarios[currentQuestionIndex];
+            
+            // Reset UI
+            feedbackAreaEl.innerHTML = '';
+            nextBtn.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+            optionsContainerEl.innerHTML = '';
+
+            scenarioTextEl.textContent = currentScenario.scenario;
+            questionCounterEl.textContent = `Scenario ${currentQuestionIndex + 1} of ${quizScenarios.length}`;
+
+            // Generate options (buttons)
+            spectrumLevels.forEach(level => {
+                const button = document.createElement('button');
+                button.textContent = level.level;
+                button.setAttribute('data-value', level.value);
+                button.className = `w-full py-3 px-4 rounded-lg font-semibold transition duration-200 shadow-md text-white ${level.color} hover:shadow-lg hover:ring-4 hover:ring-offset-2 hover:ring-indigo-300 focus:outline-none`;
+                button.onclick = () => selectOption(button);
+                optionsContainerEl.appendChild(button);
+            });
+            
+            // Remove previous selection highlights
+            optionsContainerEl.querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-offset-2', 'ring-indigo-600');
+            });
+        }
+        
+        let selectedOption = null;
+
+        function selectOption(button) {
+            // Deselect all
+            optionsContainerEl.querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-offset-2', 'ring-indigo-600');
+            });
+
+            // Select current
+            button.classList.add('ring-4', 'ring-offset-2', 'ring-indigo-600');
+            selectedOption = button.getAttribute('data-value');
+        }
+
+        function checkAnswer() {
+            if (!selectedOption) {
+                const message = document.createElement('p');
+                message.className = 'text-orange-600 font-semibold p-3 bg-orange-100 rounded-lg';
+                message.textContent = 'Please select a level before submitting.';
+                feedbackAreaEl.innerHTML = '';
+                feedbackAreaEl.appendChild(message);
+                return;
+            }
+
+            const currentScenario = quizScenarios[currentQuestionIndex];
+            const isCorrect = selectedOption === currentScenario.answer;
+            
+            // Store result in history
+            const result = {
+                index: currentQuestionIndex,
+                scenario: currentScenario.scenario,
+                userAnswer: selectedOption,
+                correctAnswer: currentScenario.answer,
+                isCorrect: isCorrect
+            };
+            quizHistory.push(result);
+            
+            // Disable buttons and hide submit
+            optionsContainerEl.querySelectorAll('button').forEach(btn => btn.disabled = true);
+            submitBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+
+            // Find the correct button and highlight it
+            const correctButton = Array.from(optionsContainerEl.querySelectorAll('button')).find(btn => btn.getAttribute('data-value') === currentScenario.answer);
+            
+            // Highlight feedback
+            const feedbackBox = document.createElement('div');
+            feedbackBox.className = 'result-box';
+            
+            if (isCorrect) {
+                score++;
+                feedbackBox.classList.add('bg-emerald-100', 'border-emerald-500');
+                feedbackBox.innerHTML = '<p class="font-bold text-emerald-700 mb-2">✅ Correct!</p>';
+            } else {
+                feedbackBox.classList.add('bg-red-100', 'border-red-500');
+                feedbackBox.innerHTML = '<p class="font-bold text-red-700 mb-2">❌ Incorrect.</p>';
+                
+                // If incorrect, highlight the user's wrong choice
+                const selectedButton = Array.from(optionsContainerEl.querySelectorAll('button')).find(btn => btn.getAttribute('data-value') === selectedOption);
+                if (selectedButton) {
+                    selectedButton.classList.add('incorrect-answer');
+                }
+            }
+            
+            // Always highlight the correct answer
+            if (correctButton) {
+                correctButton.classList.add('correct-answer');
+                if (!isCorrect) {
+                     feedbackBox.innerHTML += `<p class="text-gray-700 mb-2">The correct answer was: <span class="font-bold text-emerald-700">${correctButton.textContent}</span></p>`;
+                }
+            }
+
+            // Add detailed explanation
+            feedbackBox.innerHTML += `<p class="text-sm text-gray-600">${currentScenario.explanation}</p>`;
+            
+            feedbackAreaEl.innerHTML = '';
+            feedbackAreaEl.appendChild(feedbackBox);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            selectedOption = null;
+            if (currentQuestionIndex < quizScenarios.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            questionCounterEl.textContent = 'Quiz Complete';
+            
+            // Simplified scenario text for quiz completion
+            scenarioTextEl.textContent = 'Thank you. Quiz complete.';
+            
+            optionsContainerEl.innerHTML = '';
+            submitBtn.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            restartBtn.classList.remove('hidden');
+
+            // --- Final Message Box ---
+            const finalMessage = document.createElement('div');
+            finalMessage.className = 'p-6 bg-indigo-50 rounded-lg text-center shadow-md';
+            finalMessage.innerHTML = '<p class="text-xl font-bold text-indigo-800">Thank you. Quiz complete.</p>';
+            
+            feedbackAreaEl.innerHTML = '';
+            feedbackAreaEl.appendChild(finalMessage);
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            quizHistory = []; // Reset history on restart
+            restartBtn.classList.add('hidden');
+            loadQuestion();
+        }
+
+        // Initialize the quiz on page load
+        document.addEventListener('DOMContentLoaded', loadQuestion);
+    </script>
+</body>
+</html>

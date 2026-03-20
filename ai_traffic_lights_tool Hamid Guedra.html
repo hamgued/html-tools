@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arene's AI Traffic Lights</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for a modern, engaging look */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f9; /* Very light subtle background */
+        }
+        .traffic-light-container {
+            /* Mimic a rounded traffic light body */
+            background: #2c3e50; /* Dark gray/blue for contrast */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        .light-bulb {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+        }
+        .light-bulb:hover {
+            transform: scale(1.05);
+        }
+        .light-bulb.active {
+            box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.8), 0 0 40px 10px var(--color-glow);
+            border: 4px solid #fff;
+        }
+        .light-bulb.blue-active {
+            --color-glow: rgba(59, 130, 246, 0.7); /* Blue-500 */
+        }
+        .light-bulb.red-active {
+            --color-glow: rgba(239, 68, 68, 0.7); /* Red-500 */
+        }
+        .light-bulb.yellow-active {
+            --color-glow: rgba(234, 179, 8, 0.7); /* Yellow-500 */
+        }
+        .light-bulb.green-active {
+            --color-glow: rgba(34, 197, 94, 0.7); /* Green-500 */
+        }
+        .card-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .card-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex flex-col items-center">
+
+    <!-- Main Title and Attribution -->
+    <header class="text-center mb-8 w-full max-w-4xl">
+        <h1 class="text-3xl md:text-5xl font-extrabold text-gray-800 leading-tight">
+            Arene's AI Traffic Lights
+        </h1>
+        <p class="text-md md:text-xl text-gray-500 mt-2">
+            A guide for university students (Generated with Gemini, <a href="https://www.linkedin.com/in/hagu1/" target="_blank" class="text-blue-500 hover:text-blue-700 underline">Hamid Guedra</a>)
+        </p>
+        <div class="mt-4 text-sm text-gray-400 italic border-t pt-2">
+            Source: Arene. n.d. Introduction to the Traffic Light Model.
+            <a href="https://arene.fi/wp-content/uploads/PDF/2024/Teko%C3%A4lysuositukset/ARENE%20AI%20english.pdf?_t=1731419903" target="_blank" class="text-blue-500 hover:text-blue-700 underline">Retrieved from arene.fi</a>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Traffic Light Model Display (Left/Top) -->
+        <div class="lg:col-span-1 flex justify-center">
+            <div id="traffic-light" class="traffic-light-container p-6 rounded-full w-24 h-96 flex flex-col justify-between items-center space-y-4 shadow-lg md:w-32 md:h-96">
+                <!-- Red: Prohibited -->
+                <div id="red-light" class="light-bulb w-16 h-16 md:w-20 md:h-20 bg-red-800 rounded-full flex items-center justify-center transition duration-300" onclick="setActiveLight('red')">
+                    <span class="text-xs font-bold text-white opacity-0 active:opacity-100">RED</span>
+                </div>
+                <!-- Yellow: Reported -->
+                <div id="yellow-light" class="light-bulb w-16 h-16 md:w-20 md:h-20 bg-yellow-800 rounded-full flex items-center justify-center transition duration-300" onclick="setActiveLight('yellow')">
+                    <span class="text-xs font-bold text-white opacity-0 active:opacity-100">YELLOW</span>
+                </div>
+                <!-- Green: Allowed -->
+                <div id="green-light" class="light-bulb w-16 h-16 md:w-20 md:h-20 bg-green-800 rounded-full flex items-center justify-center transition duration-300" onclick="setActiveLight('green')">
+                    <span class="text-xs font-bold text-white opacity-0 active:opacity-100">GREEN</span>
+                </div>
+                <!-- Blue: Required -->
+                <div id="blue-light" class="light-bulb w-16 h-16 md:w-20 md:h-20 bg-blue-800 rounded-full flex items-center justify-center transition duration-300" onclick="setActiveLight('blue')">
+                    <span class="text-xs font-bold text-white opacity-0 active:opacity-100">BLUE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Display (Right/Bottom) -->
+        <div class="lg:col-span-2">
+            <div id="content-card" class="bg-white p-6 md:p-8 rounded-xl shadow-2xl border border-gray-100 min-h-[400px]">
+                <h2 id="content-title" class="text-2xl md:text-3xl font-extrabold mb-4 text-gray-700">
+                    <span id="color-name">Click a Light</span> to start learning
+                </h2>
+                <div id="content-body" class="text-gray-600 space-y-4">
+                    <p>Select one of the four AI Traffic Lights to see the specific rules and expectations for using Artificial Intelligence in your university assignments.</p>
+                    <ul class="list-disc list-inside space-y-2 pt-4 border-t border-gray-100">
+                        <li class="font-semibold text-red-600">Red: Prohibited.</li>
+                        <li class="font-semibold text-yellow-600">Yellow: Allowed, but Must be Reported.</li>
+                        <li class="font-semibold text-green-600">Green: Allowed, No Report Needed.</li>
+                        <li class="font-semibold text-blue-600">Blue: Required, Must be Used and Reported.</li>
+                    </ul>
+                    <p class="pt-4 text-sm italic text-gray-400">This model helps you manage academic integrity and leverage AI effectively.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Data structure for the traffic lights content
+        const trafficLights = {
+            blue: {
+                color: 'text-blue-600',
+                bg: 'bg-blue-500',
+                title: 'Blue: USE OF AI REQUIRED',
+                description: 'Artificial intelligence must be used to create outputs. The student must report how they used AI.',
+                consequence: 'Failure to use AI will affect the assessment.',
+                justifications: [
+                    'Students critically assess the text or other media they produce with AI.',
+                    'Students develop the scenarios produced for them by AI (e.g., on the future of their industry).',
+                    'Students create a bot or prompt an AI application to serve as a tutor.',
+                    'Students use AI as an active assistant to make their work more efficient.'
+                ]
+            },
+            red: {
+                color: 'text-red-600',
+                bg: 'bg-red-500',
+                title: 'Red: USE OF AI PROHIBITED',
+                description: 'The output must be created without the help of artificial intelligence. Use only your own knowledge and skills.',
+                consequence: 'The use of AI is forbidden for a justified reason and will be interpreted as fraud.',
+                justifications: [
+                    'Students demonstrate competence in mastering grammar (e.g., writing their own essay answers).',
+                    'The assignment assesses the student\'s ability to reflect on their own knowledge and skills.',
+                    'Solving the task with AI is too easy, and the assignment requires students\' own information for assessment.',
+                    'The assignment is based on copyrighted material that may not be fed to AI.'
+                ]
+            },
+            yellow: {
+                color: 'text-yellow-600',
+                bg: 'bg-yellow-500',
+                title: 'Yellow: USE OF AI REPORTED',
+                description: 'Artificial intelligence can be used, but the student must clearly report its use.',
+                consequence: 'Failure to disclose the use of AI will be interpreted as fraud. The use of AI may affect the assessment.',
+                justifications: [
+                    'Used during the thesis process (e.g., creating structure or checking text), but must be disclosed.',
+                    'Students write an article and use AI to support the introduction and summary.',
+                    'Students create a presentation and use AI to visualise their content.',
+                    'Used for help on a multidisciplinary topic, requiring disclosure to assess the student\'s share of knowledge.'
+                ]
+            },
+            green: {
+                color: 'text-green-600',
+                bg: 'bg-green-500',
+                title: 'Green: USE OF AI ALLOWED',
+                description: 'Artificial intelligence can be used freely and without report to create the output.',
+                consequence: 'The use of AI does not affect the assessment. It does not add significant value to the student\'s performance.',
+                justifications: [
+                    'The use of AI does not make students\' work easier; they may use it if they find it necessary.',
+                    'Students answer questions based on video material in a closed environment (cannot be downloaded).',
+                    'Students demonstrate competence in practical situations and may use AI if it is helpful.',
+                    'Students familiarise themselves with material in a foreign language and use AI to translate the materials.'
+                ]
+            }
+        };
+
+        let currentActiveLight = null;
+        const colorNameElement = document.getElementById('color-name');
+        const contentTitleElement = document.getElementById('content-title');
+        const contentBodyElement = document.getElementById('content-body');
+        const contentCardElement = document.getElementById('content-card');
+
+        /**
+         * Sets the active traffic light and updates the content card.
+         * @param {string} color - The color/key of the light to activate ('red', 'yellow', 'green', 'blue').
+         */
+        function setActiveLight(color) {
+            // Check if the light is already active
+            if (currentActiveLight === color) {
+                // If the same light is clicked, do nothing
+                return;
+            }
+
+            // 1. Clear all active states (light bulbs)
+            Object.keys(trafficLights).forEach(key => {
+                const lightElement = document.getElementById(`${key}-light`);
+                lightElement.classList.remove(`${key}-active`, trafficLights[key].bg, 'active');
+                lightElement.classList.add(`${key === 'red' ? 'bg-red-800' : key === 'yellow' ? 'bg-yellow-800' : key === 'green' ? 'bg-green-800' : 'bg-blue-800'}`);
+            });
+
+            // 2. Set the new active state (light bulb)
+            const lightData = trafficLights[color];
+            const lightElement = document.getElementById(`${color}-light`);
+            lightElement.classList.remove('bg-red-800', 'bg-yellow-800', 'bg-green-800', 'bg-blue-800'); // Remove dark state
+            lightElement.classList.add('active', `${color}-active`, lightData.bg); // Add light state
+
+            // 3. Update the content card with a transition effect
+            contentCardElement.classList.add('card-enter');
+            currentActiveLight = color;
+
+            setTimeout(() => {
+                // Remove existing color classes from title
+                contentTitleElement.className = 'text-2xl md:text-3xl font-extrabold mb-4 text-gray-700';
+
+                // Update the title and color
+                colorNameElement.textContent = lightData.title.split(':')[0] + ': ';
+                contentTitleElement.textContent = lightData.title;
+                contentTitleElement.classList.add(lightData.color);
+
+                // Construct the HTML for the body
+                let bodyHtml = `
+                    <div class="border-l-4 p-4 rounded-r-md" style="border-color: ${getColorHex(color)}; background-color: ${getLightColorHex(color)};">
+                        <p class="font-semibold text-lg ${lightData.color}">${lightData.description}</p>
+                    </div>
+
+                    <div class="mt-4 p-4 rounded-lg bg-gray-50 border border-gray-100">
+                        <h3 class="font-bold text-gray-700 text-xl mb-2">Consequence</h3>
+                        <p class="text-sm italic text-gray-600">${lightData.consequence}</p>
+                    </div>
+
+                    <div class="mt-6">
+                        <h3 class="font-bold text-gray-700 text-xl mb-3">Models for Justifications / Examples</h3>
+                        <ul class="list-none space-y-3">
+                            ${lightData.justifications.map((j, index) => `
+                                <li class="flex items-start">
+                                    <span class="mr-2 text-xl ${lightData.color} font-bold leading-none">&bull;</span>
+                                    <span class="text-gray-600">${j}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+
+                contentBodyElement.innerHTML = bodyHtml;
+
+                // Re-apply the active transition class
+                contentCardElement.classList.remove('card-enter');
+                contentCardElement.classList.add('card-enter-active');
+
+                // Clean up the active class after the transition finishes
+                setTimeout(() => {
+                    contentCardElement.classList.remove('card-enter-active');
+                }, 400);
+
+            }, 0); // Execute DOM update immediately
+
+        }
+
+        /** Helper to get Tailwind color hex */
+        function getColorHex(color) {
+            switch(color) {
+                case 'blue': return '#3b82f6'; // blue-500
+                case 'red': return '#ef4444'; // red-500
+                case 'yellow': return '#eab308'; // yellow-500
+                case 'green': return '#22c55e'; // green-500
+                default: return '#ccc';
+            }
+        }
+
+        /** Helper to get a lightened Tailwind color for background */
+        function getLightColorHex(color) {
+            switch(color) {
+                case 'blue': return '#eff6ff'; // blue-50
+                case 'red': return '#fef2f2'; // red-50
+                case 'yellow': return '#fefce8'; // yellow-50
+                case 'green': return '#f0fdf4'; // green-50
+                default: return '#f9fafb';
+            }
+        }
+
+        // Initialize with the Blue light active for immediate content
+        window.onload = () => {
+             // For a first-time EAP student, we want to immediately show the "best case" scenario.
+             setActiveLight('blue');
+        };
+
+    </script>
+</body>
+</html>

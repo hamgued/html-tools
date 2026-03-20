@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Model Canvas Explorer - Business English</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(3, minmax(150px, auto));
+            gap: 0.75rem;
+        }
+        @media (max-width: 768px) {
+            .canvas-grid {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+        .modal-active {
+            display: flex !important;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
+
+    <!-- Header -->
+    <header class="bg-white border-b p-4 shadow-sm">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-indigo-900">Business Model Canvas Explorer</h1>
+                <p class="text-sm text-slate-500">(Created with Gemini, <a href="https://www.linkedin.com/in/hagu1/" target="_blank" class="underline hover:text-indigo-600">Hamid Guedra</a>)</p>
+            </div>
+            <nav class="flex gap-2" id="nav-tabs">
+                <button onclick="switchView('canvas')" id="btn-canvas" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 transition bg-indigo-600 text-white">
+                    <i data-lucide="info" class="w-4 h-4"></i> Canvas
+                </button>
+                <button onclick="switchView('vocabulary')" id="btn-vocabulary" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 transition bg-slate-100 hover:bg-slate-200 text-slate-700">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> Vocabulary
+                </button>
+                <button onclick="switchView('quiz')" id="btn-quiz" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 transition bg-slate-100 hover:bg-slate-200 text-slate-700">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i> Practice Quiz
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-4 md:p-8 max-w-6xl mx-auto w-full">
+        
+        <!-- Canvas View -->
+        <div id="view-canvas" class="view-section space-y-6">
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 rounded-r">
+                <p class="text-blue-800 text-sm">
+                    <strong>How to use:</strong> Click on any section of the Business Model Canvas below to explore the key questions, definitions, and Business English vocabulary associated with it.
+                </p>
+            </div>
+
+            <div class="canvas-grid">
+                <!-- Row 1 & 2 spans -->
+                <button onclick="openModal('Key Partners')" class="md:col-span-1 md:row-span-2 bg-white p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition flex flex-col items-center justify-center text-center shadow-sm group">
+                    <i data-lucide="link" class="mb-2 text-indigo-500 group-hover:scale-110 transition"></i>
+                    <span class="font-bold">Key Partners</span>
+                </button>
+
+                <button onclick="openModal('Key Activities')" class="md:col-span-1 md:row-span-1 bg-white p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition flex flex-col items-center justify-center text-center shadow-sm group">
+                    <i data-lucide="check-square" class="mb-2 text-indigo-500 group-hover:scale-110 transition"></i>
+                    <span class="font-bold">Key Activities</span>
+                </button>
+
+                <button onclick="openModal('Value Propositions')" class="md:col-span-1 md:row-span-2 bg-white p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition flex flex-col items-center justify-center text-center shadow-sm group">
+                    <i data-lucide="gift" class="mb-2 text-indigo-500 group-hover:scale-110 transition"></i>
+                    <span class="font-bold">Value Propositions</span>
+                </button>
+
+                <button onclick="openModal('Customer Relationships')" class="md:col-span-1 md:row-span-1 bg-white p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition flex flex-col items-center justify-center text-center shadow-sm group">
+                    <i data-lucide="heart" class="mb-2 text-indigo-500 group-hover:scale-110 transition"></i>
+                    <span class="font-bold">Customer Relationships</span>
+                </button>
+
+                <button onclick="openModal('Customer Segments')" class="md:col-span-1 md:row-span-2 bg-white p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition flex flex-col items-center justify-center text-center shadow-sm group">
+                    <i data-lucide="users" class="mb-2 text-indigo-500 group-hover:scale-110 transition"></i>
+                    <span class="font-bold">Customer Segments</span>
+                </button>
+
+                <!-- Row 2 -->
+                <button onclick="openModal('Key Resources')" class="md:col-span-1 md:row-span-1 bg-white p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition flex flex-col items-center justify-center text-center shadow-sm group">
+                    <i data-lucide="settings" class="mb-2 text-indigo-500 group-hover:scale-110 transition"></i>
+                    <span class="font-bold">Key Resources</span>
+                </button>
+
+                <button onclick="openModal('Channels')" class="md:col-span-1 md:row-span-1 bg-white p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition flex flex-col items-center justify-center text-center shadow-sm group">
+                    <i data-lucide="truck" class="mb-2 text-indigo-500 group-hover:scale-110 transition"></i>
+                    <span class="font-bold">Channels</span>
+                </button>
+
+                <!-- Row 3 -->
+                <button onclick="openModal('Cost Structure')" class="md:col-span-3 bg-white p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition flex flex-col items-center justify-center text-center shadow-sm group">
+                    <i data-lucide="bar-chart-3" class="mb-2 text-indigo-500 group-hover:scale-110 transition"></i>
+                    <span class="font-bold">Cost Structure</span>
+                </button>
+
+                <button onclick="openModal('Revenue Streams')" class="md:col-span-2 bg-white p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition flex flex-col items-center justify-center text-center shadow-sm group">
+                    <i data-lucide="dollar-sign" class="mb-2 text-indigo-500 group-hover:scale-110 transition"></i>
+                    <span class="font-bold">Revenue Streams</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Vocabulary View -->
+        <div id="view-vocabulary" class="view-section hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold mb-4 text-indigo-900 border-b pb-4">Essential Business English Dictionary</h2>
+                <p class="text-sm text-slate-500 mb-6">Hover over any term to see its definition.</p>
+                <div id="vocab-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                    <!-- JS Injected -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz View -->
+        <div id="view-quiz" class="view-section hidden max-w-2xl mx-auto">
+            <div id="quiz-card" class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
+                <!-- JS Injected -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Detail Overlay -->
+    <div id="block-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl fade-in">
+            <div class="p-6 border-b flex justify-between items-center sticky top-0 bg-white">
+                <div class="flex items-center gap-3">
+                    <span id="modal-icon-container"></span>
+                    <h2 id="modal-title" class="text-xl font-bold">Block Name</h2>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-2">
+                    <i data-lucide="x-circle"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-6">
+                <section>
+                    <h3 class="text-indigo-600 font-semibold mb-2 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> Definition</h3>
+                    <p id="modal-description" class="text-slate-700 leading-relaxed"></p>
+                </section>
+                
+                <section>
+                    <h3 class="text-indigo-600 font-semibold mb-2 flex items-center gap-2">? Key Questions</h3>
+                    <ul id="modal-questions" class="list-disc list-inside space-y-1 text-slate-700"></ul>
+                </section>
+
+                <section class="bg-indigo-50 p-4 rounded-xl">
+                    <h3 class="text-indigo-800 font-semibold mb-2 flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i> Business English Vocab</h3>
+                    <div id="modal-vocab" class="flex flex-wrap gap-2"></div>
+                </section>
+
+                <section>
+                    <h3 class="text-indigo-600 font-semibold mb-2">Real-world Example</h3>
+                    <p id="modal-example" class="italic text-slate-600 border-l-4 border-slate-200 pl-4"></p>
+                </section>
+            </div>
+            <div class="p-6 border-t bg-slate-50 flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 p-8 mt-12 text-center text-sm">
+        <div class="max-w-4xl mx-auto space-y-2">
+            <p>Designed by: Business Model Foundry AG</p>
+            <p>Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)</p>
+            <p>Source: <a href="https://commons.wikimedia.org/wiki/File:Business_Model_Canvas.png" target="_blank" class="underline hover:text-white">Wikimedia Commons</a></p>
+            <p>License: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" class="underline hover:text-white">CC BY-SA 3.0</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Data Structure
+        const canvasData = {
+            "Value Propositions": {
+                icon: "gift",
+                questions: ["What value do we deliver to the customer?", "Which customer needs are we satisfying?"],
+                description: "This is the core of your business. It explains why customers should choose you instead of your competitors.",
+                vocab: [
+                    { term: "to deliver value", def: "Providing benefits that meet customer needs." },
+                    { term: "to satisfy a need", def: "Meeting a specific requirement of a customer." },
+                    { term: "to solve a problem", def: "Providing a solution to a customer's pain point." },
+                    { term: "bundle of services", def: "A group of related services sold together." },
+                    { term: "performance", def: "How well a product or service works." },
+                    { term: "customization", def: "Tailoring products to individual customer needs." },
+                    { term: "unique selling point", def: "The specific feature that makes a product different from others." }
+                ],
+                example: "Evernote: 'Capture, organize, and share notes from anywhere. Your best ideas are always with you.'"
+            },
+            "Customer Segments": {
+                icon: "users",
+                questions: ["For whom are we creating value?", "Who are our most important customers?"],
+                description: "The different groups of people or organizations your company aims to reach and serve.",
+                vocab: [
+                    { term: "Mass market", def: "A large group of customers with similar needs." },
+                    { term: "Niche market", def: "A specific, specialized group of customers." },
+                    { term: "Segmented", def: "Dividing customers into groups based on specific traits." },
+                    { term: "Demographics", def: "Statistics about populations (age, gender, income)." },
+                    { term: "Geographic area", def: "Where customers live or work." },
+                    { term: "Target audience", def: "The specific group of people a product is aimed at." },
+                    { term: "Multi-sided platform", def: "A business serving interdependent customer groups (e.g., credit cards)." }
+                ],
+                example: "Young couples (19-23) living in cities with middle income."
+            },
+            "Channels": {
+                icon: "truck",
+                questions: ["How are we reaching our customers now?", "Which channels work best?"],
+                description: "How a company communicates with and reaches its customer segments to deliver its value proposition.",
+                vocab: [
+                    { term: "Distribution channels", def: "The path a product takes from producer to consumer." },
+                    { term: "Awareness", def: "Making customers know about your products." },
+                    { term: "Post-purchase support", def: "Helping customers after they buy the product." },
+                    { term: "Virtual vs. Physical", def: "Online (digital) vs. real-world (brick and mortar)." },
+                    { term: "Point of sale", def: "The place where the actual transaction happens." },
+                    { term: "Customer routines", def: "How the product fits into a customer's daily life." },
+                    { term: "Evaluation", def: "Helping customers judge the value of your offer." }
+                ],
+                example: "Social media, online stores, physical delivery trucks."
+            },
+            "Customer Relationships": {
+                icon: "heart",
+                questions: ["What type of relationship does each segment expect?", "How do we get and keep customers?"],
+                description: "The types of relationships a company establishes with specific customer segments.",
+                vocab: [
+                    { term: "Personal assistance", def: "Human interaction to help the customer." },
+                    { term: "Self-service", def: "Customers help themselves." },
+                    { term: "Co-creation", def: "Working with customers to create value (e.g., reviews)." },
+                    { term: "Customer retention", def: "Keeping existing customers." },
+                    { term: "Automated services", def: "Relationships based on machines/AI." },
+                    { term: "Communities", def: "Groups of customers who share interests." },
+                    { term: "Dedicated support", def: "Assigning a specific employee to a high-value client." }
+                ],
+                example: "Automated services or dedicated personal assistants for high-value clients."
+            },
+            "Revenue Streams": {
+                icon: "dollar-sign",
+                questions: ["For what value are our customers really willing to pay?", "How much does each stream contribute?"],
+                description: "The cash a company generates from each customer segment.",
+                vocab: [
+                    { term: "Subscription fees", def: "Ongoing payments for access to a service." },
+                    { term: "Asset sale", def: "Selling ownership of a physical product." },
+                    { term: "Licensing", def: "Giving permission to use intellectual property." },
+                    { term: "Fixed vs. Dynamic pricing", def: "Set prices vs. prices that change with demand." },
+                    { term: "Brokerage fees", def: "Fees for acting as a middleman." },
+                    { term: "Usage fee", def: "Paying based on how much you use a service." },
+                    { term: "Yield management", def: "Changing prices based on when the customer buys." }
+                ],
+                example: "Evernote uses a freemium model (basic is free, premium requires a fee)."
+            },
+            "Key Resources": {
+                icon: "settings",
+                questions: ["What resources do our Value Propositions require?", "What expertise is needed?"],
+                description: "The most important assets required to make a business model work.",
+                vocab: [
+                    { term: "Intellectual property", def: "Intangible assets like patents and trademarks." },
+                    { term: "Human resources", def: "The people/staff needed for the business." },
+                    { term: "Financial assets", def: "Cash, credit, and funding." },
+                    { term: "Physical equipment", def: "Machinery, buildings, and vehicles." },
+                    { term: "Brand patents", def: "Legal protection for original inventions or designs." },
+                    { term: "Specialized machinery", def: "Tools designed for a very specific task." },
+                    { term: "Credit", def: "The ability to borrow money or buy things before paying." }
+                ],
+                example: "Patents, software developers, or specialized machinery."
+            },
+            "Key Activities": {
+                icon: "check-square",
+                questions: ["What are the most important things we must do?", "Does the company manufacture or provide services?"],
+                description: "The most important actions a company must take to operate successfully.",
+                vocab: [
+                    { term: "Production", def: "Designing and delivering a product." },
+                    { term: "Problem solving", def: "Finding new solutions to customer needs." },
+                    { term: "Platform management", def: "Maintaining an online network or software." },
+                    { term: "To manufacture", def: "To make goods on a large scale." },
+                    { term: "Supply chain management", def: "Managing the flow of goods and materials." },
+                    { term: "Expertise", def: "High-level knowledge in a specific field." },
+                    { term: "Consulting", def: "Providing professional advice." }
+                ],
+                example: "Software development, supply chain management, or consulting."
+            },
+            "Key Partners": {
+                icon: "link",
+                questions: ["Who are our Key Partners?", "What activities do they perform?"],
+                description: "The network of suppliers and partners that make the business model work.",
+                vocab: [
+                    { term: "Strategic partnerships", def: "Long-term agreements between companies." },
+                    { term: "Joint ventures", def: "Two companies starting a new project together." },
+                    { term: "Buyer-supplier relations", def: "Basic trade between a customer and a vendor." },
+                    { term: "Optimization", def: "Making the business model as efficient as possible." },
+                    { term: "Strategic alliance", def: "A partnership between non-competitors." },
+                    { term: "Non-competitors", def: "Companies that do not fight for the same customers." },
+                    { term: "Resource acquisition", def: "Getting materials or skills from outside the company." }
+                ],
+                example: "Strategic alliances between non-competitors."
+            },
+            "Cost Structure": {
+                icon: "bar-chart-3",
+                questions: ["What are the most important costs?", "Which resources are most expensive?"],
+                description: "All costs incurred to operate a business model.",
+                vocab: [
+                    { term: "Fixed costs", def: "Costs that stay the same regardless of production (e.g., rent)." },
+                    { term: "Variable costs", def: "Costs that change based on production volume." },
+                    { term: "Economies of scale", def: "Cost advantages gained by large-scale production." },
+                    { term: "Cost-driven vs. Value-driven", def: "Minimizing costs vs. maximizing quality/value." },
+                    { term: "Economies of scope", def: "Saving money by producing related products together." },
+                    { term: "Incurred costs", def: "Expenses the business has actually had to pay." },
+                    { term: "Outsourcing", def: "Hiring an outside company to do specific tasks." }
+                ],
+                example: "Salaries, rent, and raw material expenses."
+            }
+        };
+
+        const quizQuestions = [
+            {
+                q: "Which block describes the group of people you want to reach?",
+                options: ["Key Partners", "Customer Segments", "Channels", "Cost Structure"],
+                answer: "Customer Segments"
+            },
+            {
+                q: "What do we call the 'core value' we offer to customers?",
+                options: ["Revenue Stream", "Value Proposition", "Key Activity", "Distribution Channel"],
+                answer: "Value Proposition"
+            },
+            {
+                q: "A monthly payment for a service is an example of a:",
+                options: ["Fixed Cost", "Key Resource", "Subscription Fee", "Joint Venture"],
+                answer: "Subscription Fee"
+            },
+            {
+                q: "Costs that do not change based on production (like rent) are:",
+                options: ["Variable Costs", "Revenue Streams", "Fixed Costs", "Dynamic Pricing"],
+                answer: "Fixed Costs"
+            },
+            {
+                q: "Which block covers the network of suppliers that help your business?",
+                options: ["Key Partners", "Key Resources", "Channels", "Customer Relationships"],
+                answer: "Key Partners"
+            },
+            {
+                q: "Which category involves designing and creating a physical product?",
+                options: ["Platform management", "Production", "Brokerage", "Licensing"],
+                answer: "Production"
+            },
+            {
+                q: "What type of resource are 'Patents' and 'Copyrights'?",
+                options: ["Physical", "Financial", "Intellectual", "Human"],
+                answer: "Intellectual"
+            },
+            {
+                q: "Which phase of a channel helps customers check the quality of your offer?",
+                options: ["Awareness", "Evaluation", "After-sales", "Delivery"],
+                answer: "Evaluation"
+            },
+            {
+                q: "A business focused on keeping costs extremely low through automation is:",
+                options: ["Value-driven", "Niche-driven", "Cost-driven", "Segmented"],
+                answer: "Cost-driven"
+            },
+            {
+                q: "If two companies work together on a specific project, it is a:",
+                options: ["Niche Market", "Usage Fee", "Joint Venture", "Cost Structure"],
+                answer: "Joint Venture"
+            }
+        ];
+
+        // State
+        let currentQuizIndex = 0;
+        let score = 0;
+        let showFeedback = false;
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Switch Tabs
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            const activeBtn = document.getElementById(`btn-${viewName}`);
+            activeBtn.classList.add('bg-indigo-600', 'text-white');
+            activeBtn.classList.remove('bg-slate-100', 'text-slate-700');
+
+            if (viewName === 'vocabulary') renderVocab();
+            if (viewName === 'quiz') renderQuiz();
+        }
+
+        // Modal Logic
+        function openModal(blockName) {
+            const block = canvasData[blockName];
+            document.getElementById('modal-title').innerText = blockName;
+            document.getElementById('modal-description').innerText = block.description;
+            document.getElementById('modal-example').innerText = block.example;
+            
+            // Icon
+            const iconContainer = document.getElementById('modal-icon-container');
+            iconContainer.innerHTML = `<i data-lucide="${block.icon}" class="w-6 h-6 text-indigo-600"></i>`;
+            
+            // Questions
+            const qList = document.getElementById('modal-questions');
+            qList.innerHTML = block.questions.map(q => `<li>${q}</li>`).join('');
+            
+            // Vocab
+            const vContainer = document.getElementById('modal-vocab');
+            vContainer.innerHTML = block.vocab.map(v => `
+                <div class="relative group">
+                    <span class="bg-white px-3 py-1 rounded-full text-indigo-700 text-sm border border-indigo-200 shadow-sm font-medium cursor-help">
+                        ${v.term}
+                    </span>
+                    <div class="hidden group-hover:block absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-48 p-2 bg-slate-800 text-white text-xs rounded shadow-lg z-10 text-center">
+                        ${v.def}
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-800"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('block-modal').classList.add('modal-active');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('block-modal').classList.remove('modal-active');
+        }
+
+        // Vocabulary Render
+        function renderVocab() {
+            const container = document.getElementById('vocab-container');
+            container.innerHTML = Object.entries(canvasData).map(([name, data]) => `
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2 text-indigo-600">
+                        <i data-lucide="${data.icon}" class="w-5 h-5"></i>
+                        <h3 class="font-bold text-lg">${name}</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        ${data.vocab.map(item => `
+                            <div class="relative group">
+                                <div class="bg-slate-50 border border-slate-200 px-2 py-1 rounded text-sm text-slate-700 font-medium cursor-help hover:bg-indigo-50 hover:border-indigo-300 transition">
+                                    ${item.term}
+                                </div>
+                                <!-- Tooltip -->
+                                <div class="hidden group-hover:block absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-48 p-2 bg-slate-800 text-white text-xs rounded shadow-xl z-20 text-center pointer-events-none">
+                                    ${item.def}
+                                    <div class="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-800"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // Quiz Logic
+        function renderQuiz() {
+            const card = document.getElementById('quiz-card');
+            
+            if (currentQuizIndex >= quizQuestions.length) {
+                renderResults();
+                return;
+            }
+
+            const current = quizQuestions[currentQuizIndex];
+            const progress = ((currentQuizIndex + 1) / quizQuestions.length) * 100;
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-slate-500 font-medium">Question ${currentQuizIndex + 1} of ${quizQuestions.length}</span>
+                    <div class="h-2 w-32 bg-slate-100 rounded-full overflow-hidden">
+                        <div class="h-full bg-indigo-500 transition-all" style="width: ${progress}%"></div>
+                    </div>
+                </div>
+                
+                <h2 class="text-xl font-bold mb-8 text-slate-800">${current.q}</h2>
+                
+                <div class="space-y-3">
+                    ${current.options.map(opt => `
+                        <button onclick="handleAnswer('${opt}')" class="quiz-opt w-full p-4 rounded-xl text-left border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition font-medium">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+                <div id="quiz-feedback" class="mt-6 hidden p-4 rounded-lg items-center gap-3"></div>
+            `;
+        }
+
+        window.handleAnswer = (selected) => {
+            if (showFeedback) return;
+            const current = quizQuestions[currentQuizIndex];
+            const isCorrect = selected === current.answer;
+            showFeedback = true;
+
+            const feedbackDiv = document.getElementById('quiz-feedback');
+            feedbackDiv.classList.remove('hidden');
+            if (isCorrect) {
+                score++;
+                feedbackDiv.className = "mt-6 p-4 rounded-lg flex items-center gap-3 bg-green-100 text-green-800";
+                feedbackDiv.innerHTML = `<i data-lucide="check-circle-2"></i> <span class="font-bold">Correct!</span>`;
+            } else {
+                feedbackDiv.className = "mt-6 p-4 rounded-lg flex items-center gap-3 bg-red-100 text-red-800";
+                feedbackDiv.innerHTML = `<i data-lucide="x-circle"></i> <span class="font-bold">Incorrect. The answer is ${current.answer}</span>`;
+            }
+            lucide.createIcons();
+
+            setTimeout(() => {
+                showFeedback = false;
+                currentQuizIndex++;
+                renderQuiz();
+            }, 1500);
+        };
+
+        function renderResults() {
+            const card = document.getElementById('quiz-card');
+            card.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6 text-indigo-600">
+                        <i data-lucide="graduation-cap" class="w-12 h-12"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-2">Quiz Complete!</h2>
+                    <p class="text-slate-500 mb-8 text-lg">You scored <span class="text-indigo-600 font-bold">${score}</span> out of ${quizQuestions.length}</p>
+                    
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="restartQuiz()" class="px-8 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-bold">
+                            Try Again
+                        </button>
+                        <button onclick="switchView('canvas')" class="px-8 py-3 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition font-bold">
+                            Back to Canvas
+                        </button>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        window.restartQuiz = () => {
+            currentQuizIndex = 0;
+            score = 0;
+            renderQuiz();
+        };
+
+    </script>
+</body>
+</html>

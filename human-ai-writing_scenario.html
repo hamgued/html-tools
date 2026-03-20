@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Spectrum of Writing</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-slate-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // --- INLINE ICONS ---
+        const IconUser = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        );
+
+        const IconBot = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                <circle cx="12" cy="5" r="2"></circle>
+                <path d="M12 7v4"></path>
+                <line x1="8" y1="16" x2="8" y2="16"></line>
+                <line x1="16" y1="16" x2="16" y2="16"></line>
+            </svg>
+        );
+
+        const IconAlertTriangle = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        );
+
+        const IconCheckCircle = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        );
+
+        const IconXCircle = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+        );
+
+        const IconBookOpen = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+        );
+
+        const IconScale = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
+                <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
+                <path d="M7 21h10"></path>
+                <path d="M12 3v18"></path>
+                <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path>
+            </svg>
+        );
+
+        const IconHelpCircle = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        );
+
+        const IconChevronRight = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        );
+
+        const IconInfo = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+        );
+
+        // --- APP DATA ---
+
+        const spectrumLevels = [
+            {
+                id: 1,
+                humanPct: 100,
+                aiPct: 0,
+                label: "100% Human Only",
+                color: "bg-green-500",
+                hoverColor: "hover:bg-green-600",
+                textColor: "text-green-700",
+                definition: "Written by the author with no significant use of AI (except basic proofreading).",
+                context: "Typical of many professional, academic, and creative writing contexts.",
+                universityStatus: "Highly Recommended",
+                universityStatusColor: "text-green-600",
+                icon: IconUser,
+                examplePrompt: "Proofread for spelling, punctuation, and grammar. List errors using bullet points. Respect authorial voice. Do not rewrite."
+            },
+            {
+                id: 2,
+                humanPct: 75,
+                aiPct: 25,
+                label: "75% Human | 25% AI",
+                color: "bg-lime-400",
+                hoverColor: "hover:bg-lime-500",
+                textColor: "text-lime-700",
+                definition: "Written by the author with some AI support (e.g., feedback and basic proofreading).",
+                context: "Typical of some professional and academic writing contexts.",
+                universityStatus: "Acceptable (Cite usage)",
+                universityStatusColor: "text-lime-700",
+                icon: IconUser,
+                examplePrompt: "Proofread for spelling, punctuation, and grammar. Provide feedback on clarity, coherence, and transitions. Do not rewrite."
+            },
+            {
+                id: 3,
+                humanPct: 50,
+                aiPct: 50,
+                label: "50% Human | 50% AI",
+                color: "bg-yellow-400",
+                hoverColor: "hover:bg-yellow-500",
+                textColor: "text-yellow-700",
+                definition: "Written by the author in collaboration with AI (AI generated ideas, extensive feedback, rewriting large parts).",
+                context: "Typical of professional writing and advertising copy.",
+                universityStatus: "Avoid / Grey Area",
+                universityStatusColor: "text-yellow-700",
+                warning: "Generally, avoid writing like this at university.",
+                icon: IconScale,
+                examplePrompt: "Rewrite this text to improve clarity, coherence, and engagement. Maintain the original meaning."
+            },
+            {
+                id: 4,
+                humanPct: 25,
+                aiPct: 75,
+                label: "25% Human | 75% AI",
+                color: "bg-orange-500",
+                hoverColor: "hover:bg-orange-600",
+                textColor: "text-orange-700",
+                definition: "Largely written by AI. The author checked content and made some changes.",
+                context: "Typical of commercial writing and junk mail.",
+                universityStatus: "Academic Misconduct",
+                universityStatusColor: "text-red-600",
+                warning: "NOT acceptable for university coursework.",
+                icon: IconBot,
+                examplePrompt: "Generate a complete paragraph about Topic X. Include examples and cite sources."
+            },
+            {
+                id: 5,
+                humanPct: 0,
+                aiPct: 100,
+                label: "100% AI Only",
+                color: "bg-red-600",
+                hoverColor: "hover:bg-red-700",
+                textColor: "text-red-700",
+                definition: "Written completely by AI and copied without changes.",
+                context: "Typical of junk mail writing.",
+                universityStatus: "Academic Misconduct",
+                universityStatusColor: "text-red-700",
+                warning: "NOT acceptable. Considered plagiarism/misconduct.",
+                icon: IconBot,
+                examplePrompt: "Write an essay on Topic X. Ensure it includes an introduction, body paragraphs, and conclusion."
+            }
+        ];
+
+        const quizScenarios = [
+            {
+                id: 1,
+                student: "Yuki",
+                action: "Yuki writes her essay draft completely by herself. She then pastes it into an AI tool and asks it to 'Find grammatical errors and list them.' She fixes the errors herself.",
+                correctLevelId: 1,
+                validLevels: [1],
+                explanation: "This is 100% Human-led. The AI is only acting as a proofreader, not a writer. This is standard academic practice."
+            },
+            {
+                id: 2,
+                student: "Ahmed",
+                action: "Ahmed asks an AI to 'Write a 500-word introduction about climate change.' He reads it, changes a few adjectives, and submits it.",
+                correctLevelId: 5, 
+                validLevels: [4, 5],
+                explanation: "This falls into the Red/Orange zone (mostly AI). Even if he changed a few words, the core intellectual work was done by AI. This is Academic Misconduct."
+            },
+            {
+                id: 3,
+                student: "Maria",
+                action: "Maria writes her main arguments. She feels her sentences are clunky, so she asks AI to 'Rewrite these paragraphs to sound more academic.' She uses the AI output verbatim.",
+                correctLevelId: 3,
+                validLevels: [3],
+                explanation: "This is the 50/50 Yellow zone. While the ideas were Maria's, the actual writing is AI's. In most universities, this is not acceptable because you are not demonstrating your own writing ability."
+            },
+            {
+                id: 4,
+                student: "Li",
+                action: "Li writes his essay. He asks AI to critique his logic and point out weak arguments. He reads the feedback, thinks about it, and then rewrites the sections himself.",
+                correctLevelId: 2,
+                validLevels: [2],
+                explanation: "This is the 75/25 Green/Lime zone. AI is used as a tutor or peer reviewer, but the final writing is done by the human. This is usually acceptable (often with acknowledgement)."
+            },
+            {
+                id: 5,
+                student: "Sarah",
+                action: "Sarah is running late. She asks an AI to write her conclusion. She likes it, but manually rewrites about 30% of the sentences to make it sound more like her style.",
+                correctLevelId: 4,
+                validLevels: [4],
+                explanation: "This is the 25% Human | 75% AI (Orange) zone. Even though she rewrote parts, the structure and initial generation were AI. This is generally considered academic misconduct."
+            },
+            {
+                id: 6,
+                student: "Tom",
+                action: "Tom writes his entire essay himself. He then asks an AI, 'What are three key academic sources I might have missed regarding this topic?' He reads those papers and adds citations manually.",
+                correctLevelId: 2,
+                validLevels: [1, 2],
+                explanation: "This is the Green/Lime zone. Tom is using AI as a research assistant, not a writer. As long as he reads the actual papers, this is excellent use of the tool."
+            },
+            {
+                id: 7,
+                student: "Jessica",
+                action: "Jessica copies the essay prompt directly into ChatGPT. She copies the output and submits it immediately because the deadline is in 5 minutes.",
+                correctLevelId: 5,
+                validLevels: [5],
+                explanation: "This is the 100% AI (Red) zone. This is a clear-cut case of plagiarism and academic misconduct."
+            },
+            {
+                id: 8,
+                student: "David",
+                action: "David writes detailed bullet points for every paragraph. He feeds these bullets into an AI and asks it to 'Turn these into full, cohesive paragraphs.' He lightly edits the flow before submitting.",
+                correctLevelId: 3,
+                validLevels: [3],
+                explanation: "This is the 50/50 (Yellow) zone. While the ideas are David's, the articulation is AI's. This usually violates university policies because you aren't doing the work of academic writing."
+            },
+            {
+                id: 9,
+                student: "Aisha",
+                action: "Aisha turns off her internet and writes her essay in a notebook. She types it up afterwards and uses a standard dictionary to check spelling.",
+                correctLevelId: 1,
+                validLevels: [1],
+                explanation: "This is 100% Human Only. No generative AI was used at any stage. This is the traditional method of academic writing."
+            },
+            {
+                id: 10,
+                student: "Kevin",
+                action: "Kevin writes his essay but struggles with the title. He asks AI to 'Generate 10 catchy titles for an essay about Roman history.' He picks one and uses it.",
+                correctLevelId: 2,
+                validLevels: [1, 2],
+                explanation: "This is the Green/Lime zone. Using AI for brainstorming small elements like titles (while writing the content yourself) is generally acceptable, though checking your specific course policy is always wise."
+            }
+        ];
+
+        // --- MAIN COMPONENT ---
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('explore'); 
+            const [selectedLevel, setSelectedLevel] = useState(spectrumLevels[0]);
+            
+            // Quiz State
+            const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+            const [quizFeedback, setQuizFeedback] = useState(null);
+            const [score, setScore] = useState(0);
+            const [quizComplete, setQuizComplete] = useState(false);
+
+            const handleQuizAnswer = (levelId) => {
+                const currentQ = quizScenarios[currentQuestionIndex];
+                
+                // Determine if answer is correct based on validLevels array (allows for nuance)
+                const isValid = currentQ.validLevels 
+                    ? currentQ.validLevels.includes(levelId)
+                    : levelId === currentQ.correctLevelId;
+
+                if (isValid) {
+                    setScore(score + 1);
+                    setQuizFeedback({ type: 'success', msg: "Correct! " + currentQ.explanation });
+                } else {
+                    setQuizFeedback({ type: 'error', msg: "Incorrect. " + currentQ.explanation });
+                }
+            };
+
+            const nextQuestion = () => {
+                setQuizFeedback(null);
+                if (currentQuestionIndex < quizScenarios.length - 1) {
+                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                } else {
+                    setQuizComplete(true);
+                }
+            };
+
+            const restartQuiz = () => {
+                setCurrentQuestionIndex(0);
+                setScore(0);
+                setQuizComplete(false);
+                setQuizFeedback(null);
+            };
+
+            // Helper to safely render icons
+            const renderIcon = (IconComponent, props = {}) => {
+                if (!IconComponent) return null;
+                return <IconComponent {...props} />;
+            };
+
+            return (
+                <div className="min-h-screen bg-slate-50 font-sans text-slate-800 p-4 md:p-8">
+                    <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+                        
+                        {/* Header */}
+                        <div className="bg-slate-900 text-white p-6 md:p-8">
+                            <div className="flex flex-col gap-1 mb-4">
+                                <div className="flex items-center gap-3">
+                                    <IconScale size={32} className="text-blue-400" />
+                                    <h1 className="text-2xl md:text-3xl font-bold">AI & Academic Integrity</h1>
+                                </div>
+                                <p className="text-slate-400 text-sm ml-1 md:ml-11">(Generated with Gemini Canvas, Hamid Guedra)</p>
+                            </div>
+                            <p className="text-slate-300 max-w-2xl">
+                                A guide for students to understand the boundaries between human writing and AI generation.
+                            </p>
+                        </div>
+
+                        {/* Navigation Tabs */}
+                        <div className="flex border-b border-slate-200">
+                            <button 
+                                onClick={() => setActiveTab('explore')}
+                                className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'explore' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50' : 'text-slate-500 hover:bg-slate-50'}`}
+                            >
+                                <div className="flex items-center justify-center gap-2">
+                                    <IconBookOpen size={18} />
+                                    Explore the Spectrum
+                                </div>
+                            </button>
+                            <button 
+                                onClick={() => setActiveTab('quiz')}
+                                className={`flex-1 py-4 text-center font-medium transition-colors ${activeTab === 'quiz' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50' : 'text-slate-500 hover:bg-slate-50'}`}
+                            >
+                                <div className="flex items-center justify-center gap-2">
+                                    <IconHelpCircle size={18} />
+                                    Scenario Challenge
+                                </div>
+                            </button>
+                        </div>
+
+                        {/* Content Area */}
+                        <div className="p-6 md:p-8">
+                        
+                            {activeTab === 'explore' && (
+                                <div className="flex flex-col gap-8">
+                                    <div className="flex flex-col md:flex-row gap-8">
+                                        {/* Left Side: The Scale Selector */}
+                                        <div className="w-full md:w-1/3 flex flex-col gap-2">
+                                            <h3 className="text-sm font-bold uppercase text-slate-400 mb-2 tracking-wider">Select a Level</h3>
+                                            {spectrumLevels.map((level) => (
+                                                <button
+                                                    key={level.id}
+                                                    onClick={() => setSelectedLevel(level)}
+                                                    className={`
+                                                        relative group flex items-center justify-between p-4 rounded-xl transition-all duration-200 border-2
+                                                        ${selectedLevel.id === level.id ? 'border-slate-800 shadow-md scale-[1.02]' : 'border-transparent hover:scale-[1.01]'}
+                                                        ${level.color} text-white shadow-sm
+                                                    `}
+                                                >
+                                                    <div className="flex flex-col items-start">
+                                                        <span className="font-bold text-lg drop-shadow-sm">{level.label}</span>
+                                                        {selectedLevel.id === level.id && (
+                                                            <span className="text-xs opacity-90 mt-1 font-medium bg-black/20 px-2 py-0.5 rounded-full">Selected</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="bg-white/20 p-2 rounded-full">
+                                                        {renderIcon(level.icon, { size: 20 })}
+                                                    </div>
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        {/* Right Side: Details Card */}
+                                        <div className="w-full md:w-2/3">
+                                            <div className="h-full border border-slate-200 rounded-2xl p-6 md:p-8 bg-slate-50 flex flex-col">
+                                                
+                                                <div className="flex items-center gap-3 mb-6">
+                                                    <div className={`p-3 rounded-lg ${selectedLevel.color} text-white shadow-sm`}>
+                                                        {renderIcon(selectedLevel.icon, { size: 32 })}
+                                                    </div>
+                                                    <div>
+                                                        <h2 className="text-2xl font-bold text-slate-800">{selectedLevel.label}</h2>
+                                                        <span className={`font-bold text-sm px-2 py-1 rounded border ${
+                                                            selectedLevel.id > 3 ? 'bg-red-100 text-red-700 border-red-200' : 
+                                                            selectedLevel.id === 3 ? 'bg-yellow-100 text-yellow-700 border-yellow-200' : 
+                                                            'bg-green-100 text-green-700 border-green-200'
+                                                        }`}>
+                                                            {selectedLevel.universityStatus}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-6">
+                                                    <div>
+                                                        <h4 className="text-sm font-bold text-slate-400 uppercase mb-1">Definition</h4>
+                                                        <p className="text-lg leading-relaxed font-medium text-slate-700">{selectedLevel.definition}</p>
+                                                    </div>
+
+                                                    {selectedLevel.warning && (
+                                                        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg flex items-start gap-3">
+                                                            <IconAlertTriangle className="text-red-500 shrink-0 mt-1" size={20} />
+                                                            <p className="text-red-800 text-sm font-medium">{selectedLevel.warning}</p>
+                                                        </div>
+                                                    )}
+
+                                                    <div>
+                                                        <h4 className="text-sm font-bold text-slate-400 uppercase mb-1">Typical Context</h4>
+                                                        <p className="text-slate-600">{selectedLevel.context}</p>
+                                                    </div>
+
+                                                    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <IconBot size={16} className="text-blue-500" />
+                                                            <h4 className="text-sm font-bold text-blue-600 uppercase">Example AI Prompt</h4>
+                                                        </div>
+                                                        <p className="font-mono text-sm text-slate-600 bg-slate-50 p-3 rounded border border-slate-100 italic">
+                                                            "{selectedLevel.examplePrompt}"
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Reference Footer */}
+                                    <div className="text-center text-slate-500 text-sm mt-6 border-t border-slate-100 pt-6">
+                                        <p>
+                                            Inspired by <a href="#" className="text-blue-600 hover:underline" onClick={(e) => e.preventDefault()}>Jim O’Mahony: “My easy to follow guide for attribution”</a> and Ville Arvola’s GenAI hyödyntämisen tasot (presented at ITK2025).
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'quiz' && (
+                                <div className="max-w-3xl mx-auto">
+                                    {!quizComplete ? (
+                                        <>
+                                            <div className="mb-6 flex justify-between items-center">
+                                                <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">Scenario {currentQuestionIndex + 1} of {quizScenarios.length}</span>
+                                                <span className="text-sm font-medium bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Score: {score}</span>
+                                            </div>
+
+                                            <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm mb-8">
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold">
+                                                        {quizScenarios[currentQuestionIndex].student[0]}
+                                                    </div>
+                                                    <h3 className="text-xl font-bold">{quizScenarios[currentQuestionIndex].student}'s Strategy</h3>
+                                                </div>
+                                                <p className="text-lg text-slate-700 leading-relaxed mb-6">
+                                                    {quizScenarios[currentQuestionIndex].action}
+                                                </p>
+                                                
+                                                <div className="border-t border-slate-100 pt-6">
+                                                    <p className="font-medium text-slate-900 mb-4 flex items-center gap-2">
+                                                        <IconInfo size={18} />
+                                                        Based on the spectrum, categorize this behavior:
+                                                    </p>
+                                                    
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                        {!quizFeedback ? (
+                                                            spectrumLevels.map((level) => (
+                                                                <button
+                                                                    key={level.id}
+                                                                    onClick={() => handleQuizAnswer(level.id)}
+                                                                    className={`p-3 rounded-lg border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-left flex items-center gap-2 group`}
+                                                                >
+                                                                    <div className={`w-3 h-3 rounded-full ${level.color}`}></div>
+                                                                    <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900">{level.label}</span>
+                                                                </button>
+                                                            ))
+                                                        ) : (
+                                                            <div className={`col-span-2 p-4 rounded-lg border ${quizFeedback.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
+                                                                <div className="flex items-start gap-3">
+                                                                    {quizFeedback.type === 'success' ? <IconCheckCircle className="mt-1" /> : <IconXCircle className="mt-1" />}
+                                                                    <div>
+                                                                        <p className="font-bold text-lg mb-1">{quizFeedback.type === 'success' ? 'That is Correct!' : 'Not quite.'}</p>
+                                                                        <p className="leading-relaxed">{quizFeedback.msg}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <button 
+                                                                    onClick={nextQuestion}
+                                                                    className="mt-4 bg-slate-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-slate-800 transition-colors flex items-center gap-2"
+                                                                >
+                                                                    Next Scenario <IconChevronRight size={16} />
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="text-center py-12 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                                            <div className="inline-block p-4 rounded-full bg-blue-100 text-blue-600 mb-4">
+                                                <IconCheckCircle size={48} />
+                                            </div>
+                                            <h2 className="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                                            <p className="text-slate-500 mb-6">You scored {score} out of {quizScenarios.length}</p>
+                                            
+                                            <div className="max-w-md mx-auto mb-8 text-left bg-slate-50 p-6 rounded-xl border border-slate-200">
+                                                <h4 className="font-bold text-slate-900 mb-2">Key Takeaway:</h4>
+                                                <p className="text-slate-700 text-sm">
+                                                    In an EAP context, sticking to the <strong>Green</strong> and <strong>Lime</strong> zones (100% Human or Human-Led with AI feedback) is usually safe. The <strong>Yellow</strong> zone is risky, and <strong>Orange/Red</strong> zones usually result in Academic Misconduct charges.
+                                                </p>
+                                            </div>
+
+                                            <button 
+                                                onClick={restartQuiz}
+                                                className="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition-colors"
+                                            >
+                                                Try Again
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

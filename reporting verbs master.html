@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporting Verbs Master</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Define appData before Alpine loads -->
+    <script>
+        function appData() {
+            return {
+                activeTab: 'learn',
+                sidebarOpen: false,
+                quizIndex: 0,
+                score: 0,
+                quizFeedback: null,
+                sortRound: 0,
+                sortItems: [],
+                sortFeedback: {},
+                navItems: [
+                    { id: 'learn', label: 'Study Guide', icon: 'book-open' },
+                    { id: 'sort', label: 'Sorting Games', icon: 'gamepad-2' },
+                    { id: 'quiz', label: 'Challenge Quiz', icon: 'trending-up' }
+                ],
+                verbData: {
+                    neutral: {
+                        title: "Neutral",
+                        description: "Used to describe facts, methodology, or observations without making a judgment.",
+                        color: "bg-blue-100 text-blue-800 border-blue-200",
+                        verbs: ["describe", "show", "reveal", "note", "point out", "indicate", "report", "observe", "state", "examine"]
+                    },
+                    tentative: {
+                        title: "Tentative",
+                        description: "Used when the writer is being hesitant or speculating (not 100% certain).",
+                        color: "bg-amber-100 text-amber-800 border-amber-200",
+                        verbs: ["suggest", "speculate", "imply", "propose", "hypothesize", "postulate", "recommend", "moot"]
+                    },
+                    strong: {
+                        title: "Strong",
+                        description: "Used when the writer is absolutely sure and making a firm claim or argument.",
+                        color: "bg-emerald-100 text-emerald-800 border-emerald-200",
+                        verbs: ["argue", "claim", "emphasize", "contend", "maintain", "assert", "refute", "reject", "challenge"]
+                    }
+                },
+                sortGames: [
+                    [
+                        { id: 101, word: "argue", cat: "strong" },
+                        { id: 102, word: "suggest", cat: "tentative" },
+                        { id: 103, word: "show", cat: "neutral" },
+                        { id: 104, word: "claim", cat: "strong" },
+                        { id: 105, word: "imply", cat: "tentative" },
+                        { id: 106, word: "describe", cat: "neutral" },
+                    ],
+                    [
+                        { id: 201, word: "refute", cat: "strong" },
+                        { id: 202, word: "hypothesize", cat: "tentative" },
+                        { id: 203, word: "observe", cat: "neutral" },
+                        { id: 204, word: "reject", cat: "strong" },
+                        { id: 205, word: "speculate", cat: "tentative" },
+                        { id: 206, word: "examine", cat: "neutral" },
+                    ],
+                    [
+                        { id: 301, word: "contend", cat: "strong" },
+                        { id: 302, word: "postulate", cat: "tentative" },
+                        { id: 303, word: "indicate", cat: "neutral" },
+                        { id: 304, word: "assert", cat: "strong" },
+                        { id: 305, word: "propose", cat: "tentative" },
+                        { id: 306, word: "report", cat: "neutral" },
+                    ],
+                    [
+                        { id: 401, word: "maintain", cat: "strong" },
+                        { id: 402, word: "moot", cat: "tentative" },
+                        { id: 403, word: "state", cat: "neutral" },
+                        { id: 404, word: "deny", cat: "strong" },
+                        { id: 405, word: "intimate", cat: "tentative" },
+                        { id: 406, word: "note", cat: "neutral" },
+                    ],
+                    [
+                        { id: 501, word: "challenge", cat: "strong" },
+                        { id: 502, word: "recommend", cat: "tentative" },
+                        { id: 503, word: "reveal", cat: "neutral" },
+                        { id: 504, word: "emphasize", cat: "strong" },
+                        { id: 505, word: "hypothesize", cat: "tentative" },
+                        { id: 506, word: "point out", cat: "neutral" },
+                    ]
+                ],
+                quizQuestions: [
+                    {
+                        context: "The researcher found some early evidence, but more studies are needed to be sure.",
+                        sentence: "The researcher ________ that the new drug might be effective.",
+                        options: ["claims", "suggests", "notes"],
+                        correct: "suggests",
+                        explanation: "'Suggests' is tentative. Since the evidence is 'early' and they aren't 'sure', a cautious verb is best."
+                    },
+                    {
+                        context: "The author has a very firm opinion and is ready to defend it against critics.",
+                        sentence: "Professor Miller ________ that the current economic model is failing.",
+                        options: ["mentions", "speculates", "contends"],
+                        correct: "contends",
+                        explanation: "'Contends' is a strong verb. It matches the author's firm opinion and readiness to defend their stance."
+                    },
+                    {
+                        context: "A simple description of what happened in the experiment.",
+                        sentence: "The study ________ how the temperature affected the chemical reaction.",
+                        options: ["argues", "describes", "hypothesizes"],
+                        correct: "describes",
+                        explanation: "'Describes' is neutral. It simply states what the study does without adding a level of certainty or argument."
+                    },
+                    {
+                        context: "The writer is guessing about a future outcome based on very little data.",
+                        sentence: "The economist ________ that the market will crash next year.",
+                        options: ["speculates", "states", "emphasizes"],
+                        correct: "speculates",
+                        explanation: "'Speculates' is tentative/weak. It is perfect for 'guessing' when you don't have much data."
+                    },
+                    {
+                        context: "The author completely disagrees with a previous theory and provides proof against it.",
+                        sentence: "Dr. Aris ________ the theory that gravity is a social construct.",
+                        options: ["notes", "refutes", "suggests"],
+                        correct: "refutes",
+                        explanation: "'Refutes' is a strong verb used to show absolute disagreement backed by evidence."
+                    },
+                    {
+                        context: "The researcher is explaining the steps they took in the lab.",
+                        sentence: "This section ________ the methodology used to collect the samples.",
+                        options: ["argues", "outlines", "postulates"],
+                        correct: "outlines",
+                        explanation: "When describing methodology or steps, neutral verbs like 'outlines' or 'describes' are standard."
+                    },
+                    {
+                        context: "The author has held the same firm position for twenty years despite constant criticism.",
+                        sentence: "She ________ that the original findings remain valid today.",
+                        options: ["maintains", "implies", "mentions"],
+                        correct: "maintains",
+                        explanation: "'Maintains' is a strong verb. It indicates a persistent, firm belief held over time."
+                    },
+                    {
+                        context: "The scientists are proposing a new idea that has not been tested yet.",
+                        sentence: "The team ________ a new theory for dark matter distribution.",
+                        options: ["reveals", "states", "hypothesizes"],
+                        correct: "hypothesizes",
+                        explanation: "'Hypothesizes' is tentative. It is the correct academic term for a theory that is still being tested."
+                    },
+                    {
+                        context: "The researcher points to a specific piece of evidence that contradicts a common belief.",
+                        sentence: "The data ________ the widely held view that high taxes always hurt growth.",
+                        options: ["challenges", "shows", "recommends"],
+                        correct: "challenges",
+                        explanation: "'Challenges' is a strong verb. It shows that the author is actively questioning or arguing against an existing belief."
+                    },
+                    {
+                        context: "The statistics simply provide a clear, factual link without arguing for a specific policy.",
+                        sentence: "The latest figures ________ a significant increase in urban migration.",
+                        options: ["argue", "indicate", "speculate"],
+                        correct: "indicate",
+                        explanation: "'Indicate' is a neutral verb. It is used to present factual data or trends without adding personal judgment."
+                    }
+                ],
+                init() {
+                    this.loadSortRound();
+                    // Initial icons
+                    this.$nextTick(() => lucide.createIcons());
+                    // Re-create icons on state changes that affect the DOM
+                    this.$watch('activeTab', () => this.$nextTick(() => lucide.createIcons()));
+                    this.$watch('quizIndex', () => this.$nextTick(() => lucide.createIcons()));
+                    this.$watch('sidebarOpen', () => this.$nextTick(() => lucide.createIcons()));
+                    this.$watch('quizFeedback', () => this.$nextTick(() => lucide.createIcons()));
+                },
+                loadSortRound() {
+                    this.sortItems = [...this.sortGames[this.sortRound]].sort(() => Math.random() - 0.5);
+                    this.sortFeedback = {};
+                },
+                nextSortRound() {
+                    this.sortRound = (this.sortRound + 1) % this.sortGames.length;
+                    this.loadSortRound();
+                },
+                handleSort(verbId, category) {
+                    const verb = this.sortItems.find(v => v.id === verbId);
+                    const isCorrect = verb.cat === category;
+                    this.sortFeedback[verbId] = isCorrect ? 'correct' : 'incorrect';
+                },
+                handleQuizAnswer(option) {
+                    const current = this.quizQuestions[this.quizIndex];
+                    const isCorrect = option === current.correct;
+                    if (isCorrect && !this.quizFeedback) this.score++;
+                    this.quizFeedback = { isCorrect, answer: option, explanation: current.explanation };
+                    this.$nextTick(() => lucide.createIcons());
+                },
+                nextQuestion() {
+                    this.quizIndex = (this.quizIndex + 1) % this.quizQuestions.length;
+                    this.quizFeedback = null;
+                    this.$nextTick(() => lucide.createIcons());
+                },
+                getQuizButtonClass(opt) {
+                    if (!this.quizFeedback) return 'bg-white border-slate-200 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-lg';
+                    if (this.quizFeedback.answer === opt) {
+                        return this.quizFeedback.isCorrect ? 'bg-emerald-500 border-emerald-600 text-white' : 'bg-rose-500 border-rose-600 text-white';
+                    }
+                    return 'opacity-40 border-slate-200 grayscale';
+                }
+            };
+        }
+    </script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .animate-shake {
+            animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900" x-data="appData()">
+
+    <div class="min-h-screen flex flex-col md:flex-row">
+        
+        <!-- Mobile Header Toggle -->
+        <div class="md:hidden bg-white border-b p-4 flex justify-between items-center sticky top-0 z-50">
+            <h1 class="font-bold text-lg text-indigo-600">RV Master</h1>
+            <button @click="sidebarOpen = !sidebarOpen" class="p-2 text-slate-600">
+                <i x-show="!sidebarOpen" data-lucide="menu"></i>
+                <i x-show="sidebarOpen" data-lucide="x" x-cloak></i>
+            </button>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <aside 
+            class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:block"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+            x-cloak
+        >
+            <div class="p-6">
+                <!-- Branding area removed as requested, leaving space -->
+                <div class="mb-12"></div>
+                
+                <nav class="space-y-2">
+                    <template x-for="item in navItems" :key="item.id">
+                        <button
+                            @click="activeTab = item.id; sidebarOpen = false"
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all"
+                            :class="activeTab === item.id ? 'bg-indigo-50 text-indigo-600' : 'text-slate-600 hover:bg-slate-50'"
+                        >
+                            <i :data-lucide="item.icon" class="w-5 h-5"></i>
+                            <span x-text="item.label"></span>
+                        </button>
+                    </template>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col min-h-screen overflow-y-auto">
+            <div class="p-6 md:p-12 max-w-4xl w-full mx-auto flex-1">
+                
+                <!-- Main Header -->
+                <header class="mb-10 text-center md:text-left">
+                    <h1 class="text-4xl font-black text-slate-800 tracking-tight">Reporting Verbs Master</h1>
+                    <p class="text-indigo-600 font-medium mt-1">Created with Gemini, Hamid Guedra</p>
+                    <p class="text-slate-400 text-sm mt-2">Level: CEFR B1/B2 Academic English</p>
+                </header>
+
+                <!-- TAB: LEARN -->
+                <div x-show="activeTab === 'learn'" x-cloak class="space-y-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                            <i data-lucide="info" class="text-indigo-500"></i> The Strength Spectrum
+                        </h2>
+                        <p class="mb-8 text-slate-600 leading-relaxed">
+                            Reporting verbs differ in terms of their strength. For example, <strong>'to suggest'</strong> is much weaker and more tentative than <strong>'to argue'</strong>. 
+                        </p>
+                        
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <template x-for="(data, key) in verbData" :key="key">
+                                <div class="p-6 rounded-2xl border-2 flex flex-col" :class="data.color">
+                                    <h3 class="font-bold text-xl mb-3" x-text="data.title"></h3>
+                                    <p class="text-sm mb-6 leading-snug opacity-90" x-text="data.description"></p>
+                                    <div class="mt-auto">
+                                        <p class="text-[10px] font-bold uppercase tracking-widest mb-2 opacity-60">Example Verbs</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            <template x-for="v in data.verbs" :key="v">
+                                                <span class="px-2 py-1 bg-white/60 rounded text-xs font-medium border border-black/5" x-text="v"></span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 p-8 rounded-2xl border border-amber-200">
+                        <h3 class="font-bold text-xl text-amber-800 mb-4 flex items-center gap-2">
+                            <i data-lucide="alert-triangle" class="w-6 h-6"></i> Essential Grammar Rules
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-2">
+                                <p class="font-bold text-amber-900">1. The Third-Person 'S'</p>
+                                <p class="text-amber-800/80 text-sm">When the subject is singular (e.g., Smith, the author), add an 's'.</p>
+                                <div class="text-xs bg-amber-100 p-2 rounded border border-amber-200">
+                                    ✅ Smith <strong>argues</strong>... <br/>
+                                    ❌ Smith <strong>argue</strong>...
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="font-bold text-amber-900">2. Present Tense Choice</p>
+                                <p class="text-amber-800/80 text-sm">Usually, we use the Present Simple to bring past research into the current conversation.</p>
+                                <div class="text-xs bg-amber-100 p-2 rounded border border-amber-200">
+                                    ✅ "Jones <strong>suggests</strong> that..."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: SORT -->
+                <div x-show="activeTab === 'sort'" x-cloak class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold">Sorting Game: Round <span x-text="sortRound + 1"></span></h2>
+                            <p class="text-slate-500">Categorize these verbs by clicking them, then picking a bucket.</p>
+                        </div>
+                        <button 
+                            @click="nextSortRound()"
+                            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm font-bold transition-colors"
+                        >
+                            Change Game Set
+                        </button>
+                    </div>
+
+                    <div class="flex flex-wrap gap-4 mb-12 justify-center min-h-[120px]">
+                        <template x-for="item in sortItems" :key="item.id">
+                            <div class="relative group">
+                                <div 
+                                    class="px-6 py-4 rounded-xl border-2 font-bold shadow-sm transition-all cursor-default"
+                                    :class="{
+                                        'bg-amber-500 border-amber-600 text-white': sortFeedback[item.id] === 'correct' && item.cat === 'tentative',
+                                        'bg-blue-500 border-blue-600 text-white': sortFeedback[item.id] === 'correct' && item.cat === 'neutral',
+                                        'bg-emerald-500 border-emerald-600 text-white': sortFeedback[item.id] === 'correct' && item.cat === 'strong',
+                                        'bg-rose-50 border-rose-200 text-rose-800 animate-shake': sortFeedback[item.id] === 'incorrect',
+                                        'bg-white border-slate-200 hover:border-indigo-500 hover:shadow-md': !sortFeedback[item.id]
+                                    }"
+                                    x-text="item.word"
+                                ></div>
+                                <div x-show="!sortFeedback[item.id]" class="absolute top-full left-0 right-0 mt-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-xl bg-white p-1 rounded-lg border border-slate-100">
+                                    <button @click="handleSort(item.id, 'tentative')" class="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[9px] py-1.5 rounded font-black uppercase">Tentative</button>
+                                    <button @click="handleSort(item.id, 'neutral')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-800 text-[9px] py-1.5 rounded font-black uppercase">Neut</button>
+                                    <button @click="handleSort(item.id, 'strong')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[9px] py-1.5 rounded font-black uppercase">Strong</button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-6 border-t pt-10 text-center">
+                        <div class="p-6 bg-amber-50 rounded-2xl border border-dashed border-amber-300">
+                            <div class="font-black text-amber-800 text-sm mb-1 uppercase tracking-tighter">Tentative</div>
+                        </div>
+                        <div class="p-6 bg-blue-50 rounded-2xl border border-dashed border-blue-300">
+                            <div class="font-black text-blue-800 text-sm mb-1 uppercase tracking-tighter">Neutral</div>
+                        </div>
+                        <div class="p-6 bg-emerald-50 rounded-2xl border border-dashed border-emerald-300">
+                            <div class="font-black text-emerald-800 text-sm mb-1 uppercase tracking-tighter">Strong</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: QUIZ -->
+                <div x-show="activeTab === 'quiz'" x-cloak class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-2xl font-bold">Challenge Quiz</h2>
+                            <p class="text-slate-400 text-sm">Question <span x-text="quizIndex + 1"></span> of <span x-text="quizQuestions.length"></span></p>
+                        </div>
+                        <div class="text-right">
+                            <span class="bg-indigo-600 text-white px-5 py-2 rounded-full text-sm font-black shadow-lg shadow-indigo-200">
+                                SCORE: <span x-text="score"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mb-10 p-6 bg-slate-900 rounded-2xl text-white">
+                        <p class="text-xs text-indigo-300 uppercase font-black tracking-widest mb-3">Context:</p>
+                        <p class="text-lg italic leading-relaxed font-serif" x-text="'&quot;' + quizQuestions[quizIndex].context + '&quot;'"></p>
+                    </div>
+
+                    <div class="text-xl font-medium mb-12 p-8 bg-slate-50 border-2 border-slate-100 rounded-2xl">
+                        <span x-text="quizQuestions[quizIndex].sentence.split('________')[0]"></span>
+                        <span class="inline-block min-w-[150px] border-b-4 border-indigo-400 text-indigo-600 px-3 text-center transition-all duration-300"
+                              x-text="quizFeedback ? quizFeedback.answer : '__________'">
+                        </span>
+                        <span x-text="quizQuestions[quizIndex].sentence.split('________')[1]"></span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+                        <template x-for="opt in quizQuestions[quizIndex].options" :key="opt">
+                            <button
+                                :disabled="!!quizFeedback"
+                                @click="handleQuizAnswer(opt)"
+                                class="py-4 px-6 rounded-2xl border-2 transition-all font-bold text-lg"
+                                :class="getQuizButtonClass(opt)"
+                                x-text="opt"
+                            ></button>
+                        </template>
+                    </div>
+
+                    <div x-show="quizFeedback" x-cloak class="p-8 rounded-2xl mb-8 flex gap-6"
+                         :class="quizFeedback?.isCorrect ? 'bg-emerald-50 text-emerald-900 border border-emerald-200' : 'bg-rose-50 text-rose-900 border border-rose-200'">
+                        <div class="shrink-0">
+                            <i :data-lucide="quizFeedback?.isCorrect ? 'check-circle-2' : 'x-circle'" class="w-8 h-8" :class="quizFeedback?.isCorrect ? 'text-emerald-600' : 'text-rose-600'"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold mb-2" x-text="quizFeedback?.isCorrect ? 'Excellent!' : 'Learn for next time:'"></h4>
+                            <p class="leading-relaxed" x-text="quizFeedback?.explanation"></p>
+                        </div>
+                    </div>
+
+                    <button 
+                        x-show="quizFeedback"
+                        x-cloak
+                        @click="nextQuestion()"
+                        class="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black flex items-center justify-center gap-3 hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100"
+                    >
+                        NEXT QUESTION <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Shared Footer -->
+                <footer class="mt-auto pt-12 pb-6 text-center text-slate-400 text-xs border-t border-slate-100">
+                    <p>© Based on University of Warwick Academic English Resources</p>
+                </footer>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

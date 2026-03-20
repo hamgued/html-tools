@@ -1,0 +1,473 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyzing Reporting Verbs in Business & IT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+        .option-card { transition: all 0.2s ease; cursor: pointer; border: 2px solid #e5e7eb; }
+        .option-card:hover { border-color: #3b82f6; background-color: #eff6ff; }
+        .option-selected { border-color: #3b82f6; background-color: #eff6ff; }
+        .option-correct { border-color: #10b981 !important; background-color: #f0fdf4 !important; }
+        .option-incorrect { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
+        .input-correct { border-color: #10b981 !important; background-color: #f0fdf4 !important; }
+        .input-incorrect { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
+        
+        .word-token {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 2px;
+            border-radius: 6px;
+            cursor: grab;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .word-token:active { cursor: grabbing; }
+        .word-token:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        
+        .drop-zone {
+            min-height: 56px;
+            border: 2px dashed #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            transition: all 0.3s;
+            background: #fcfcfc;
+        }
+        .drop-zone.drag-over {
+            border-color: #6366f1;
+            background: #eef2ff;
+        }
+        .dropped-word {
+            padding: 4px 12px;
+            background: #6366f1;
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            animation: popIn 0.2s ease-out;
+        }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans">
+
+    <div class="max-w-3xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-800 text-center uppercase tracking-tight">Analyzing Reporting Verbs</h1>
+            <p class="text-slate-500 italic text-center mt-1">Business & IT Contexts</p>
+            <p class="text-slate-400 text-xs text-center mt-2 font-semibold">(Created with Gemini Pro by Hamid Guedra)</p>
+            
+            <!-- Progress Bar -->
+            <div class="mt-8 bg-slate-200 h-2 w-full rounded-full overflow-hidden">
+                <div id="progress-bar" class="bg-indigo-600 h-full transition-all duration-500" style="width: 12.5%;"></div>
+            </div>
+            <div class="flex justify-between mt-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                <span id="progress-text">Step 1 of 8</span>
+                <span id="score-text">Completed: 0/8</span>
+            </div>
+        </header>
+
+        <!-- Main Exercise Area -->
+        <main id="exercise-viewport" class="relative overflow-hidden">
+            <div id="exercise-card" class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden fade-in">
+                <!-- Content will be injected here -->
+            </div>
+        </main>
+
+        <!-- Final Success View (Hidden by default) -->
+        <div id="completion-view" class="hidden bg-white rounded-2xl shadow-xl border border-slate-200 p-10 text-center fade-in">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 text-green-600 rounded-full mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">Module Complete!</h2>
+            <p class="text-slate-600 mb-8 max-w-md mx-auto">You have successfully analyzed all reporting verbs in this set. You can now correctly identify, categorize, and interpret reporting language in academic business writing.</p>
+            <button onclick="restartActivity()" class="px-8 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-bold shadow-lg shadow-indigo-200">
+                Restart Module
+            </button>
+        </div>
+
+        <footer class="mt-12 text-center text-slate-400 text-sm">
+            &copy; Business & IT Academic Writing Module
+        </footer>
+    </div>
+
+    <script>
+        const exercises = [
+            {
+                id: 1,
+                sentence: "Chen and Rodriguez (2023, 45) suggest that employee satisfaction may have significant impacts on customer retention rates.",
+                verb: "suggest",
+                category: "tentative",
+                options: [
+                    { text: "It presents the findings as a confirmed law of business that requires no further evidence.", correct: false },
+                    { text: "It indicates that while there is evidence, the authors are presenting the finding cautiously rather than as absolute certainty.", correct: true },
+                    { text: "It implies that the researchers are doubting their own data and expect the findings to be proven wrong.", correct: false }
+                ]
+            },
+            {
+                id: 2,
+                sentence: "Thompson (2023, 76) argues that sustainable business practices will fundamentally transform consumer purchasing decisions within five years.",
+                verb: "argues",
+                category: "strong",
+                options: [
+                    { text: "It signals that the author is taking a firm, persuasive stance on a debatable or central thesis.", correct: true },
+                    { text: "It suggests the author is neutrally describing a process without any personal conviction.", correct: false },
+                    { text: "It indicates that the author is angry with the current state of consumer purchasing.", correct: false }
+                ]
+            },
+            {
+                id: 3,
+                sentence: "Patel and Martinez (2024, 29) observe that 78% of executives prioritize workplace flexibility when considering new positions.",
+                verb: "observe",
+                category: "neutral",
+                options: [
+                    { text: "It suggests that the authors find the 78% figure surprisingly high and are questioning its validity.", correct: false },
+                    { text: "It implies that the researchers are taking a strong side in the flexible work debate.", correct: false },
+                    { text: "It presents the finding as a factual, direct outcome of data collection with minimal subjective interpretation.", correct: true }
+                ]
+            },
+            {
+                id: 4,
+                sentence: "The research team speculates that international market expansion could increase revenue by 30% for mid-sized companies (Wilson, 2023, 156).",
+                verb: "speculates",
+                category: "tentative",
+                options: [
+                    { text: "It conveys a high degree of uncertainty, signaling that the 30% figure is an educated guess based on limited data.", correct: true },
+                    { text: "It confirms that the 30% revenue increase is a guaranteed outcome of the expansion strategy.", correct: false },
+                    { text: "It suggests that the research team is criticizing companies that do not expand internationally.", correct: false }
+                ]
+            },
+            {
+                id: 5,
+                sentence: "Several industry experts question the effectiveness of traditional performance reviews for motivating millennial employees (Harris & Nguyen, 2024, 33-35).",
+                verb: "question",
+                category: "critical",
+                options: [
+                    { text: "It indicates that the experts are confused about how performance reviews work and need more information.", correct: false },
+                    { text: "It signals doubt or a challenge to existing norms, positioning the cited work as a critique of current practices.", correct: true },
+                    { text: "It shows that the experts are supportive of traditional reviews and want to keep them.", correct: false }
+                ]
+            },
+            {
+                id: 6,
+                sentence: "Garcia (2023, 112) emphasizes the critical role of data privacy in building customer trust for fintech startups.",
+                verb: "emphasizes",
+                category: "strong",
+                options: [
+                    { text: "It suggests the researcher is unsure if data privacy is actually important for trust.", correct: false },
+                    { text: "It highlights that the researcher places significant weight on this specific factor as a key finding of the study.", correct: true },
+                    { text: "It indicates that the researcher is neutrally listing data privacy as one of many minor factors.", correct: false }
+                ]
+            },
+            {
+                id: 7,
+                sentence: "Lee and Kim (2024, 58) claim that AI-driven automation will replace 40% of entry-level accounting tasks by 2030.",
+                verb: "claim",
+                category: "strong",
+                options: [
+                    { text: "It signals that this is the authors' specific position, which the writer may view with some skepticism or as a point requiring further proof.", correct: true },
+                    { text: "It presents the 40% figure as an absolute, proven fact that the writer fully endorses.", correct: false },
+                    { text: "It suggests that the authors are making a tentative suggestion they don't really believe in.", correct: false }
+                ]
+            },
+            {
+                id: 8,
+                sentence: "The survey notes that most IT managers prefer hybrid cloud architectures for scalable infrastructure (Tan, 2023, 201).",
+                verb: "notes",
+                category: "neutral",
+                options: [
+                    { text: "It implies that the writer strongly disagrees with the IT managers' preference.", correct: false },
+                    { text: "It suggests that the findings are purely speculative and based on guesswork.", correct: false },
+                    { text: "It presents the preference as a direct, observed point from the data without adding an evaluative or persuasive tone.", correct: true }
+                ]
+            }
+        ];
+
+        let currentIndex = 0;
+        let selectedOption = null;
+        let droppedVerb = null;
+        let completedIds = new Set();
+
+        function renderCurrentStep() {
+            const ex = exercises[currentIndex];
+            const card = document.getElementById('exercise-card');
+            
+            // Update UI progress
+            document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / exercises.length) * 100}%`;
+            document.getElementById('progress-text').innerText = `Step ${currentIndex + 1} of ${exercises.length}`;
+            document.getElementById('score-text').innerText = `Completed: ${completedIds.size}/${exercises.length}`;
+
+            selectedOption = null;
+            droppedVerb = null;
+
+            // Split sentence into words for dragging
+            const words = ex.sentence.split(/\s+/);
+            const sentenceHtml = words.map((w, i) => 
+                `<span class="word-token" draggable="true" ondragstart="handleDragStart(event, '${w.replace(/[()]/g, '')}')">${w}</span>`
+            ).join(' ');
+
+            let optionsHtml = ex.options.map((opt, optIndex) => `
+                <div onclick="selectOption(${optIndex})" id="opt-${optIndex}" 
+                    class="option-card p-4 rounded-xl text-sm text-slate-700 bg-white">
+                    ${opt.text}
+                </div>
+            `).join('');
+
+            card.innerHTML = `
+                <div class="p-8">
+                    <div class="mb-8">
+                        <div class="flex justify-between items-start mb-4">
+                             <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-wider">Case Analysis</span>
+                             <button onclick="showAnswer()" class="text-xs font-bold text-indigo-500 hover:text-indigo-700 transition uppercase tracking-widest flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                Show Answer
+                             </button>
+                        </div>
+                        <p class="text-sm font-bold text-slate-500 mb-3 uppercase tracking-tight">Drag the reporting verb from the sentence above and drop it into the box below (1. REPORTING VERB).</p>
+                        <div class="text-xl text-slate-800 leading-relaxed font-medium bg-slate-50 p-6 rounded-xl border border-slate-100">
+                            ${sentenceHtml}
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-500 mb-2 uppercase tracking-tight">1. Reporting Verb</label>
+                            <div id="verb-drop-zone" 
+                                class="drop-zone" 
+                                ondragover="handleDragOver(event)" 
+                                ondragleave="handleDragLeave(event)"
+                                ondrop="handleDrop(event)">
+                                <span class="text-slate-400 text-sm font-medium" id="drop-placeholder">Drop verb here...</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-500 mb-2 uppercase tracking-tight">2. Verb Category</label>
+                            <select id="cat-select" class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 h-[56px] focus:border-indigo-500 outline-none transition bg-white">
+                                <option value="">-- Choose Category --</option>
+                                <option value="neutral">Neutral</option>
+                                <option value="strong">Strong</option>
+                                <option value="tentative">Tentative</option>
+                                <option value="critical">Critical</option>
+                                <option value="supportive">Supportive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <label class="block text-sm font-bold text-slate-500 mb-4 uppercase tracking-tight">3. Interpretation (The Effect)</label>
+                        <div class="space-y-3">
+                            ${optionsHtml}
+                        </div>
+                    </div>
+
+                    <div id="feedback" class="mb-6 hidden p-4 rounded-xl text-sm font-semibold border-2"></div>
+
+                    <div class="flex flex-col gap-4">
+                        <button onclick="validate()" id="btn-validate"
+                            class="w-full bg-indigo-600 text-white px-6 py-4 rounded-xl hover:bg-indigo-700 transition font-bold shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
+                            <span>Validate Analysis</span>
+                        </button>
+                        
+                        <div class="flex items-center gap-4">
+                            <button onclick="prevStep()" id="nav-prev" 
+                                class="${currentIndex === 0 ? 'invisible' : ''} flex-1 bg-white border-2 border-slate-200 text-slate-600 px-6 py-3 rounded-xl hover:bg-slate-50 transition font-bold flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Back
+                            </button>
+                            <button onclick="nextStep()" id="nav-next" 
+                                class="flex-1 bg-white border-2 border-slate-200 text-slate-600 px-6 py-3 rounded-xl hover:bg-slate-50 transition font-bold flex items-center justify-center gap-2">
+                                ${currentIndex === exercises.length - 1 ? 'Finish' : 'Next'}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            card.classList.remove('fade-in');
+            void card.offsetWidth; // Trigger reflow
+            card.classList.add('fade-in');
+        }
+
+        // Drag and Drop Handlers
+        function handleDragStart(e, word) {
+            e.dataTransfer.setData("text/plain", word);
+            e.dataTransfer.effectAllowed = "move";
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const zone = e.currentTarget;
+            zone.classList.remove('drag-over');
+            
+            const word = e.dataTransfer.getData("text/plain");
+            // Clean word from trailing punctuation
+            droppedVerb = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+            
+            zone.innerHTML = `<span class="dropped-word">${droppedVerb}</span>`;
+            zone.classList.remove('input-correct', 'input-incorrect');
+        }
+
+        function selectOption(idx) {
+            const ex = exercises[currentIndex];
+            ex.options.forEach((_, i) => {
+                const opt = document.getElementById(`opt-${i}`);
+                if(opt) opt.classList.remove('option-selected');
+            });
+            const selectedOpt = document.getElementById(`opt-${idx}`);
+            if(selectedOpt) selectedOpt.classList.add('option-selected');
+            selectedOption = idx;
+        }
+
+        /**
+         * Answer Key functionality
+         * Automatically fills in the correct answers for the current exercise.
+         */
+        function showAnswer() {
+            const ex = exercises[currentIndex];
+            
+            // 1. Fill Verb
+            droppedVerb = ex.verb;
+            const dropZone = document.getElementById('verb-drop-zone');
+            dropZone.innerHTML = `<span class="dropped-word">${droppedVerb}</span>`;
+            
+            // 2. Fill Category
+            const catSelect = document.getElementById('cat-select');
+            catSelect.value = ex.category;
+            
+            // 3. Select Correct Option
+            const correctIdx = ex.options.findIndex(opt => opt.correct);
+            selectOption(correctIdx);
+            
+            // 4. Validate to show green colors
+            validate();
+        }
+
+        function validate() {
+            const ex = exercises[currentIndex];
+            const dropZone = document.getElementById('verb-drop-zone');
+            const catSelect = document.getElementById('cat-select');
+            const feedback = document.getElementById('feedback');
+
+            if (!droppedVerb) {
+                feedback.innerHTML = "⚠️ Please identify the verb by dragging it to the box.";
+                feedback.className = "mb-6 p-4 rounded-xl text-sm font-semibold border-2 bg-amber-50 border-amber-200 text-amber-700 block";
+                feedback.classList.remove('hidden');
+                return;
+            }
+
+            const inputVal = droppedVerb.toLowerCase();
+            const correctVerb = ex.verb.toLowerCase();
+            
+            // Soft matching for singular/plural/punctuation
+            const isVerbCorrect = inputVal === correctVerb || 
+                                 inputVal === correctVerb + 's' || 
+                                 (correctVerb.endsWith('s') && inputVal === correctVerb.slice(0, -1));
+            
+            const isCatCorrect = catSelect.value === ex.category;
+            const isOptCorrect = selectedOption !== null && ex.options[selectedOption].correct;
+
+            dropZone.classList.remove('input-correct', 'input-incorrect');
+            catSelect.classList.remove('input-correct', 'input-incorrect');
+            ex.options.forEach((_, i) => {
+                const opt = document.getElementById(`opt-${i}`);
+                if(opt) opt.classList.remove('option-correct', 'option-incorrect');
+            });
+
+            if (isVerbCorrect && isCatCorrect && isOptCorrect) {
+                dropZone.classList.add('input-correct');
+                catSelect.classList.add('input-correct');
+                document.getElementById(`opt-${selectedOption}`).classList.add('option-correct');
+                
+                feedback.innerHTML = "✅ Excellent! All parts of your analysis are correct.";
+                feedback.className = "mb-6 p-4 rounded-xl text-sm font-semibold border-2 bg-green-50 border-green-200 text-green-700 block";
+                
+                completedIds.add(ex.id);
+                document.getElementById('score-text').innerText = `Completed: ${completedIds.size}/${exercises.length}`;
+            } else {
+                let messages = [];
+                
+                if (isVerbCorrect) {
+                    dropZone.classList.add('input-correct');
+                } else {
+                    dropZone.classList.add('input-incorrect');
+                    messages.push("re-identify the reporting verb");
+                }
+
+                if (isCatCorrect) {
+                    catSelect.classList.add('input-correct');
+                } else {
+                    catSelect.classList.add('input-incorrect');
+                    messages.push("adjust the verb category");
+                }
+
+                if (selectedOption !== null) {
+                    if (isOptCorrect) {
+                        document.getElementById(`opt-${selectedOption}`).classList.add('option-correct');
+                    } else {
+                        document.getElementById(`opt-${selectedOption}`).classList.add('option-incorrect');
+                        messages.push("review the interpretation");
+                    }
+                } else {
+                    messages.push("select an interpretation");
+                }
+
+                feedback.innerHTML = `⚠️ Almost there! Please ${messages.join(', ')} and try again.`;
+                feedback.className = "mb-6 p-4 rounded-xl text-sm font-semibold border-2 bg-amber-50 border-amber-200 text-amber-700 block";
+                feedback.classList.remove('hidden');
+            }
+        }
+
+        function prevStep() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCurrentStep();
+            }
+        }
+
+        function nextStep() {
+            if (currentIndex < exercises.length - 1) {
+                currentIndex++;
+                renderCurrentStep();
+            } else {
+                document.getElementById('exercise-viewport').classList.add('hidden');
+                document.getElementById('completion-view').classList.remove('hidden');
+            }
+        }
+
+        function restartActivity() {
+            currentIndex = 0;
+            completedIds.clear();
+            document.getElementById('exercise-viewport').classList.remove('hidden');
+            document.getElementById('completion-view').classList.add('hidden');
+            renderCurrentStep();
+        }
+
+        window.onload = renderCurrentStep;
+    </script>
+</body>
+</html>
