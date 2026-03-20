@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thesis Report – Language & Presentation Rubric</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #f9f7f3;
+    --surface: #ffffff;
+    --ink:     #1c1c1c;
+    --mid:     #555;
+    --rule:    #ddd;
+    --accent:  #2c6e49;
+    --gold:    #b5793a;
+    --c5:#1b4332; --bg5:#d8f3dc;
+    --c4:#2d6a4f; --bg4:#e9f5ec;
+    --c3:#52796f; --bg3:#eaf2f0;
+    --c2:#a07030; --bg2:#fdf3e3;
+    --c1:#8b3a3a; --bg1:#fde8e8;
+    --c0:#444;    --bg0:#e8e8e8;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Lato',sans-serif;font-size:14px;padding:2rem 1rem 4rem}
+  header{max-width:1200px;margin:0 auto 2rem;text-align:center;border-bottom:3px solid var(--accent);padding-bottom:1.2rem}
+  header h1{font-family:'Merriweather',Georgia,serif;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--accent);margin-bottom:.3rem}
+  header p{color:var(--mid);font-size:.85rem}
+  .instruction{max-width:1200px;margin:0 auto 1.2rem;background:#eaf4ee;border-left:4px solid var(--accent);padding:.7rem 1rem;font-size:.83rem;color:#2c4a35;border-radius:0 4px 4px 0}
+  .table-wrap{max-width:1200px;margin:0 auto;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--surface);border:1px solid var(--rule)}
+  col.c5,col.c4,col.c3,col.c2,col.c1{width:16.5%} col.c0{width:17.5%}
+  thead th{padding:.7rem .5rem .5rem;text-align:center;font-family:'Merriweather',serif;font-size:.75rem;font-weight:700;border-bottom:2px solid var(--rule);border-right:1px solid var(--rule);vertical-align:bottom}
+  thead th:last-child{border-right:none}
+  .th-num{display:block;font-size:1.5rem;font-weight:700;line-height:1;margin-bottom:2px}
+  thead th:nth-child(1){color:var(--c5);border-top:4px solid var(--c5);background:var(--bg5)}
+  thead th:nth-child(2){color:var(--c4);border-top:4px solid var(--c4);background:var(--bg4)}
+  thead th:nth-child(3){color:var(--c3);border-top:4px solid var(--c3);background:var(--bg3)}
+  thead th:nth-child(4){color:var(--c2);border-top:4px solid var(--c2);background:var(--bg2)}
+  thead th:nth-child(5){color:var(--c1);border-top:4px solid var(--c1);background:var(--bg1)}
+  thead th:nth-child(6){color:var(--c0);border-top:4px solid var(--c0);background:var(--bg0)}
+  tr.label-row td{background:#f5f2ed;border-top:2px solid var(--rule);border-bottom:1px solid #e0ddd8;padding:.4rem .7rem;font-family:'Merriweather',serif;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mid)}
+  tr.crit-row td{padding:0;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);vertical-align:top}
+  tr.crit-row td:last-child{border-right:none}
+  label.option{display:flex;align-items:flex-start;gap:8px;padding:.65rem .6rem;cursor:pointer;transition:background .12s}
+  label.option:hover{opacity:.88}
+  label.option input[type="radio"]{appearance:none;-webkit-appearance:none;width:15px;height:15px;border:1.5px solid #bbb;border-radius:50%;flex-shrink:0;margin-top:2px;position:relative;cursor:pointer;transition:background .12s,border-color .12s}
+  label.option input[type="radio"]:checked::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#fff}
+  tr.crit-row td:nth-child(1) label.option input[type="radio"]{--rc:var(--c5)}
+  tr.crit-row td:nth-child(2) label.option input[type="radio"]{--rc:var(--c4)}
+  tr.crit-row td:nth-child(3) label.option input[type="radio"]{--rc:var(--c3)}
+  tr.crit-row td:nth-child(4) label.option input[type="radio"]{--rc:var(--c2)}
+  tr.crit-row td:nth-child(5) label.option input[type="radio"]{--rc:var(--c1)}
+  tr.crit-row td:nth-child(6) label.option input[type="radio"]{--rc:var(--c0)}
+  label.option input[type="radio"]:checked{background:var(--rc,#333);border-color:var(--rc,#333)}
+  label.option.selected{border-left:4px solid var(--sel-color,#333);padding-left:calc(.6rem - 3px)}
+  tr.crit-row td:nth-child(1) label.option.selected{background:var(--bg5);--sel-color:var(--c5)}
+  tr.crit-row td:nth-child(2) label.option.selected{background:var(--bg4);--sel-color:var(--c4)}
+  tr.crit-row td:nth-child(3) label.option.selected{background:var(--bg3);--sel-color:var(--c3)}
+  tr.crit-row td:nth-child(4) label.option.selected{background:var(--bg2);--sel-color:var(--c2)}
+  tr.crit-row td:nth-child(5) label.option.selected{background:var(--bg1);--sel-color:var(--c1)}
+  tr.crit-row td:nth-child(6) label.option.selected{background:var(--bg0);--sel-color:var(--c0)}
+  .crit-text{font-size:.77rem;line-height:1.5;color:var(--ink)}
+  .crit-text.fail-text{font-style:italic;color:#777}
+  /* Score panel */
+  .score-panel{max-width:1200px;margin:1.5rem auto 0;background:var(--accent);color:#fff;border-radius:4px;padding:1.1rem 1.5rem;display:flex;align-items:center;flex-wrap:wrap;gap:1.2rem}
+  .reset-btn{margin-left:auto;background:transparent;border:1.5px solid #9cc8b0;color:#2c6e49;font-family:'Lato',sans-serif;font-size:.8rem;padding:.35rem .9rem;border-radius:20px;cursor:pointer;transition:all .15s;letter-spacing:.04em}
+  .reset-btn:hover{background:#2c6e49;border-color:#2c6e49;color:#fff}
+  footer{max-width:1200px;margin:2rem auto 0;text-align:center;font-size:.78rem;color:#888}
+  footer a{color:var(--gold);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+  /* Info panel */
+  .info-panel{max-width:1200px;margin:0 auto 1.2rem;background:#eef6f1;border:1.5px solid #b2d8c4;border-radius:4px;padding:.9rem 1.4rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem .8rem}
+  .info-row{display:flex;align-items:center;gap:.6rem}
+  .info-label{font-family:'Merriweather',serif;font-size:.76rem;font-weight:700;white-space:nowrap;color:#2c6e49;min-width:11rem}
+  .info-input{flex:1;border:none;border-bottom:1.5px solid #9cc8b0;background:transparent;font-family:'Lato',sans-serif;font-size:.84rem;color:var(--ink);padding:.15rem .2rem;outline:none;min-width:80px}
+  .info-input:focus{border-bottom-color:var(--accent);background:#fff;border-radius:2px 2px 0 0}
+  .info-input::placeholder{color:#a0b8ac;font-style:italic}
+  .info-row.full{grid-column:1/-1;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+  .info-grade-value{font-family:'Merriweather',serif;font-size:1rem;font-weight:700;color:var(--accent);margin-left:.3rem}
+  @media(max-width:860px){.table-wrap{font-size:.7rem}table{min-width:680px}}
+
+  @media print {
+    @page { size: A4 landscape; margin: 9mm 8mm; }
+    body { padding: 0; font-size: 8pt; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    header { margin-bottom: 5mm; padding-bottom: 3mm; max-width: 100%; }
+    header h1 { font-size: 12pt; }
+    header p  { font-size: 7.5pt; }
+    .instruction { display: none; }
+    .table-wrap { max-width: 100%; overflow: visible; }
+    table { font-size: 7pt; border: 1px solid #bbb; }
+    thead th { font-size: 7.5pt; padding: .3rem .35rem .2rem; }
+    .th-num { font-size: 11pt; }
+    tr.label-row td { font-size: 6.5pt; padding: .2rem .45rem; }
+    label.option { padding: .28rem .35rem; gap: 4px; }
+    label.option input[type="radio"] { width: 10px; height: 10px; margin-top: 1px; flex-shrink: 0; }
+    label.option input[type="radio"]:checked::after { inset: 2px; }
+    .crit-text { font-size: 6.8pt; line-height: 1.35; }
+    .score-panel { margin-top: 4mm; padding: .6rem .9rem; gap: .7rem; max-width: 100%; border-radius: 3px; }
+    .reset-btn { display: none; }
+    .info-panel { margin-bottom: 4mm; padding: .55rem 1rem; gap: .3rem .5rem; border-radius: 3px; }
+    .info-label { font-size: 7pt; min-width: 9rem; color: #2c6e49; }
+    .info-input { font-size: 7pt; border-bottom: 1px solid #aaa; }
+    .info-grade-value { font-size: 8pt; }
+    .info-panel { background: #f0f8f4; border-color: #b2d8c4; }
+
+    footer { margin-top: 3mm; font-size: 6.5pt; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Thesis — Language and Reporting Rubric</h1>
+  <p>LAB University of Applied Sciences</p>
+</header>
+
+<div class="info-panel">
+  <div class="info-row">
+    <label class="info-label" for="fieldStudent">Student:</label>
+    <input class="info-input" id="fieldStudent" type="text" placeholder="Enter student name">
+  </div>
+  <div class="info-row">
+    <label class="info-label" for="fieldSupervisor">Thesis supervisor:</label>
+    <input class="info-input" id="fieldSupervisor" type="text" placeholder="Enter supervisor name">
+  </div>
+  <div class="info-row full">
+    <label class="info-label" for="fieldExaminer">Language examiner:</label>
+    <input class="info-input" id="fieldExaminer" type="text" placeholder="Enter examiner name">
+  </div>
+  <div class="info-row full">
+    <span class="info-label">Final reporting and language assessment (grade):</span>
+    <span class="info-grade-value" id="infoGrade">—</span>
+    <span style="font-size:.78rem;color:#52796f;margin-left:.4rem" id="infoLabel"></span>
+    <button class="reset-btn" onclick="resetAll()" style="margin-left:auto">&#x21BA; Reset</button>
+  </div>
+</div>
+
+<div class="instruction">
+  Select <strong>one option per criterion row</strong>. The score updates automatically as a weighted average.
+</div>
+
+<div class="table-wrap">
+<table>
+  <colgroup>
+    <col class="c5"><col class="c4"><col class="c3"><col class="c2"><col class="c1"><col class="c0">
+  </colgroup>
+  <thead>
+    <tr>
+      <th><span class="th-num">5</span>Excellent</th>
+      <th><span class="th-num">4</span>Very Good</th>
+      <th><span class="th-num">3</span>Good</th>
+      <th><span class="th-num">2</span>Satisfactory</th>
+      <th><span class="th-num">1</span>Passable</th>
+      <th><span class="th-num">0</span>Fail</th>
+    </tr>
+  </thead>
+  <tbody id="rubricBody"></tbody>
+</table>
+</div>
+
+<footer>
+  Tool by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp; Rubric by Samu Lattu
+</footer>
+
+<script>
+const criteria = [
+  {
+    label: "Structure",
+    items: [
+      "write a thesis report with a consistent and balanced structure",
+      "write a thesis report with a consistent structure",
+      "write a thesis report with a mostly consistent structure",
+      "write a thesis report with a structure that has consistent elements",
+      "write a thesis report but the structure is imperfect or not logical"
+    ]
+  },
+  {
+    label: "Style & Cohesion",
+    items: [
+      "write very fluent, cohesive, and factual-style text",
+      "write fluent, cohesive, and factual-style text",
+      "mostly write fluent, cohesive, and factual-style text",
+      "write factual-style text but the style may be faltering and cohesion elements may be lacking",
+      "write text but the style is faltering and there are plentiful linguistic errors"
+    ]
+  },
+  {
+    label: "Language Accuracy",
+    items: [
+      "write accurate text with almost no linguistic errors",
+      "write text mostly without linguistic errors",
+      "mostly write linguistically good text",
+      "write text that conveys the message despite the errors",
+      "write text that conveys the message despite the plentiful errors"
+    ]
+  },
+  {
+    label: "Referencing",
+    items: [
+      "indicate sources and references without errors and refer to sources diversely using both parenthetical and narrative in-text referencing",
+      "indicate sources and references with almost no errors and refer to sources quite diversely using both parenthetical and narrative in-text referencing",
+      "indicate sources and references with almost no errors using either parenthetical or narrative in-text referencing",
+      "indicate sources and references but there are some shortcomings in them",
+      "indicate sources and references but there are shortcomings in them"
+    ]
+  },
+  {
+    label: "Visual Presentation",
+    items: [
+      "elucidate the report visually: images, figures or tables are appropriate and finalised, referred to and elaborated on notably well in the text",
+      "elucidate the report visually: images, figures or tables are appropriate and clear, referred to and elaborated on in the text",
+      "elucidate the report visually: images, figures or tables are appropriate, clear and referred to in the text",
+      "elucidate the report visually: images, figures or tables are appropriate and mostly referred to in the text; captions are mostly logical",
+      "elucidate the report visually: images, figures or tables remain disconnected; captions are not logical"
+    ]
+  }
+];
+
+const FAIL_TEXT = "The student has not attained the skills and goals of a passing grade.";
+const gradeValues  = [5, 4, 3, 2, 1, 0];
+const gradeLabels  = {5:'Excellent', 4:'Very Good', 3:'Good', 2:'Satisfactory', 1:'Passable', 0:'Fail'};
+const gradePillCls = {5:'g5', 4:'g4', 3:'g3', 2:'g2', 1:'g1', 0:'g0'};
+
+const selected = {}; // row → colIndex
+
+function buildTable() {
+  const tbody = document.getElementById('rubricBody');
+  criteria.forEach((crit, row) => {
+    // label row
+    const ltr = document.createElement('tr');
+    ltr.className = 'label-row';
+    const ltd = document.createElement('td');
+    ltd.colSpan = 6;
+    ltd.textContent = crit.label;
+    ltr.appendChild(ltd);
+    tbody.appendChild(ltr);
+
+    // criteria row
+    const ctr = document.createElement('tr');
+    ctr.className = 'crit-row';
+
+    // columns 0-4 (grades 5-1)
+    crit.items.forEach((text, col) => {
+      const td = document.createElement('td');
+      const lbl = document.createElement('label');
+      lbl.className = 'option';
+      lbl.htmlFor = `r${row}c${col}`;
+
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = `row${row}`;
+      radio.id = `r${row}c${col}`;
+
+      radio.addEventListener('change', () => {
+        ctr.querySelectorAll('label.option').forEach(l => l.classList.remove('selected'));
+        lbl.classList.add('selected');
+        selected[row] = col;
+        updateScore();
+      });
+
+      const span = document.createElement('span');
+      span.className = 'crit-text';
+      span.textContent = 'The student can ' + text;
+
+      lbl.appendChild(radio);
+      lbl.appendChild(span);
+      td.appendChild(lbl);
+      ctr.appendChild(td);
+    });
+
+    // column 5 (fail)
+    const failTd = document.createElement('td');
+    const failLbl = document.createElement('label');
+    failLbl.className = 'option';
+    failLbl.htmlFor = `r${row}c5`;
+
+    const failRadio = document.createElement('input');
+    failRadio.type = 'radio';
+    failRadio.name = `row${row}`;
+    failRadio.id = `r${row}c5`;
+
+    failRadio.addEventListener('change', () => {
+      ctr.querySelectorAll('label.option').forEach(l => l.classList.remove('selected'));
+      failLbl.classList.add('selected');
+      selected[row] = 5;
+      updateScore();
+    });
+
+    const failSpan = document.createElement('span');
+    failSpan.className = 'crit-text fail-text';
+    failSpan.textContent = FAIL_TEXT;
+
+    failLbl.appendChild(failRadio);
+    failLbl.appendChild(failSpan);
+    failTd.appendChild(failLbl);
+    ctr.appendChild(failTd);
+
+    tbody.appendChild(ctr);
+  });
+}
+
+function updateScore() {
+  const keys = Object.keys(selected);
+  const assessed = keys.length;
+
+  if (assessed === 0) {
+    document.getElementById('infoGrade').textContent = '—';
+    document.getElementById('infoLabel').textContent = '';
+    return;
+  }
+
+  let sum = 0;
+  keys.forEach(row => { sum += gradeValues[selected[row]]; });
+
+  const avg = sum / assessed;
+  const display = Number.isInteger(avg) ? String(avg) : avg.toFixed(1);
+  const rounded = Math.round(avg);
+
+  document.getElementById('infoGrade').textContent = display;
+  document.getElementById('infoLabel').textContent = gradeLabels[rounded] ? '(' + gradeLabels[rounded] + ')' : '';
+}
+
+function resetAll() {
+  for (const k in selected) delete selected[k];
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('label.option').forEach(l => l.classList.remove('selected'));
+  document.getElementById('infoGrade').textContent = '—';
+  document.getElementById('infoLabel').textContent = '';
+  updateScore();
+}
+
+buildTable();
+</script>
+</body>
+</html>
