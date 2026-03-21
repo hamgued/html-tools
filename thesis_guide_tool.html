@@ -444,11 +444,10 @@ footer a:hover { text-decoration: underline; }
 <div class="tabs">
   <button class="tab active" onclick="showSection('overview',this)">Overview</button>
   <button class="tab" onclick="showSection('style',this)">Writing Style</button>
-  <button class="tab" onclick="showSection('structure',this)">Structure</button>
   <button class="tab" onclick="showSection('intext',this)">In-Text Refs</button>
   <button class="tab" onclick="showSection('reflist',this)">Ref List</button>
-  <button class="tab" onclick="showSection('quiz',this)">Quiz</button>
   <button class="tab" onclick="showSection('builder',this)">Ref Builder</button>
+  <button class="tab" onclick="showSection('quiz',this)">Quiz</button>
 </div>
 
 <main>
@@ -476,14 +475,6 @@ footer a:hover { text-decoration: underline; }
         <span class="toc-tag study">Study + Practice</span>
       </div>
     </button>
-    <button class="toc-card" onclick="goTo('structure')">
-      <div class="toc-num">03</div>
-      <div class="toc-card-body">
-        <h3>Report Structure</h3>
-        <p>Required sections from title page to appendices.</p>
-        <span class="toc-tag practice">Drag &amp; Drop</span>
-      </div>
-    </button>
     <button class="toc-card" onclick="goTo('intext')">
       <div class="toc-num">04</div>
       <div class="toc-card-body">
@@ -500,20 +491,20 @@ footer a:hover { text-decoration: underline; }
         <span class="toc-tag study">Study</span>
       </div>
     </button>
-    <button class="toc-card" onclick="goTo('quiz')">
-      <div class="toc-num">06</div>
-      <div class="toc-card-body">
-        <h3>Knowledge Quiz</h3>
-        <p>20 randomised multiple-choice questions with instant feedback.</p>
-        <span class="toc-tag game">Quiz · 20 questions</span>
-      </div>
-    </button>
     <button class="toc-card" onclick="goTo('builder')">
       <div class="toc-num">07</div>
       <div class="toc-card-body">
         <h3>Reference Builder</h3>
         <p>Fill in source details and get a correctly formatted reference entry.</p>
         <span class="toc-tag practice">Interactive Tool</span>
+      </div>
+    </button>
+    <button class="toc-card" onclick="goTo('quiz')">
+      <div class="toc-num">06</div>
+      <div class="toc-card-body">
+        <h3>Knowledge Quiz</h3>
+        <p>20 randomised multiple-choice questions with instant feedback.</p>
+        <span class="toc-tag game">Quiz · 20 questions</span>
       </div>
     </button>
   </div>
@@ -530,22 +521,114 @@ footer a:hover { text-decoration: underline; }
   <div class="rule-card">
     <h3>Language Quality</h3>
     <p>The language must be <span class="highlight">easy to read, clear, concrete, and consistent</span>. Avoid spoken-language expressions. Use professional vocabulary of your field. Prefer direct constructions — e.g., <code>is evaluated</code> over <code>evaluation is carried out</code>. Avoid vague phrases like <code>within the framework of</code>.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.9rem;">
+      <div style="background:var(--wrong-lt);border:1px solid #fca5a5;border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--wrong);margin-bottom:0.3rem;">✗ Avoid</div>
+        <p style="font-size:0.82rem;line-height:1.5;color:#7f1d1d;">An evaluation of the results was carried out by the research team within the framework of the project.</p>
+      </div>
+      <div style="background:var(--correct-lt);border:1px solid #86efac;border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--correct);margin-bottom:0.3rem;">✓ Prefer</div>
+        <p style="font-size:0.82rem;line-height:1.5;color:#14532d;">The research team evaluated the results.</p>
+      </div>
+    </div>
   </div>
+
   <div class="rule-card blue">
     <h3>Paragraph &amp; Chapter Rules</h3>
     <p>Text must progress consistently sentence-to-sentence and paragraph-to-paragraph. <span class="highlight">Each chapter must contain at least two paragraphs</span>, and <span class="highlight">each paragraph must contain at least two sentences.</span></p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.9rem;">
+      <div style="background:var(--wrong-lt);border:1px solid #fca5a5;border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--wrong);margin-bottom:0.3rem;">✗ Avoid</div>
+        <p style="font-size:0.82rem;line-height:1.5;color:#7f1d1d;"><strong>3 Customer Satisfaction</strong><br>Customer satisfaction is important.</p>
+        <p style="font-size:0.75rem;color:#991b1b;margin-top:0.4rem;">One paragraph, one sentence — invalid.</p>
+      </div>
+      <div style="background:var(--correct-lt);border:1px solid #86efac;border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--correct);margin-bottom:0.3rem;">✓ Prefer</div>
+        <p style="font-size:0.82rem;line-height:1.5;color:#14532d;"><strong>3 Customer Satisfaction</strong><br>Customer satisfaction measures how well a company meets expectations. It is a key indicator of long-term business success.<br><br>Several factors influence satisfaction, including product quality and service speed. These are examined in the following sections.</p>
+      </div>
+    </div>
   </div>
+
   <div class="rule-card amber">
     <h3>Paraphrasing vs. Quoting</h3>
     <p>Paraphrasing shows you understood the source. Short direct quotations inside a sentence are typed in <em>italics</em>. Long direct quotations use the <code>LAB Citation</code> style, separated by blank lines before and after. Translated quotations are not italicised — reference as <code>(Author Year, author's translation)</code>.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.9rem;">
+      <div style="background:var(--wrong-lt);border:1px solid #fca5a5;border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--wrong);margin-bottom:0.3rem;">✗ Avoid — copy-pasting</div>
+        <p style="font-size:0.82rem;line-height:1.5;color:#7f1d1d;"><em>Leadership is the process of influencing others to understand and agree about what needs to be done and how to do it.</em> (Yukl 2013, 7.)</p>
+        <p style="font-size:0.75rem;color:#991b1b;margin-top:0.4rem;">Overuse of direct quotation adds no analysis.</p>
+      </div>
+      <div style="background:var(--correct-lt);border:1px solid #86efac;border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--correct);margin-bottom:0.3rem;">✓ Prefer — paraphrase</div>
+        <p style="font-size:0.82rem;line-height:1.5;color:#14532d;">According to Yukl (2013, 7), leadership involves guiding others toward a shared understanding of goals and the methods required to achieve them.</p>
+      </div>
+    </div>
+    <div style="margin-top:0.7rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+      <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#2563eb;margin-bottom:0.3rem;">Short in-sentence quotation (italics)</div>
+      <p style="font-size:0.82rem;line-height:1.5;">Yukl (2013, 7) defines leadership as <em>the process of influencing others to understand and agree.</em></p>
+    </div>
+    <div style="margin-top:0.55rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+      <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#7c3aed;margin-bottom:0.3rem;">Translated quotation (no italics)</div>
+      <p style="font-size:0.82rem;line-height:1.5;">Leadership is the process of influencing others toward shared goals. (Yukl 2013, 7, author's translation.)</p>
+    </div>
   </div>
+
   <div class="rule-card purple">
     <h3>Lists</h3>
     <p>Lists must have an introductory sentence or phrase. <span class="highlight">No comma after bullets.</span> Bullets not full sentences → start lowercase, full stop after last bullet only. Bullets that are full sentences → capital letter + full stop each. An entire chapter cannot consist of lists only.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.9rem;">
+      <div style="background:var(--wrong-lt);border:1px solid #fca5a5;border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--wrong);margin-bottom:0.3rem;">✗ Avoid</div>
+        <p style="font-size:0.82rem;line-height:1.8;color:#7f1d1d;">The system has several features:<br>
+        • Fast processing,<br>
+        • Secure login,<br>
+        • Easy export.</p>
+        <p style="font-size:0.75rem;color:#991b1b;margin-top:0.4rem;">Commas after bullets — incorrect.</p>
+      </div>
+      <div style="background:var(--correct-lt);border:1px solid #86efac;border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--correct);margin-bottom:0.3rem;">✓ Prefer</div>
+        <p style="font-size:0.82rem;line-height:1.8;color:#14532d;">The system has several features:<br>
+        • fast processing<br>
+        • secure login<br>
+        • easy export.</p>
+        <p style="font-size:0.75rem;color:#166534;margin-top:0.4rem;">No commas. Lowercase start. Full stop after last bullet only.</p>
+      </div>
+    </div>
+    <div style="margin-top:0.6rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+      <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#7c3aed;margin-bottom:0.3rem;">✓ Full-sentence bullets</div>
+      <p style="font-size:0.82rem;line-height:1.8;">The following stages take place in forming groups:<br>
+      • First, members who do not know each other are overly courteous.<br>
+      • Next, conflicts arise and members begin to test each other.<br>
+      • In the last stage, the situation stabilises and the group is ready to work productively.</p>
+    </div>
   </div>
+
   <div class="rule-card">
     <h3>Illustrations — Images, Figures, Tables</h3>
     <p>All illustrations are left-aligned and numbered consecutively. Figure/image captions go <span class="highlight">below</span>; table captions go <span class="highlight">above</span>. Style: <code>LAB Figure Title</code>. Captions are not complete sentences. Reference every illustration by number in the text before it appears. Must fit on one page with caption — otherwise place in appendices.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.9rem;">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.7rem 0.85rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal-dk);margin-bottom:0.5rem;">Figure caption — below</div>
+        <div style="background:var(--border);border-radius:4px;height:52px;display:flex;align-items:center;justify-content:center;margin-bottom:0.45rem;">
+          <span style="font-size:0.75rem;color:var(--muted);">[ chart / diagram ]</span>
+        </div>
+        <p style="font-size:0.8rem;color:var(--text);">Figure 1. Sales volume by quarter (Smith 2022)</p>
+        <p style="font-size:0.72rem;color:var(--muted);margin-top:0.3rem;">Caption is below the figure. Not a complete sentence. Source in parentheses.</p>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.7rem 0.85rem;">
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal-dk);margin-bottom:0.5rem;">Table caption — above</div>
+        <p style="font-size:0.8rem;color:var(--text);margin-bottom:0.45rem;">Table 1. Annual revenue figures (Jones 2021)</p>
+        <div style="background:var(--border);border-radius:4px;height:52px;display:flex;align-items:center;justify-content:center;">
+          <span style="font-size:0.75rem;color:var(--muted);">[ table data ]</span>
+        </div>
+        <p style="font-size:0.72rem;color:var(--muted);margin-top:0.35rem;">Caption is above the table. Not a complete sentence.</p>
+      </div>
+    </div>
+    <div style="margin-top:0.6rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+      <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal-dk);margin-bottom:0.3rem;">In-text reference before the illustration</div>
+      <p style="font-size:0.82rem;line-height:1.5;">Customer satisfaction scores varied significantly across regions, as shown in Figure 1.</p>
+      <p style="font-size:0.72rem;color:var(--muted);margin-top:0.25rem;">Always refer to the illustration by number in the text before it appears.</p>
+    </div>
   </div>
 
   <div class="divider"></div>
@@ -564,28 +647,6 @@ footer a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<!-- ═══════════════════════════ STRUCTURE -->
-<div class="section" id="section-structure">
-  <div class="section-header">
-    <div class="section-label">Module 03</div>
-    <h1 class="section-title">Report Structure</h1>
-    <p class="section-desc">A LAB thesis report follows a fixed sequence of nine sections.</p>
-  </div>
-  <div class="rule-card" style="margin-bottom:1.3rem;">
-    <h3>Required Sections — in Order</h3>
-    <p>Title page → Abstract → Contents → List of abbreviations (if applicable) → Introduction → Main body chapters → Summary and discussion → References → Appendices (if necessary).</p>
-  </div>
-  <div class="sub-heading">Drag &amp; Order Activity</div>
-  <div class="sub-desc">Drag the tiles into the correct sequence (1 = first, 9 = last).</div>
-  <div class="drag-area" id="dragSource"></div>
-  <div id="orderZones"></div>
-  <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-    <button class="btn" onclick="checkOrder()">Check Order</button>
-    <button class="btn ghost" onclick="initOrder()">Reset</button>
-  </div>
-  <div class="feedback" id="orderFeedback" style="margin-top:1rem;"></div>
-</div>
-
 <!-- ═══════════════════════════ IN-TEXT REFS -->
 <div class="section" id="section-intext">
   <div class="section-header">
@@ -602,6 +663,11 @@ footer a:hover { text-decoration: underline; }
   <div class="rule-card blue">
     <h3>Parenthetical — Multiple Sentences / Paragraph</h3>
     <p>Full stop goes <span class="highlight">inside</span> the brackets.<br><code>(Tuomi-Sorjonen 2013, 53.)</code></p>
+    <div style="margin-top:0.7rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
+      <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#2563eb;margin-bottom:0.35rem;">Example — two sentences paraphrased from one source</div>
+      <p style="font-size:0.82rem;line-height:1.6;">Value-added tax included in representation costs is not deductible. Representation expenses are costs that aim to create new business relationships, maintain existing ones, or otherwise promote business. (Tuomi-Sorjonen 2013, 53.)</p>
+      <p style="font-size:0.72rem;color:var(--muted);margin-top:0.35rem;">The reference covers both sentences, so the full stop goes inside the closing bracket.</p>
+    </div>
   </div>
   <div class="rule-card amber">
     <h3>Narrative Reference</h3>
@@ -721,36 +787,10 @@ footer a:hover { text-decoration: underline; }
     <h1 class="section-title">Reference Builder</h1>
     <p class="section-desc">Select a source type, fill in the fields, and get a correctly formatted entry.</p>
   </div>
-  <!-- Tool A: Builder -->
+  <!-- Tool A: Example Viewer -->
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.5rem;margin-bottom:1.5rem;">
-    <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:1.1rem;">
-      <span style="background:var(--teal);color:#fff;font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:999px;letter-spacing:0.07em;text-transform:uppercase;">Tool A</span>
-      <span style="font-weight:600;font-size:0.95rem;">Build Your Own Reference</span>
-    </div>
-    <div class="ref-fields" style="grid-template-columns:1fr;margin-bottom:1.1rem;">
-      <div class="ref-field">
-        <label>Source Type</label>
-        <select id="refType" onchange="updateRefBuilder()">
-          <option value="book">Printed Book</option>
-          <option value="article">Journal / Magazine Article</option>
-          <option value="web">Web Page (with author)</option>
-          <option value="webnoauthor">Web Page (no author)</option>
-          <option value="act">Act / Decree</option>
-          <option value="thesis">Thesis</option>
-          <option value="interview">Interview (background research)</option>
-        </select>
-      </div>
-    </div>
-    <div id="refFields" class="ref-fields"></div>
-    <div class="ref-output-label">Generated Reference Entry</div>
-    <div class="ref-output" id="refOutput">Fill in the fields above…</div>
-    <button class="btn" onclick="copyRef()">Copy to Clipboard</button>
-  </div>
-
-  <!-- Tool B: Example Viewer -->
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.5rem;">
     <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;">
-      <span style="background:var(--amber);color:#fff;font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:999px;letter-spacing:0.07em;text-transform:uppercase;">Tool B</span>
+      <span style="background:var(--amber);color:#fff;font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:999px;letter-spacing:0.07em;text-transform:uppercase;">Tool A</span>
       <span style="font-weight:600;font-size:0.95rem;">See a Worked Example</span>
     </div>
     <p style="font-size:0.83rem;color:var(--muted);margin-bottom:1rem;">Select a source type to see a complete, correctly formatted example with all fields filled in.</p>
@@ -773,6 +813,32 @@ footer a:hover { text-decoration: underline; }
     <div class="ref-output" id="exampleOutput"></div>
     <div id="exampleNote" style="margin-top:0.7rem;font-size:0.8rem;color:var(--muted);line-height:1.5;"></div>
   </div>
+
+  <!-- Tool B: Builder -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.5rem;">
+    <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:1.1rem;">
+      <span style="background:var(--teal);color:#fff;font-size:0.68rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:999px;letter-spacing:0.07em;text-transform:uppercase;">Tool B</span>
+      <span style="font-weight:600;font-size:0.95rem;">Build Your Own Reference</span>
+    </div>
+    <div class="ref-fields" style="grid-template-columns:1fr;margin-bottom:1.1rem;">
+      <div class="ref-field">
+        <label>Source Type</label>
+        <select id="refType" onchange="updateRefBuilder()">
+          <option value="book">Printed Book</option>
+          <option value="article">Journal / Magazine Article</option>
+          <option value="web">Web Page (with author)</option>
+          <option value="webnoauthor">Web Page (no author)</option>
+          <option value="act">Act / Decree</option>
+          <option value="thesis">Thesis</option>
+          <option value="interview">Interview (background research)</option>
+        </select>
+      </div>
+    </div>
+    <div id="refFields" class="ref-fields"></div>
+    <div class="ref-output-label">Generated Reference Entry</div>
+    <div class="ref-output" id="refOutput">Fill in the fields above…</div>
+    <button class="btn" onclick="copyRef()">Copy to Clipboard</button>
+  </div>
 </div>
 
 
@@ -791,7 +857,7 @@ function addScore(n) {
 }
 
 // ── NAVIGATION ────────────────────────────────────────────
-const sectionOrder = ['overview','style','structure','intext','reflist','quiz','builder'];
+const sectionOrder = ['overview','style','intext','reflist','builder','quiz'];
 function showSection(id, tabEl) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -1184,7 +1250,7 @@ function showExample() {
 }
 
 // ── INIT ──────────────────────────────────────────────────
-window.onload = () => { initOrder(); initSpotErrors(); initQuiz(); updateRefBuilder(); showExample(); };
+window.onload = () => { initSpotErrors(); initQuiz(); updateRefBuilder(); showExample(); };
 </script>
 </body>
 </html>
