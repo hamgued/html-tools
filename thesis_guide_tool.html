@@ -429,6 +429,54 @@ footer {
 }
 footer a { color: var(--teal-dk); text-decoration: none; font-weight: 500; }
 footer a:hover { text-decoration: underline; }
+/* ── TOOLTIPS ────────────────────────────────────────── */
+.tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: var(--teal-lt);
+  color: var(--teal-dk);
+  border: 1px solid var(--teal-mid);
+  border-radius: 50%;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: help;
+  flex-shrink: 0;
+  vertical-align: middle;
+  margin-left: 0.35rem;
+  top: -1px;
+}
+.tip .tip-box {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: #f5f6f4;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  width: 220px;
+  z-index: 200;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+.tip .tip-box::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--text);
+}
+.tip:hover .tip-box { display: block; }
 </style>
 </head>
 <body>
@@ -631,20 +679,6 @@ footer a:hover { text-decoration: underline; }
     </div>
   </div>
 
-  <div class="divider"></div>
-  <div class="sub-heading">Quick Practice — Fill in the Blanks</div>
-  <div class="sub-desc">Type the missing word(s) and press Check.</div>
-  <div class="question-card">
-    <div class="q-category">Fill-in Exercise</div>
-    <div class="fill-text">
-      Each chapter must contain at least <input class="fill-blank" id="f1" placeholder="?" size="4"> paragraphs, and each paragraph must contain at least <input class="fill-blank" id="f2" placeholder="?" size="4"> sentences. Captions for tables are placed <input class="fill-blank" id="f3" placeholder="above/below" size="9"> the table, while captions for figures are placed <input class="fill-blank" id="f4" placeholder="above/below" size="9"> the figure.
-    </div>
-    <div class="feedback" id="fillFeedback"></div>
-    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-      <button class="btn" onclick="checkFill()">Check Answers</button>
-      <button class="btn ghost" onclick="resetFill()">Reset</button>
-    </div>
-  </div>
 </div>
 
 <!-- ═══════════════════════════ IN-TEXT REFS -->
@@ -656,12 +690,12 @@ footer a:hover { text-decoration: underline; }
   </div>
 
   <div class="rule-card">
-    <h3>Parenthetical — Single Sentence</h3>
+    <h3>Parenthetical — Single Sentence <span class="tip">?<span class="tip-box">The reference applies to one sentence only. The full stop ends the sentence after the closing bracket.</span></span></h3>
     <p>Full stop goes <span class="highlight">outside</span> the closing bracket.<br>
     <code>Good management helps employees develop competence (Ekholm &amp; Salmenkangas 2015, 35–36).</code></p>
   </div>
   <div class="rule-card blue">
-    <h3>Parenthetical — Multiple Sentences / Paragraph</h3>
+    <h3>Parenthetical — Multiple Sentences / Paragraph <span class="tip">?<span class="tip-box">When the reference covers more than one sentence, the full stop moves inside the bracket to signal the wider scope of the citation.</span></span></h3>
     <p>Full stop goes <span class="highlight">inside</span> the brackets.<br><code>(Tuomi-Sorjonen 2013, 53.)</code></p>
     <div style="margin-top:0.7rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.6rem 0.8rem;">
       <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#2563eb;margin-bottom:0.35rem;">Example — two sentences paraphrased from one source</div>
@@ -670,42 +704,42 @@ footer a:hover { text-decoration: underline; }
     </div>
   </div>
   <div class="rule-card amber">
-    <h3>Narrative Reference</h3>
+    <h3>Narrative Reference <span class="tip">?<span class="tip-box">The author's name is woven into the sentence as its subject. The year and page go in brackets directly after the name — not at the end of the sentence.</span></span></h3>
     <p>Author name in the sentence; year and page in brackets immediately after.<br>
     <code>Myers and Kassing (2009, 72) claim that…</code><br>
     <code>According to Myers and Kassing (2009, 72), …</code><br>
     <code>Singh et al. (2020) emphasize that…</code></p>
   </div>
   <div class="rule-card purple">
-    <h3>Multiple Sources in One Reference</h3>
+    <h3>Multiple Sources in One Reference <span class="tip">?<span class="tip-box">Listing sources chronologically shows the development of research over time. Separate each source with a semicolon inside the same pair of brackets.</span></span></h3>
     <p>List in <span class="highlight">chronological order</span>, separated by <span class="highlight">semicolons</span>.<br>
     <code>(Siukosaari 2015, 205; Ojanen 2016, 18; Kuutti 2017, 102.)</code></p>
   </div>
   <div class="rule-card">
-    <h3>Two Authors</h3>
+    <h3>Two Authors <span class="tip">?<span class="tip-box">Use an ampersand (&) between two authors in both in-text references and in the references list. Never use "and".</span></span></h3>
     <p>Use an ampersand: <code>(Chang &amp; Nguyen 2011, 13.)</code></p>
   </div>
   <div class="rule-card blue">
-    <h3>Three or More Authors</h3>
+    <h3>Three or More Authors <span class="tip">?<span class="tip-box">Only the first-listed author is named in the in-text reference. "et al." is Latin for "and others". Note: et al. is NOT permitted in the references list — all authors must be named there.</span></span></h3>
     <p>First author only + <code>et al.</code>: <code>(Jones et al. 2009, 43–45.)</code></p>
   </div>
   <div class="rule-card amber">
-    <h3>Secondary Sources</h3>
+    <h3>Secondary Sources <span class="tip">?<span class="tip-box">A secondary source is one you read that quotes or cites the original (primary) source. Always try to find the primary source first. Only the secondary source appears in the references list.</span></span></h3>
     <p>Use only when primary source is unavailable.<br>
     <code>(Robson 1995, according to Hirsjärvi et al. 2009, 134.)</code><br>
     Only the secondary source goes in the references list.</p>
   </div>
   <div class="rule-card purple">
-    <h3>Acts and Decrees</h3>
+    <h3>Acts and Decrees <span class="tip">?<span class="tip-box">Include the official name of the act, its code number, the year, and the relevant section. No page numbers are used for legislative sources.</span></span></h3>
     <p><code>(Biobank Act 688/2012, Section 2.)</code></p>
   </div>
   <div class="rule-card">
-    <h3>No Author Found</h3>
+    <h3>No Author Found <span class="tip">?<span class="tip-box">If no individual author is named, use the title of the publication. For web pages without an author, use the name of the organisation responsible for the site.</span></span></h3>
     <p>Use publication title: <code>(Travel Guide to the Galaxy 2012, 14.)</code><br>
     Web page — use publishing body + year: <code>(Posti Group Oyj 2016)</code></p>
   </div>
   <div class="rule-card blue">
-    <h3>Same Author, Same Year</h3>
+    <h3>Same Author, Same Year <span class="tip">?<span class="tip-box">Add lowercase letters (a, b, c…) immediately after the year whenever the same author has multiple works published in the same year. Use the same letters in both the in-text reference and the references list.</span></span></h3>
     <p>Add lowercase letters: <code>(Nguyen 2016a, 23; Nguyen 2016b, 35.)</code></p>
   </div>
 
@@ -723,49 +757,49 @@ footer a:hover { text-decoration: underline; }
     <p class="section-desc">How to format entries for each source type.</p>
   </div>
   <div class="rule-card">
-    <h3>General Rules</h3>
+    <h3>General Rules <span class="tip">?<span class="tip-box">The references list is ordered A–Z by the first author's surname. Every source cited in the text must appear, and no source may appear unless it was actually cited.</span></span></h3>
     <p>Alphabetical order A–Z. All sources used must appear; no unused sources. Authors listed as <span class="highlight">Surname, I.</span> All authors named — <code>et al.</code> is prohibited in the references list.</p>
   </div>
   <div class="rule-card blue">
-    <h3>Printed Book</h3>
+    <h3>Printed Book <span class="tip">?<span class="tip-box">Include edition information if it is not the first edition. If the place of publication or publisher is missing from the source, simply omit that element.</span></span></h3>
     <p><code>Surname, I. Year. Title. Place: Publisher.</code><br><br>
     Brynjolfsson, E. &amp; McAfee, A. 2014. The Second Machine Age. New York: W. W. Norton.</p>
   </div>
   <div class="rule-card amber">
-    <h3>Journal / Magazine Article</h3>
+    <h3>Journal / Magazine Article <span class="tip">?<span class="tip-box">For academic journals, include the volume and issue number (e.g. Vol. 13 (8)). For newspaper articles, include the full date and page number instead.</span></span></h3>
     <p><code>Surname, I. Year. Article title. Journal Name, pages.</code><br><br>
     Lepore, J. 2020. All the King's Data. The New Yorker, August 3 &amp; 10/2020, 18–24.</p>
   </div>
   <div class="rule-card purple">
-    <h3>Digital Source</h3>
+    <h3>Digital Source <span class="tip">?<span class="tip-box">Always include the retrieval date — web content can change or disappear. If access requires a login or payment, write "Limited availability at" instead of "Available at". No full stop after the URL.</span></span></h3>
     <p><code>Surname, I. Year. Title. Publisher. Retrieved on [date]. Available at [URL]</code><br>
     No full stop after the web address. Always include retrieval date.</p>
   </div>
   <div class="rule-card">
-    <h3>Web Page — No Author</h3>
+    <h3>Web Page — No Author <span class="tip">?<span class="tip-box">When no year of publication is shown on the page, omit the year entirely — do not write "n.d." or "no date". The organisation name or page title acts as the author.</span></span></h3>
     <p>Use the organisation name or page title.<br>
     Finnish Nurses Association. Professional Ethics and Collegiality. Retrieved on 12 August 2020. Available at https://…</p>
   </div>
   <div class="rule-card blue">
-    <h3>Act / Decree</h3>
+    <h3>Act / Decree <span class="tip">?<span class="tip-box">The minimal entry is just the name and code. You may optionally add the source database and retrieval information for reader convenience.</span></span></h3>
     <p><code>Name of Act Code/Year.</code><br>Biobank Act 688/2012.</p>
   </div>
   <div class="rule-card amber">
-    <h3>Interview (Background Research)</h3>
+    <h3>Interview (Background Research) <span class="tip">?<span class="tip-box">Only background research interviews are listed here. Interviews conducted to gather empirical research data are kept anonymous and are never included in the references list.</span></span></h3>
     <p>Green, M. 2022. Managing Director. DuraPipes Ltd. Interview on 5 February 2022.<br>
     <em style="font-size:0.81rem;color:var(--muted);">Empirical data interviews are NOT listed — they are anonymous.</em></p>
   </div>
   <div class="rule-card purple">
-    <h3>Thesis</h3>
+    <h3>Thesis <span class="tip">?<span class="tip-box">Specify the degree level clearly. Theses published on Theseus can be referenced with the URN permalink, which is permanent and preferred over a direct URL.</span></span></h3>
     <p>Harjunpää, A. 2022. [Title]. LAB University of Applied Sciences. Thesis (Master's degree). Retrieved on 2 May 2022. Available at https://…</p>
   </div>
   <div class="rule-card">
-    <h3>Images / Figures / Tables</h3>
+    <h3>Images / Figures / Tables <span class="tip">?<span class="tip-box">Sources for all illustrations go in the same references list as all other sources — there is no separate list for images. The format follows the same rules as for the source type (book, web page, etc.).</span></span></h3>
     <p>Sources for illustrations go in the <span class="highlight">same references list</span> — no separate list.<br>
     Nagy, R. R. 2015. Datamancer's Steampunk Laptop. Retrieved on 10 February 2020. Available at http://…</p>
   </div>
   <div class="rule-card blue">
-    <h3>Secondary Source in the Ref List</h3>
+    <h3>Secondary Source in the Ref List <span class="tip">?<span class="tip-box">You only list the source you actually read (the secondary source). The original author (primary source) is mentioned in the in-text reference but does not appear in the references list.</span></span></h3>
     <p>Enter <span class="highlight">only the secondary source</span>. If you cited (Robson 1995, according to Hirsjärvi et al. 2009, 134), only Hirsjärvi et al. appears.</p>
   </div>
 </div>
