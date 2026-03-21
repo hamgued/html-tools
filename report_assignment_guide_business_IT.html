@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academic Report – Assignment Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=DM+Sans:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --border: #e2ddd6;
+    --text: #1e1c18;
+    --muted: #6b6760;
+    --accent: #2d6a4f;
+    --accent-light: #e8f4ee;
+    --accent-text: #1a4731;
+    --warn: #92400e;
+    --warn-bg: #fef3c7;
+    --warn-border: #fcd34d;
+    --danger: #991b1b;
+    --danger-bg: #fef2f2;
+    --danger-border: #fca5a5;
+    --info: #1e40af;
+    --info-bg: #eff6ff;
+    --info-border: #bfdbfe;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  .wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 14px;
+    padding: 2rem 2rem 1.6rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    right: -30px; top: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .hero-tag {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+  .hero h1 {
+    font-family: 'Lora', serif;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .hero p {
+    font-size: 14px;
+    opacity: 0.85;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+  .hero-pills {
+    display: flex;
+    gap: 8px;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .pill {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+
+  /* TABS */
+  .tabs-nav {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 110px;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .tab-btn:hover { background: var(--bg); color: var(--text); }
+  .tab-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .tab-panel { display: none; animation: fadeIn 0.2s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    margin-bottom: 10px;
+  }
+  .card-head {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  .card-body {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ALERTS */
+  .alert {
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    border-left: 3px solid;
+  }
+  .alert strong { font-weight: 500; }
+  .alert-warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
+  .alert-danger { background: var(--danger-bg); color: var(--danger); border-color: var(--danger-border); }
+  .alert-info { background: var(--info-bg); color: var(--info); border-color: var(--info-border); }
+  .alert-green { background: var(--accent-light); color: var(--accent-text); border-color: var(--accent); }
+
+  /* SECTION LABEL */
+  .sec-label {
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  /* TOPIC GRID */
+  .topic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 520px) { .topic-grid { grid-template-columns: 1fr; } }
+  .topic-card {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    background: var(--surface);
+  }
+  .topic-card.highlighted { border-color: var(--accent); border-width: 1.5px; }
+  .topic-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .topic-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .icon-a { background: var(--info-bg); color: var(--info); }
+  .icon-b { background: var(--accent-light); color: var(--accent-text); }
+  .topic-desc { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-bottom: 8px; }
+  .mini-badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .mb-blue { background: var(--info-bg); color: var(--info); }
+  .mb-green { background: var(--accent-light); color: var(--accent-text); }
+
+  /* STRUCTURE */
+  .struct-list { display: flex; flex-direction: column; gap: 5px; }
+  .struct-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+  }
+  .struct-item.indent {
+    margin-left: 20px;
+    background: var(--bg);
+    border-style: dashed;
+  }
+  .struct-num { font-size: 12px; font-weight: 500; color: var(--accent); min-width: 20px; }
+  .struct-name { font-size: 13px; font-weight: 500; color: var(--text); min-width: 140px; }
+  .struct-note { font-size: 12px; color: var(--muted); }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 8px; }
+  .step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-text { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+  .step-text strong { color: var(--text); font-weight: 500; }
+
+  /* TIMELINE */
+  .timeline { display: flex; flex-direction: column; }
+  .tl-item { display: flex; gap: 14px; }
+  .tl-spine { display: flex; flex-direction: column; align-items: center; }
+  .tl-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .tl-line { width: 1.5px; flex: 1; background: var(--border); min-height: 14px; margin: 3px 0; }
+  .tl-body { padding-bottom: 18px; }
+  .tl-phase {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+  }
+  .tl-desc { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+
+  /* ACCORDION */
+  .accordion { display: flex; flex-direction: column; gap: 6px; }
+  .acc-item {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .acc-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    gap: 10px;
+  }
+  .acc-trigger:hover { background: var(--bg); }
+  .acc-icon {
+    font-size: 16px;
+    color: var(--muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .acc-item.open .acc-icon { transform: rotate(45deg); }
+  .acc-body {
+    display: none;
+    padding: 0 14px 14px;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    border-top: 0.5px solid var(--border);
+  }
+  .acc-item.open .acc-body { display: block; }
+  .acc-body p + p { margin-top: 8px; }
+  .acc-body .alert { margin-top: 10px; }
+
+  /* PROMPT BOX */
+  .prompt-box {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+  .prompt-box strong { font-style: normal; font-weight: 500; color: var(--text); }
+
+  divider { display: block; height: 0.5px; background: var(--border); margin: 1.2rem 0; }
+
+  .term-grid { display: flex; flex-wrap: wrap; gap: 7px; overflow: visible; }
+  .term-chip {
+    display: inline-block;
+    font-size: 13px;
+    padding: 5px 11px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    color: var(--text);
+    cursor: default;
+    position: relative;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .term-chip:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); }
+  #chip-tooltip {
+    position: fixed;
+    background: #1e1c18;
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 7px 10px;
+    border-radius: 6px;
+    width: 240px;
+    text-align: left;
+    white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 9999;
+  }
+  #chip-tooltip.visible { opacity: 1; }
+
+  /* GRADE BADGE */
+  .grade-display {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    margin-bottom: 10px;
+  }
+  .grade-circle {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .grade-num {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--accent-text);
+  }
+  .grade-info { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .grade-info strong { color: var(--text); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="hero">
+    <div class="hero-tag">Assignment Guide</div>
+    <h1>Writing Your Academic Report</h1>
+    <p>A plain-language guide to help you and your team understand the assignment, structure your report, and submit with confidence.</p>
+    <div class="hero-pills">
+      <span class="pill">Team project</span>
+      <span class="pill">~30 hours</span>
+      <span class="pill">Graded 0–5</span>
+    </div>
+    <p style="margin-top:1rem;font-size:11px;opacity:0.5;">Created with Claude Sonnet 4.6 &middot; Hamid Guedra</p>
+  </div>
+
+  <nav class="tabs-nav" role="tablist">
+    <button class="tab-btn active" role="tab" onclick="switchTab(this,'overview')">Overview</button>
+    <button class="tab-btn" role="tab" onclick="switchTab(this,'topics')">Topics</button>
+    <button class="tab-btn" role="tab" onclick="switchTab(this,'structure')">Structure</button>
+    <button class="tab-btn" role="tab" onclick="switchTab(this,'timeline')">Timeline</button>
+    <button class="tab-btn" role="tab" onclick="switchTab(this,'submit')">Submission</button>
+    <button class="tab-btn" role="tab" onclick="switchTab(this,'ai')">AI Rules</button>
+  </nav>
+
+  <!-- OVERVIEW -->
+  <div id="tab-overview" class="tab-panel active">
+    <div class="sec-label">What is this assignment?</div>
+    <div class="card">
+      <div class="card-body">You and your team will write a short academic report together. You choose one of two topics, follow a fixed template structure, find and cite credible sources, go through at least one draft, and submit a final version before the deadline. The whole process — choosing a topic, researching, drafting, getting feedback, and revising — runs across the semester.</div>
+    </div>
+
+    <div class="sec-label" style="margin-top:1.4rem">Learning goals</div>
+    <div class="accordion">
+      <div class="acc-item open">
+        <button class="acc-trigger" onclick="toggleAcc(this)">Writing & research <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>Write a structured academic report and learn the conventions of academic communication. Search for credible sources through the library database (LAB Primo) and cite them correctly following LAB's Thesis Guidebook format.</p>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">Teamwork & feedback <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>Practice collaborative writing as a team. Give and receive peer feedback on a team's draft. Use AI tools (within the allowed limits) to get proofreading feedback, and reflect on the difference between peer and AI feedback.</p>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">Definitions & concepts <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>Define 8 key terms related to your chosen topic (business plan or UX research) and write clear, source-supported definitions for each one.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:1.4rem">Grading</div>
+    <div class="grade-display">
+      <div class="grade-circle"><div class="grade-num">0–5</div></div>
+      <div class="grade-info"><strong>Team grade.</strong> The whole team receives the same mark. Sections 2 and 3 must be complete before the midterm exam, where you individually write the report abstract.</div>
+    </div>
+  </div>
+
+  <!-- TOPICS -->
+  <div id="tab-topics" class="tab-panel">
+    <div class="sec-label">Choose your topic</div>
+    <div class="alert alert-warn"><strong>Important:</strong> Choose as a team — you cannot change your topic later.</div>
+
+    <div class="topic-grid">
+      <div class="topic-card">
+        <div class="topic-title"><span class="topic-icon icon-a">A</span> Business plan</div>
+        <div class="topic-desc">Define 8 key business plan terms (section 2) and create an imaginary business plan for a company of your choice (section 3).</div>
+        <div class="topic-desc"><strong>Section 3 covers:</strong> value proposition, customer segments, delivery channels, customer relations, key partners, revenue model, key resources, and cost structure.</div>
+        <span class="mini-badge mb-blue">Imaginary company</span>
+      </div>
+      <div class="topic-card">
+        <div class="topic-title"><span class="topic-icon icon-b">B</span> UX research</div>
+        <div class="topic-desc">Define 8 key UX research terms (section 2) and conduct small-scale user research on a real app, tool, or website (section 3).</div>
+        <div class="topic-desc"><strong>Section 3 covers:</strong> problem statement, user personas, a user journey map, evaluation and solutions, methodology, and benchmarking.</div>
+        <span class="mini-badge mb-green">Real research</span>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:1.4rem">Term definitions (Section 2)</div>
+
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-head">Paragraph structure for each definition</div>
+      <div class="card-body">Every definition subsection should follow this three-part structure:
+        <ol style="margin-top:8px;margin-left:1.1rem;display:flex;flex-direction:column;gap:5px;">
+          <li><strong>Topic sentence</strong> — introduce the term and explain why it matters in your topic area.</li>
+          <li><strong>Definition</strong> — define the term using a credible source, cited correctly.</li>
+          <li><strong>Remaining paragraph</strong> — elaborate with examples, additional sources, or further explanation.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="accordion" style="margin-top:2px">
+      <div class="acc-item open">
+        <button class="acc-trigger" onclick="toggleAcc(this)">Strong author citations (preferred) <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>A <strong>strong author citation</strong> puts the author's name in the sentence itself. This is the preferred style — it gives more weight to your source and reads more academically. There are three patterns:</p>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+            <div style="background:var(--accent-light);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:10px 12px;font-size:13px;color:var(--accent-text);">
+              <div style="font-weight:500;margin-bottom:4px;">Pattern 1 — "according to"</div>
+              <div>…according to Payne et al. (2017, 467), value proposition is a strategic tool that a business can use to outline the benefits it offers and the value it creates.</div>
+            </div>
+            <div style="background:var(--accent-light);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:10px 12px;font-size:13px;color:var(--accent-text);">
+              <div style="font-weight:500;margin-bottom:4px;">Pattern 2 — reporting verb (explain, describe, note…)</div>
+              <div>…Payne et al. (2017, 467) explain that value proposition is a strategic tool that a business can use to outline the benefits it offers and the value it creates.</div>
+            </div>
+            <div style="background:var(--accent-light);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:10px 12px;font-size:13px;color:var(--accent-text);">
+              <div style="font-weight:500;margin-bottom:4px;">Pattern 3 — "define … as"</div>
+              <div>…Payne et al. (2017, 467) define value proposition as a strategic tool that a business can use to outline the benefits it offers and the value it creates.</div>
+            </div>
+          </div>
+          <p style="margin-top:10px;font-size:12.5px;">You can also acknowledge disagreement or multiple definitions before your chosen one: <em>"While there are many definitions and some disagreement (Kaikkonen 2017, 34), according to Payne et al. (2017, 467)…"</em></p>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">Weak author citations (also acceptable) <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>A <strong>weak author citation</strong> places the author in brackets at the end of the sentence. This is acceptable but less emphatic. Use it when the idea matters more than who said it.</p>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+            <div style="background:var(--info-bg);border-left:3px solid var(--info-border);border-radius:0 6px 6px 0;padding:10px 12px;font-size:13px;color:var(--info);">
+              <div style="font-weight:500;margin-bottom:4px;">Pattern 1 — passive voice + brackets</div>
+              <div>Usability can be defined as part of UX research and a core concept in discussions on better user experience (Smith &amp; Wesson 2022, 24).</div>
+            </div>
+            <div style="background:var(--info-bg);border-left:3px solid var(--info-border);border-radius:0 6px 6px 0;padding:10px 12px;font-size:13px;color:var(--info);">
+              <div style="font-weight:500;margin-bottom:4px;">Pattern 2 — "is" + brackets</div>
+              <div>Usability is part of UX research and a core concept in discussions on better user experience (Smith &amp; Wesson 2022, 24).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">How to format your references list <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>Every source you cite must appear in the references list at the end of the report. Follow LAB's Thesis Guidebook format (chapters 7.2–7.4). Here are examples of correctly formatted references:</p>
+          <div style="margin-top:10px;background:var(--bg);border:0.5px solid var(--border);border-radius:6px;padding:12px 14px;font-size:12.5px;color:var(--muted);line-height:1.8;">
+            <p>Hassan, M. M. &amp; Tabasum, M. 2018. Customer profiling and segmentation in retail banks using data mining techniques. International journal of advanced research in computer science. Vol. 9 (4), 24–29. Retrieved on [date]. Available at DOI 10.26483/ijarcs.v9i4.6172.</p>
+            <p style="margin-top:8px">Payne, A., Frow, P. &amp; Eggert, A. 2017. The customer value proposition: evolution, development, and application in marketing. Journal of the Academy of Marketing Science, Vol 45 (4), 467–489. Retrieved on [date]. Available at DOI 10.1007/s11747-017-0523-z.</p>
+            <p style="margin-top:8px">Smith, B. &amp; Wesson, J. 2022. UX Research Essentials. E-book. UX Research Publishers. LAB Primo.</p>
+          </div>
+          <p style="margin-top:8px;font-size:12.5px;">Note: include the retrieval date and URL or DOI for online sources. For e-books found through LAB Primo, add "LAB Primo" at the end.</p>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">Business plan terms to define <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Hover over a term to see a brief description.</p>
+          <div class="term-grid">
+            <span class="term-chip" data-tip="The unique benefit or solution a business offers to its customers — why they should choose you over a competitor.">Value proposition</span>
+            <span class="term-chip" data-tip="Dividing a market into distinct groups of customers who share similar needs, characteristics, or behaviours.">Customer segmentation</span>
+            <span class="term-chip" data-tip="The methods a business uses to reach its customers and deliver its product or service (e.g. online store, social media, physical shop).">Delivery and communication channel</span>
+            <span class="term-chip" data-tip="The strategies and practices a business uses to build and maintain relationships with its customers.">Customer relations management</span>
+            <span class="term-chip" data-tip="External companies or individuals that a business works with to operate successfully (e.g. suppliers, distributors, technology providers).">Key partner</span>
+            <span class="term-chip" data-tip="The way a business earns income — for example through sales, subscriptions, licensing, or advertising.">Revenue model</span>
+            <span class="term-chip" data-tip="The most important assets a business needs to function, such as people, technology, physical equipment, or intellectual property.">Key resource</span>
+            <span class="term-chip" data-tip="All the significant costs involved in running the business — what it costs to create and deliver value to customers.">Cost structure</span>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">UX research terms to define <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Hover over a term to see a brief description.</p>
+          <div class="term-grid">
+            <span class="term-chip" data-tip="How easy and efficient a product is to use — whether users can accomplish their goals without confusion or frustration.">Usability</span>
+            <span class="term-chip" data-tip="The overall experience a person has when interacting with a product or service, including feelings, perceptions, and responses.">User experience</span>
+            <span class="term-chip" data-tip="A fictional but research-based profile representing a typical user — their goals, needs, and behaviours.">User persona</span>
+            <span class="term-chip" data-tip="A design process where you repeatedly test, get feedback, and improve a product in cycles rather than building it all at once.">Iterative design</span>
+            <span class="term-chip" data-tip="Observing real users as they attempt tasks with a product to identify usability problems and areas for improvement.">Usability testing</span>
+            <span class="term-chip" data-tip="Testing an early model (prototype) of a product with users to gather feedback before the final version is built.">Prototype testing</span>
+            <span class="term-chip" data-tip="A moderated group discussion used to gather opinions, attitudes, and reactions from a set of users or potential users.">Focus group</span>
+            <span class="term-chip" data-tip="Designing products so that people with disabilities or different abilities can use them effectively — including visual, motor, and cognitive considerations.">Accessibility</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRUCTURE -->
+  <div id="tab-structure" class="tab-panel">
+    <div class="sec-label">Report structure</div>
+    <div class="alert alert-info"><strong>Use the official template.</strong> Template 1 for business plan, Template 2 for UX research. Do not change the section headings or numbering.</div>
+
+    <div class="struct-list">
+      <div class="struct-item"><span class="struct-num">—</span><span class="struct-name">Cover page</span><span class="struct-note">Report title, course name, instructor, all author names and student ID numbers</span></div>
+      <div class="struct-item"><span class="struct-num">—</span><span class="struct-name">Abstract</span><span class="struct-note">Leave blank — you write this during the midterm exam</span></div>
+      <div class="struct-item"><span class="struct-num">—</span><span class="struct-name">Table of contents</span><span class="struct-note">Generated automatically if using Word — update before submitting</span></div>
+      <div class="struct-item"><span class="struct-num">1</span><span class="struct-name">Introduction</span><span class="struct-note">Brief overview of the report topic and structure</span></div>
+      <div class="struct-item"><span class="struct-num">2</span><span class="struct-name">Term definitions</span><span class="struct-note">Define all 8 key terms — one definition per subsection (2.1–2.8)</span></div>
+      <div class="struct-item indent"><span class="struct-num">2.1–2.8</span><span class="struct-name">Each term</span><span class="struct-note">Written in your own words, with at least one cited source per definition</span></div>
+      <div class="struct-item"><span class="struct-num">3</span><span class="struct-name">Main content</span><span class="struct-note">Your business plan or UX research analysis</span></div>
+      <div class="struct-item indent"><span class="struct-num">3.1–3.x</span><span class="struct-name">Subsections</span><span class="struct-note">Follow the template's subsection structure for your chosen topic</span></div>
+      <div class="struct-item"><span class="struct-num">4</span><span class="struct-name">Feedback section</span><span class="struct-note">Document peer feedback (4.1), AI feedback (4.2), and your reflection comparing the two (4.3)</span></div>
+      <div class="struct-item"><span class="struct-num">5</span><span class="struct-name">AI tool use</span><span class="struct-note">Disclose any AI tools you used and how — required even if use was minimal</span></div>
+      <div class="struct-item"><span class="struct-num">—</span><span class="struct-name">References</span><span class="struct-note">Full reference list following LAB Thesis Guidebook format (chapters 7.2–7.4)</span></div>
+      <div class="struct-item"><span class="struct-num">—</span><span class="struct-name">Appendices</span><span class="struct-note">Any supporting materials (e.g. survey questions, screenshots)</span></div>
+    </div>
+
+    <div class="sec-label" style="margin-top:1.4rem">Formatting & sources</div>
+    <div class="accordion">
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">How to find credible sources <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>Use <strong>LAB Primo</strong> (the library database) to search for academic books and journal articles. Avoid using Wikipedia, random websites, or AI-generated text as sources.</p>
+          <p>Each definition in section 2 needs at least one source. Section 3 should also include cited sources where appropriate. Aim for a mix of source types.</p>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">How to cite and reference <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>Follow <strong>LAB's Thesis Guidebook, chapters 6.1, 6.2, 7.2, 7.3, and 7.4</strong> for in-text citations and reference list formatting.</p>
+          <p>Every source cited in the text must appear in the reference list, and every item in the reference list must be cited in the text.</p>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">Visual elements (images, figures, tables) <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>The template includes placeholders for images, figures, and tables. Label all visuals (e.g. "Figure 1. Our user journey map") and refer to them in your text. For section 3 in the business plan template, there is a placeholder for a brand image and a customer table. For the UX template, there is a user persona table and a journey map figure.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div id="tab-timeline" class="tab-panel">
+    <div class="sec-label">Semester timeline</div>
+    <div class="alert alert-info">You will work on the report throughout the semester during lessons — but you must also set aside time outside of class.</div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-phase">Early semester</div>
+          <div class="tl-desc">Form your team and choose your topic. Start searching for sources and drafting your term definitions in section 2.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-phase">Mid semester</div>
+          <div class="tl-desc">Complete your first draft (all sections present, most content written). Submit to Turnitin for similarity feedback. Give and receive peer feedback. Get AI proofreading feedback.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body">
+          <div class="tl-phase">Midterm exam</div>
+          <div class="tl-desc">Sections 2 and 3 must be complete by now. In the exam, you individually write an abstract (summary) of your team's report.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-spine"><div class="tl-dot"></div></div>
+        <div class="tl-body">
+          <div class="tl-phase">End of semester — final deadline</div>
+          <div class="tl-desc">Finalise your report and give a short presentation based on your work. Upload the final version before the deadline — the submission link closes automatically.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:1.4rem">What counts as a first draft?</div>
+    <div class="card">
+      <div class="card-body">All template sections are present and contain real content (mostly complete). Perfect grammar, spelling, and formatting are not required at this stage — errors are normal and expected. You can use placeholders like <strong>TBC</strong> (to be completed), <strong>NSS</strong> (needs a source), or <strong>FCN</strong> (further clarification needed).</div>
+    </div>
+    <div class="alert alert-green" style="margin-top:8px">The purpose of the first draft is to have something concrete to review, critique, and improve — and to prepare you to write the abstract in the midterm exam.</div>
+  </div>
+
+  <!-- SUBMISSION -->
+  <div id="tab-submit" class="tab-panel">
+    <div class="sec-label">How to submit</div>
+    <div class="alert alert-warn"><strong>No late submissions.</strong> The submission link closes automatically at the deadline. Plan ahead.</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Use the correct template.</strong> Template 1 for the business plan, Template 2 for UX research. Do not rename sections or change the structure.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Only the team leader uploads.</strong> One person submits on behalf of the whole group. Everyone else should make sure the leader has the latest version well before the deadline.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Upload draft versions early.</strong> Submit drafts to get a Turnitin Similarity Report. Turnitin can take several hours or up to a day to respond — don't wait until the last minute.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Review and revise.</strong> If Turnitin flags high similarity, edit your report and resubmit. Keep refining until you are satisfied with the final version.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text"><strong>Submit your final version before the deadline.</strong> Make sure the uploaded file is your best, complete version. You cannot make changes after the link closes.</div>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:1.4rem">Turnitin & plagiarism</div>
+    <div class="accordion">
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">What is Turnitin? <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>Turnitin is a tool that checks your report for similarity with other texts and flags potential plagiarism. It also includes AI writing detection. The Similarity Report shows which parts of your text match other sources.</p>
+          <p>A high similarity score does not automatically mean plagiarism — properly quoted and cited text will show as similar. But you should review the report and paraphrase or cite anything that looks like it was copied.</p>
+        </div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger" onclick="toggleAcc(this)">What is plagiarism? <span class="acc-icon">+</span></button>
+        <div class="acc-body">
+          <p>Plagiarism is using someone else's words or ideas without proper attribution. This includes copying text from a source without citation, paraphrasing too closely without a reference, or submitting AI-generated content as your own work.</p>
+          <p>Always write in your own words and cite your sources. If in doubt, cite — over-citing is better than under-citing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI RULES -->
+  <div id="tab-ai" class="tab-panel">
+    <div class="sec-label">Rules for using AI tools</div>
+    <div class="alert alert-danger"><strong>Not allowed:</strong> You may NOT use AI tools to write any part of your report. This includes generating definitions, paragraphs, analysis, or any other content.</div>
+    <div class="alert alert-green"><strong>Allowed:</strong> You MAY use AI tools only to proofread — checking grammar, spelling, and punctuation. No rewriting.</div>
+    <div class="alert alert-green"><strong>Allowed:</strong> You MAY use AI to get feedback on your writing — but this is done together with your instructor in class, not independently.</div>
+
+    <div class="sec-label" style="margin-top:1.4rem">If you use AI, you must</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Save records.</strong> Take screenshots or save copies of your AI chat sessions for every time you used an AI tool.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Disclose it in section 5.</strong> Fill in the AI use disclosure section of your report. Failing to disclose AI use is treated as fraud and will affect your grade.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Complete the AI disclosure form</strong> provided by your instructor (linked in the course).</div>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:1.4rem">Recommended proofreading prompt</div>
+    <div class="card">
+      <div class="card-head">Copy and paste this into your AI tool of choice</div>
+      <div class="prompt-box">
+        <strong>Role:</strong> You are a proofreading tool.<br>
+        <strong>Focus area:</strong> Proofread for grammar, spelling, and punctuation only.<br>
+        <strong>Boundaries:</strong> Do not rewrite anything. Respect my original authorial voice and only flag objective writing mistakes.<br>
+        <strong>Context:</strong> I am writing an academic report.<br>
+        <strong>Feedback format:</strong> Provide your feedback in bullet points.<br>
+        <strong>How to start:</strong> Wait for me to give you a passage or file to check.
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:1.4rem">AI in the classroom</div>
+    <div class="card">
+      <div class="card-body">Your instructor will use AI tools together with you in class — specifically for getting AI feedback on your writing, which goes into section 4.2 of your report. In section 4.3, you reflect on how the peer feedback and AI feedback compared. Keep notes on both.</div>
+    </div>
+  </div>
+
+</div>
+
+<div id="chip-tooltip"></div>
+<script>
+
+  // Term chip tooltips
+  const tip = document.getElementById('chip-tooltip');
+  document.querySelectorAll('.term-chip').forEach(chip => {
+    chip.addEventListener('mouseenter', e => {
+      tip.textContent = chip.dataset.tip;
+      tip.classList.add('visible');
+      position(e);
+    });
+    chip.addEventListener('mousemove', position);
+    chip.addEventListener('mouseleave', () => tip.classList.remove('visible'));
+  });
+  function position(e) {
+    const pad = 12, tw = 240, th = tip.offsetHeight || 80;
+    let x = e.clientX + pad;
+    let y = e.clientY + pad;
+    if (x + tw > window.innerWidth - pad) x = e.clientX - tw - pad;
+    if (y + th > window.innerHeight - pad) y = e.clientY - th - pad;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+  }
+
+  function switchTab(btn, id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+
+  function toggleAcc(btn) {
+    const item = btn.closest('.acc-item');
+    item.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
