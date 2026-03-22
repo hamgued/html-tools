@@ -14,11 +14,31 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-  header { background: #ffffff; border-bottom: 1px solid #e0e6ed; padding: 0 24px; flex-shrink: 0; display: flex; align-items: center; min-height: 58px; }
+  header { background: #ffffff; border-bottom: 1px solid #e0e6ed; color: var(--text); padding: 0 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; min-height: 58px; gap: 20px; }
   .header-left h1 { font-size: 1.05rem; font-weight: 700; color: #1a237e; }
   .header-left p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
   .header-left a { color: var(--blue); text-decoration: none; }
   .header-left a:hover { text-decoration: underline; }
+
+  /* TRAFFIC LIGHTS */
+  .tl-header { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+  .tl-header-label { font-size: 0.69rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-right: 6px; white-space: nowrap; text-decoration: none; }
+  .tl-header-label:hover { color: var(--blue); text-decoration: underline; }
+  .tl-pill { position: relative; display: flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; cursor: default; border: 1.5px solid #e4e8ef; background: #f7f9fc; transition: border-color 0.15s; }
+  .tl-pill:hover { border-color: #bbc; }
+  .tl-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .tl-dot-green { background: #43a047; }
+  .tl-dot-amber { background: #fb8c00; }
+  .tl-dot-red { background: #e53935; }
+  .tl-pill-text { font-size: 0.71rem; font-weight: 600; color: #555; white-space: nowrap; }
+  .tl-tooltip { display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 7px 11px; border-radius: 7px; font-size: 0.72rem; width: 185px; z-index: 300; line-height: 1.4; box-shadow: 0 3px 10px rgba(0,0,0,0.22); pointer-events: none; white-space: normal; text-align: center; }
+  .tl-pill:hover .tl-tooltip { display: block; }
+  .tl-header .tl-pill:last-child .tl-tooltip { left: auto; right: 0; transform: none; }
+
+  @media (max-width: 680px) {
+    .tl-pill-text { display: none; }
+    .tl-header-label { display: none; }
+  }
 
   .main { flex: 1; overflow-y: auto; padding: 28px 32px; }
   .panel-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
@@ -82,6 +102,24 @@
     <h1>✍️ Prompt Builder Workshop</h1>
     <p>LAB/LUT Language Centre · <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></p>
   </div>
+  <div class="tl-header">
+    <a class="tl-header-label" href="https://arene.fi/wp-content/uploads/PDF/2024/tekoalysuositukset/ARENE%20AI%20english.pdf?_t=1731419903" target="_blank">🚦 Arene Traffic Lights</a>
+    <div class="tl-pill">
+      <div class="tl-dot tl-dot-green"></div>
+      <span class="tl-pill-text">Green – OK</span>
+      <div class="tl-tooltip">AI use is allowed and encouraged. No special restrictions apply.</div>
+    </div>
+    <div class="tl-pill">
+      <div class="tl-dot tl-dot-amber"></div>
+      <span class="tl-pill-text">Amber – Caution</span>
+      <div class="tl-tooltip">AI use is permitted but requires care. Check task instructions and disclose use.</div>
+    </div>
+    <div class="tl-pill">
+      <div class="tl-dot tl-dot-red"></div>
+      <span class="tl-pill-text">Red – Not allowed</span>
+      <div class="tl-tooltip">AI use is prohibited for this task. Using AI would be academic misconduct.</div>
+    </div>
+  </div>
 </header>
 
 <div class="main">
@@ -131,6 +169,12 @@
                 <option value="minutes">Meeting minutes</option>
                 <option value="abstract">Abstract</option>
                 <option value="lit_review">Literature review section</option>
+                <option value="proposal">Project / research proposal</option>
+                <option value="memo">Business memo</option>
+                <option value="case_study">Case study</option>
+                <option value="research_article">Research article section</option>
+                <option value="newsletter">Newsletter / internal comms</option>
+                <option value="social_media">Social media post</option>
               </select>
             </div>
           </div>
@@ -191,8 +235,14 @@ const techniques = [
         discussion_post:"You are an online learning facilitator. I need to write a discussion post on {topic}. What should my post include to be both substantive and engaging?",
         minutes:"You are an experienced meeting facilitator. I need to write minutes for a meeting on {topic}. What structure and key sections should I use?",
         abstract:"You are an academic writing tutor. I am writing an abstract for a paper on {topic}. What elements must I include and what is the ideal order?",
-        lit_review:"You are a research supervisor. I am planning a literature review section on {topic}. What themes should I look for and how should I organise the section?"
-      },
+        lit_review:"You are a research supervisor. I am planning a literature review section on {topic}. What themes should I look for and how should I organise the section?",
+        proposal:"You are an experienced grant writer. I need to write a proposal on {topic}. What sections must I include, what is each section\'s purpose, and what would reviewers look for most critically?",
+        memo:"You are a business communication specialist. I need to write a memo on {topic}. What is the standard memo structure, what should each section contain, and what makes a memo effective in a professional context?",
+        case_study:"You are a business writing expert. I need to write a case study on {topic}. What sections must I include, what makes a case study compelling, and what evidence should I gather before writing?",
+        research_article:"You are an academic writing tutor with expertise in research writing. I need to write a section of a research article on {topic}. What does a strong [introduction / methods / results / discussion] section contain, and what are the most common weaknesses?",
+        newsletter:"You are an internal communications specialist. I need to write a newsletter or internal communication on {topic}. What structure works best, what tone is appropriate, and what should I prioritise to ensure it gets read?"
+      ,
+        social_media:"You are a social media strategist. I need to write a social media post about {topic}. What platform am I writing for, who is the target audience, and what key message should the post convey? Guide me without writing it."},
       drafting:{
         email:"You are a professional communication coach. I am writing an email about {topic}. Without writing it for me, tell me: what should my opening sentence achieve, what should the body paragraph do, and how should I close?",
         essay:"You are an academic writing tutor. I am drafting an introduction for an essay on {topic}. Guide me: what should my first sentence do, what background context is essential, and how should I phrase my thesis?",
@@ -203,8 +253,14 @@ const techniques = [
         discussion_post:"You are a learning facilitator. I am drafting a discussion post on {topic}. Guide me: what position should I state upfront, what evidence should I use, and how should I invite further discussion?",
         minutes:"You are a professional minute-taker. I am drafting minutes for a meeting on {topic}. What must I include for each agenda item, and how should I phrase decisions and action points?",
         abstract:"You are an academic writing tutor. I am drafting an abstract for a paper on {topic}. Walk me through what each sentence in a 5-sentence abstract should do — without writing it for me.",
-        lit_review:"You are a research supervisor. I am drafting a literature review section on {topic}. Guide me: how should I open the section, how should I group sources, and how should I end with a gap statement?"
-      },
+        lit_review:"You are a research supervisor. I am drafting a literature review section on {topic}. Guide me: how should I open the section, how should I group sources, and how should I end with a gap statement?",
+        proposal:"You are an experienced proposal writer. I am drafting the introduction to a proposal on {topic}. Without writing it for me, tell me: what must the first sentence establish, what problem must I define clearly, and how should I close the introduction?",
+        memo:"You are a business communication coach. I am drafting a memo on {topic}. Without writing it for me, tell me: what should my subject line achieve, what must the first sentence establish, and how should I end with a clear action point?",
+        case_study:"You are a business writing coach. I am drafting the opening section of a case study on {topic}. Without writing it for me, tell me: what must the first paragraph establish, how should I introduce the organisation or context, and what should I avoid?",
+        research_article:"You are an academic writing coach. I am drafting a section of a research article on {topic}. Without writing it for me, guide me: how should I open this section, how should I integrate evidence, and how should I close with a link to the next section?",
+        newsletter:"You are an internal communications coach. I am drafting a newsletter on {topic}. Without writing it for me, tell me: what should my headline do, how should I open the first paragraph, and how should I close to encourage the desired action?"
+      ,
+        social_media:"You are a social media coach. I am drafting a post about {topic}. Without writing it for me, tell me: what should my opening hook do, how long should the post be for this platform, and how should I end with a call to action or question?"},
       revising:{
         email:"You are a professional editor. Here is my draft email about {topic}: [paste draft]. Without rewriting it, tell me specifically what is unclear, what the tone issues are, and what structural changes would improve it.",
         essay:"You are an academic writing tutor. Here is my draft essay paragraph on {topic}: [paste paragraph]. Without rewriting it, identify weaknesses in the argument, suggest where I need more evidence, and flag any issues with academic style.",
@@ -215,8 +271,14 @@ const techniques = [
         discussion_post:"You are a learning facilitator. Here is my discussion post on {topic}: [paste post]. Without rewriting it, tell me if my argument is clear, whether I have supported it adequately, and how I could invite more engagement.",
         minutes:"You are a professional editor. Here are my draft minutes for a meeting on {topic}: [paste draft]. Without rewriting, tell me what is unclear, what is missing, and whether action points are specific enough.",
         abstract:"You are a research supervisor. Here is my draft abstract for a paper on {topic}: [paste abstract]. Without rewriting it, tell me which elements are missing, which sentences are unclear, and whether it accurately represents the paper.",
-        lit_review:"You are a research supervisor. Here is my literature review section on {topic}: [paste section]. Without rewriting it, tell me: is the argument coherent, are sources integrated or just listed, and is there a clear gap statement?"
-      },
+        lit_review:"You are a research supervisor. Here is my literature review section on {topic}: [paste section]. Without rewriting it, tell me: is the argument coherent, are sources integrated or just listed, and is there a clear gap statement?",
+        proposal:"You are an experienced proposal reviewer. Here is my draft proposal section on {topic}: [paste section]. Without rewriting it, tell me: is the argument convincing, is the methodology credible, and what would a sceptical reviewer challenge?",
+        memo:"You are a professional editor. Here is my draft memo on {topic}: [paste]. Without rewriting it, tell me: is the structure clear, is the tone appropriate, and is the required action unambiguous?",
+        case_study:"You are a professional business editor. Here is my draft case study on {topic}: [paste]. Without rewriting it, tell me: is the narrative compelling, is the evidence strong enough, and where does the argument weaken?",
+        research_article:"You are a research supervisor. Here is my draft section of a research article on {topic}: [paste]. Without rewriting it, tell me: does each paragraph have a clear argument, is evidence integrated (not just cited), and where is the weakest reasoning?",
+        newsletter:"You are an internal communications editor. Here is my draft newsletter on {topic}: [paste]. Without rewriting it, tell me: is the key message immediately clear, is the tone engaging, and is there anything likely to confuse or disengage readers?"
+      ,
+        social_media:"You are a social media strategist. Here is my draft post about {topic}: [paste draft]. Without rewriting it, tell me: is the hook strong, is the message clear, and is the tone right for the platform and audience?"},
       editing:{
         email:"You are a professional proofreader. Check this email about {topic} for grammar, punctuation, and tone errors: [paste text]. List each error, its type, and your suggested correction.",
         essay:"You are an academic proofreader. Check this essay paragraph on {topic} for grammar, academic register, and coherence issues: [paste paragraph]. List each error and your suggested correction.",
@@ -227,8 +289,14 @@ const techniques = [
         discussion_post:"You are an academic writing tutor. Proofread this discussion post on {topic}: [paste post]. List any grammar or register errors with corrections.",
         minutes:"You are a professional editor. Proofread these meeting minutes on {topic}: [paste minutes]. Flag any unclear phrasing, missing information, or language errors.",
         abstract:"You are an academic proofreader. Check this abstract on {topic} for grammar and clarity: [paste abstract]. List each issue and your suggested fix.",
-        lit_review:"You are a research supervisor. Proofread this literature review section on {topic}: [paste section]. Flag language errors, unclear sentences, and any places where citation style is inconsistent."
-      }
+        lit_review:"You are a research supervisor. Proofread this literature review section on {topic}: [paste section]. Flag language errors, unclear sentences, and any places where citation style is inconsistent.",
+        proposal:"You are a professional editor. Proofread this proposal section on {topic}: [paste]. List all grammar, style, and register errors with corrections.",
+        memo:"You are a professional proofreader. Check this memo on {topic} for grammar, punctuation, and tone errors: [paste]. List each error and correction.",
+        case_study:"You are a professional proofreader. Check this case study on {topic} for grammar, style, and consistency errors: [paste]. List each error and correction.",
+        research_article:"You are an academic proofreader. Check this research article section on {topic} for grammar, hedging language, citation integration, and register: [paste]. List each error and correction.",
+        newsletter:"You are a professional editor. Proofread this newsletter on {topic} for grammar, tone, and clarity: [paste]. List each error and correction."
+      ,
+        social_media:"You are a professional editor. Check this social media post about {topic} for grammar, clarity, and tone: [paste]. List each issue and correction."}
     }
   },
   { name:"Step-by-step", icon:"🪜", tip:"<strong>Step-by-step prompting</strong> asks the AI to reason through a task in stages. This helps you understand the process, not just receive a result.",
@@ -243,8 +311,14 @@ const techniques = [
         discussion_post:"Help me plan a discussion post on {topic}. Think step by step: 1) what position will I take, 2) what evidence supports it, 3) what question can I pose to invite responses?",
         minutes:"Help me plan the structure of my meeting minutes on {topic}. Think step by step: 1) what information goes in the header, 2) how should I record each agenda item, 3) how should I format action points?",
         abstract:"Help me plan an abstract for a paper on {topic}. Think step by step: 1) what is the research problem, 2) what method did I use, 3) what are the main findings, 4) what is the significance?",
-        lit_review:"Help me plan a literature review section on {topic}. Think step by step: 1) what are the main themes in the literature, 2) how should I group the sources, 3) what gap will I identify at the end?"
-      },
+        lit_review:"Help me plan a literature review section on {topic}. Think step by step: 1) what are the main themes in the literature, 2) how should I group the sources, 3) what gap will I identify at the end?",
+        proposal:"Help me plan a proposal on {topic}. Think step by step: 1) define the problem or opportunity, 2) state the objectives, 3) outline the methodology, 4) identify the expected outcomes, 5) consider the budget or resources needed.",
+        memo:"Help me plan a memo on {topic}. Think step by step: 1) who is the audience and what do they need to know, 2) what is the single key message, 3) what background is essential, 4) what action do I want the reader to take?",
+        case_study:"Help me plan a case study on {topic}. Think step by step: 1) define the context and background, 2) identify the problem or challenge, 3) describe the solution or intervention, 4) present the results with evidence, 5) draw out the key lessons.",
+        research_article:"Help me plan a research article section on {topic}. Think step by step: 1) what is the purpose of this section, 2) what must the reader know by the end of it, 3) what evidence or data should I draw on, 4) how does it connect to the next section?",
+        newsletter:"Help me plan a newsletter or internal communication on {topic}. Think step by step: 1) who is the audience and what do they need to know, 2) what is the key message, 3) what supporting information should I include, 4) what action (if any) do I want readers to take?"
+      ,
+        social_media:"Help me plan a social media post about {topic}. Think step by step: 1) identify the platform and its conventions, 2) define the target audience, 3) state the single key message, 4) decide on the tone, 5) plan a call to action or question."},
       drafting:{
         email:"I am writing an email about {topic}. Walk me through the drafting process step by step: what should I write first, what should each paragraph accomplish, and what must my closing sentence do? Do not write the email for me.",
         essay:"I am drafting an introduction for an essay on {topic}. Walk me through the process step by step: what should my opening sentence do, what context must I give, and how do I write a strong thesis? Do not write it for me.",
@@ -255,8 +329,14 @@ const techniques = [
         discussion_post:"I am writing a discussion post on {topic}. Walk me through the process step by step: how should I open, what should my argument include, and how should I end to invite replies? Do not write it for me.",
         minutes:"I am writing up minutes for a meeting on {topic}. Walk me through the process step by step: what must I record for each agenda item, how do I phrase decisions, and how do I format action points? Do not write them for me.",
         abstract:"I am drafting an abstract for a paper on {topic}. Walk me through the process step by step: what should each of the five sentences accomplish? Do not write it for me.",
-        lit_review:"I am drafting a literature review section on {topic}. Walk me through the process step by step: how do I open, how do I move between sources, and how do I end with a research gap? Do not write it for me."
-      },
+        lit_review:"I am drafting a literature review section on {topic}. Walk me through the process step by step: how do I open, how do I move between sources, and how do I end with a research gap? Do not write it for me.",
+        proposal:"I am drafting a proposal on {topic}. Walk me through the process step by step: what must each section accomplish, what should I write first, and what common mistakes should I avoid? Do not write it for me.",
+        memo:"I am drafting a memo on {topic}. Walk me through the process step by step: what goes in the header, what should the opening paragraph state, and how should I phrase the call to action? Do not write it for me.",
+        case_study:"I am drafting a case study on {topic}. Walk me through the process step by step: what should the opening do, how should I present the problem, how should I describe the solution, and how should I present the results? Do not write it for me.",
+        research_article:"I am drafting a section of a research article on {topic}. Walk me through the process: what should the opening sentence establish, how should I present evidence, and how should I signal the transition to the next section? Do not write it for me.",
+        newsletter:"I am drafting a newsletter on {topic}. Walk me through the process step by step: what should the headline achieve, what should the opening paragraph establish, and how should I present the key information clearly? Do not write it for me."
+      ,
+        social_media:"I am drafting a social media post about {topic}. Walk me through the process step by step: how should I open to stop the scroll, what should the body say, and how should I close? Do not write it for me."},
       revising:{
         email:"Revise my thinking on this draft email about {topic} step by step: [paste draft]. 1) Is the subject line effective? 2) Is the opening clear? 3) Is the main message easy to follow? 4) Is the closing appropriate? Give me questions to ask myself, not a rewrite.",
         essay:"Help me revise this essay paragraph on {topic} step by step: [paste paragraph]. 1) Is the topic sentence clear? 2) Is the argument supported by evidence? 3) Is the academic register appropriate? 4) Does it link to the next paragraph? Give me feedback, not a rewrite.",
@@ -267,8 +347,14 @@ const techniques = [
         discussion_post:"Help me revise this discussion post on {topic} step by step: [paste post]. 1) Is my position clear from the start? 2) Is my argument well supported? 3) Does it invite engagement? Give me questions to guide my revision, not a rewrite.",
         minutes:"Help me revise these meeting minutes on {topic} step by step: [paste minutes]. 1) Are decisions clearly recorded? 2) Are action points specific with owners and deadlines? 3) Is the language clear and neutral? Give me feedback, not a rewrite.",
         abstract:"Help me revise this abstract on {topic} step by step: [paste abstract]. 1) Is the research problem clear? 2) Is the method stated? 3) Are the findings specific? 4) Is the significance explained? Give me targeted feedback, not a rewrite.",
-        lit_review:"Help me revise this literature review section on {topic} step by step: [paste section]. 1) Is the argument coherent? 2) Are sources synthesised or just listed? 3) Is there a clear gap statement? Give me feedback questions, not a rewrite."
-      },
+        lit_review:"Help me revise this literature review section on {topic} step by step: [paste section]. 1) Is the argument coherent? 2) Are sources synthesised or just listed? 3) Is there a clear gap statement? Give me feedback questions, not a rewrite.",
+        proposal:"Help me revise this proposal section on {topic} step by step: [paste section]. 1) Is the problem clearly stated? 2) Are the objectives measurable? 3) Is the method feasible? 4) Are the outcomes realistic? Give me feedback questions, not a rewrite.",
+        memo:"Help me revise this memo on {topic} step by step: [paste]. 1) Is the subject line specific? 2) Is the purpose stated in the first sentence? 3) Is the background concise? 4) Is the action point clear with a deadline? Give me feedback, not a rewrite.",
+        case_study:"Help me revise this case study on {topic} step by step: [paste]. 1) Is the context clear? 2) Is the problem well defined? 3) Is the solution explained credibly? 4) Are the results specific and evidenced? Give me feedback, not a rewrite.",
+        research_article:"Help me revise this section of a research article on {topic} step by step: [paste]. 1) Does each paragraph open with a clear claim? 2) Is evidence integrated with commentary? 3) Is the argument coherent across paragraphs? 4) Does it connect to the next section? Give me feedback, not a rewrite.",
+        newsletter:"Help me revise this newsletter on {topic} step by step: [paste]. 1) Is the headline specific and engaging? 2) Is the key information in the first paragraph? 3) Is the tone right for the audience? 4) Is the call to action clear? Give me feedback, not a rewrite."
+      ,
+        social_media:"Help me revise this social media post about {topic} step by step: [paste]. 1) Is the opening line compelling? 2) Is the message clear in the first sentence? 3) Is the tone right for the platform? 4) Is there a clear call to action? Give me feedback, not a rewrite."},
       editing:{
         email:"Proofread this email about {topic} step by step: [paste text]. 1) Check grammar, 2) check punctuation, 3) check spelling, 4) check tone. List each error and correction separately.",
         essay:"Proofread this essay paragraph on {topic} step by step: [paste paragraph]. 1) Check grammar and syntax, 2) check academic register, 3) check citation style, 4) check sentence coherence. List each issue and correction.",
@@ -279,8 +365,14 @@ const techniques = [
         discussion_post:"Proofread this discussion post on {topic} step by step: [paste post]. 1) Check grammar, 2) check that claims are clearly expressed, 3) check register. List each issue and correction.",
         minutes:"Proofread these meeting minutes on {topic} step by step: [paste minutes]. 1) Check grammar, 2) check that action points are complete and unambiguous, 3) check neutral language. List all issues.",
         abstract:"Proofread this abstract on {topic} step by step: [paste abstract]. 1) Check grammar, 2) check that each element is present, 3) check conciseness. List each issue and correction.",
-        lit_review:"Proofread this literature review section on {topic} step by step: [paste section]. 1) Check grammar, 2) check citation consistency, 3) flag any unclear or unsupported claims. List all issues."
-      }
+        lit_review:"Proofread this literature review section on {topic} step by step: [paste section]. 1) Check grammar, 2) check citation consistency, 3) flag any unclear or unsupported claims. List all issues.",
+        proposal:"Proofread this proposal on {topic} step by step: [paste]. 1) Check grammar, 2) check that all objectives use action verbs, 3) check formal register, 4) check consistency of tense. List each issue and correction.",
+        memo:"Proofread this memo on {topic} step by step: [paste]. 1) Check grammar, 2) check spelling, 3) check that dates and names are consistent, 4) check tone. List each issue and correction.",
+        case_study:"Proofread this case study on {topic} step by step: [paste]. 1) Check grammar, 2) check tense consistency, 3) check that numbers are presented consistently, 4) check register. List each issue and correction.",
+        research_article:"Proofread this research article section on {topic} step by step: [paste]. 1) Check grammar and syntax, 2) check hedging language is used where claims need qualification, 3) check citation format and integration, 4) check academic register. List each issue.",
+        newsletter:"Proofread this newsletter on {topic} step by step: [paste]. 1) Check grammar and spelling, 2) check that headings and subheadings are consistent, 3) check that dates and names are accurate, 4) check tone. List each issue."
+      ,
+        social_media:"Proofread this social media post about {topic} step by step: [paste]. 1) Check grammar, 2) check spelling, 3) check that hashtags are relevant and correctly formatted, 4) check tone. List each issue."}
     }
   },
   { name:"Format control", icon:"📝", tip:"<strong>Format control prompting</strong> specifies the structure, length, or output format you want. Use it to get planning scaffolds and checklists tailored to your text type.",
@@ -295,8 +387,14 @@ const techniques = [
         discussion_post:"Give me a planning template for a 150-word discussion post on {topic}: opening position, supporting evidence, counterpoint acknowledged, closing question. Labels and descriptions only.",
         minutes:"Give me a template for meeting minutes on {topic} with labelled sections: header information, attendees, agenda items (each with discussion, decision, action points), and next steps.",
         abstract:"Give me a 5-sentence abstract planning template for a paper on {topic}. Label each sentence: 1-Background, 2-Gap/Problem, 3-Method, 4-Findings, 5-Significance. Do not write my content.",
-        lit_review:"Give me a planning template for a literature review section on {topic}. Include: opening framing sentence purpose, Theme 1 (sources + argument), Theme 2 (sources + argument), Theme 3 (sources + argument), gap statement. Labels only."
-      },
+        lit_review:"Give me a planning template for a literature review section on {topic}. Include: opening framing sentence purpose, Theme 1 (sources + argument), Theme 2 (sources + argument), Theme 3 (sources + argument), gap statement. Labels only.",
+        proposal:"Give me a section-by-section planning template for a proposal on {topic}. Label each section and describe its purpose in one sentence. Do not write the content.",
+        memo:"Give me a planning template for a memo on {topic} with labelled sections: TO/FROM/DATE/SUBJECT header, purpose statement, background, key points, and required action. Labels and descriptions only.",
+        case_study:"Give me a section-by-section planning template for a case study on {topic}. Label each section and describe its purpose in one sentence. Do not write the content.",
+        research_article:"Give me a move-by-move planning template for the [introduction / methods / results / discussion] section of a research article on {topic}. Label each rhetorical move and describe what it must accomplish.",
+        newsletter:"Give me a planning template for a newsletter on {topic}. Label each section: headline, opening hook, key information, supporting details, call to action / next steps. Descriptions only — no content."
+      ,
+        social_media:"Give me a planning template for a social media post about {topic}. Label each element: Platform | Audience | Hook (max 10 words) | Key message (1 sentence) | Call to action / closing question. Descriptions only."},
       drafting:{
         email:"I am writing a formal email about {topic}. Give me a sentence-starter scaffold only — not the full email. Provide: one option for an opening sentence, one option for introducing my main point, and one option for a closing sentence. I will write the rest myself.",
         essay:"I am drafting an introduction for an essay on {topic}. Give me three sentence-starter options only: one for a hook, one for providing background context, and one for a thesis. I will choose and develop them myself.",
@@ -307,8 +405,14 @@ const techniques = [
         discussion_post:"I am writing a discussion post on {topic}. Give me sentence-starter options only: one for stating my position, one for introducing evidence, one for inviting discussion. I will develop them myself.",
         minutes:"I am writing up minutes for a meeting on {topic}. Give me a phrasing scaffold for: recording a decision, recording an action point (with owner and deadline), and noting a tabled item. Do not write my minutes for me.",
         abstract:"I am drafting an abstract for a paper on {topic}. Give me a sentence-starter for each of the five parts: Background, Problem, Method, Findings, and Significance. I will complete each sentence myself.",
-        lit_review:"I am drafting a literature review section on {topic}. Give me sentence-starter options for: opening the section, introducing a new theme, comparing two sources, and writing a gap statement. I will use them as prompts only."
-      },
+        lit_review:"I am drafting a literature review section on {topic}. Give me sentence-starter options for: opening the section, introducing a new theme, comparing two sources, and writing a gap statement. I will use them as prompts only.",
+        proposal:"I am drafting a proposal on {topic}. Give me sentence-starter options only — one for opening the problem statement, one for stating the objective, and one for describing the methodology. I will complete them myself.",
+        memo:"I am drafting a memo on {topic}. Give me sentence-starter options only — one for the purpose statement, one for the background, and one for the required action. I will complete them myself.",
+        case_study:"I am drafting a case study on {topic}. Give me sentence-starter options only — one for introducing the context, one for stating the problem, and one for presenting the key result. I will complete them myself.",
+        research_article:"I am drafting a section of a research article on {topic}. Give me sentence-starter options only — one for the opening move, one for presenting evidence, and one for closing the section. I will complete them myself.",
+        newsletter:"I am drafting a newsletter on {topic}. Give me sentence-starter options only — one for the headline, one for the opening sentence, and one for the call to action. I will complete them myself."
+      ,
+        social_media:"I am drafting a social media post about {topic}. Give me sentence-starter options only — one for an attention-grabbing opening line and one for a closing call to action. I will complete them myself."},
       revising:{
         email:"Rewrite only the weakest sentence in this email about {topic}: [paste email]. Identify which sentence it is, explain why it is weak, and give one improved version. Leave the rest for me to revise.",
         essay:"Identify the one weakest sentence in this essay paragraph on {topic}: [paste paragraph]. Explain why it is weak and give one improved version. Do not rewrite the whole paragraph.",
@@ -319,8 +423,14 @@ const techniques = [
         discussion_post:"Identify the weakest part of this discussion post on {topic}: [paste post]. Explain the issue and suggest how I could address it. Do not rewrite the post for me.",
         minutes:"Identify any action points in these minutes on {topic} that are unclear or incomplete: [paste minutes]. Explain what is missing and suggest how to phrase them — do not rewrite the whole document.",
         abstract:"Identify the weakest sentence in this abstract on {topic}: [paste abstract]. Explain what the issue is and give one improved version. Leave the rest for me.",
-        lit_review:"Identify the section of this literature review on {topic} where I am summarising rather than synthesising: [paste section]. Explain the difference with a specific example from my text, and suggest how I could improve that passage."
-      },
+        lit_review:"Identify the section of this literature review on {topic} where I am summarising rather than synthesising: [paste section]. Explain the difference with a specific example from my text, and suggest how I could improve that passage.",
+        proposal:"Identify the one weakest paragraph in this proposal on {topic}: [paste proposal]. Explain what is unconvincing and suggest how I could strengthen it — do not rewrite it for me.",
+        memo:"Identify the one weakest sentence in this memo on {topic}: [paste]. Explain why it is weak and how I could improve it — do not rewrite it.",
+        case_study:"Identify the one weakest section of this case study on {topic}: [paste]. Explain what is unconvincing and how I could improve it — do not rewrite it.",
+        research_article:"Identify the one paragraph in this research article section on {topic} where I summarise rather than argue: [paste]. Explain what analytical move is missing and how I could add it — do not rewrite it.",
+        newsletter:"Identify the one part of this newsletter on {topic} most likely to cause readers to stop reading: [paste]. Explain why and how I could improve it — do not rewrite it."
+      ,
+        social_media:"Identify the weakest line in this social media post about {topic}: [paste]. Explain why it is weak and how I could improve it — do not rewrite it."},
       editing:{
         email:"Proofread this email about {topic}: [paste text]. List errors in a table with three columns: Error | Type | Correction.",
         essay:"Proofread this essay paragraph on {topic}: [paste paragraph]. List all errors with corrections in this format: Error | Type | Correction.",
@@ -331,8 +441,14 @@ const techniques = [
         discussion_post:"Proofread this discussion post on {topic}: [paste post]. List each error and correction in a clear table.",
         minutes:"Proofread these meeting minutes on {topic}: [paste minutes]. List errors in this format: Section | Error | Correction.",
         abstract:"Proofread this abstract on {topic}: [paste abstract]. List each error and correction in this format: Sentence number | Error | Correction.",
-        lit_review:"Proofread this literature review section on {topic}: [paste section]. List grammar errors, citation inconsistencies, and unclear phrasing in a numbered table."
-      }
+        lit_review:"Proofread this literature review section on {topic}: [paste section]. List grammar errors, citation inconsistencies, and unclear phrasing in a numbered table.",
+        proposal:"Proofread this proposal on {topic}: [paste]. List errors in a table: Error | Type | Correction.",
+        memo:"Proofread this memo on {topic}: [paste]. List all errors in a table: Error | Type | Correction.",
+        case_study:"Proofread this case study on {topic}: [paste]. List all errors in a table: Error | Type | Correction.",
+        research_article:"Proofread this research article section on {topic}: [paste]. List all errors in a table: Error | Type | Correction.",
+        newsletter:"Proofread this newsletter on {topic}: [paste]. List all errors in a table: Error | Type | Correction."
+      ,
+        social_media:"Proofread this social media post about {topic}: [paste]. List all errors in a table: Error | Type | Correction."}
     }
   },
   { name:"Iterative refine", icon:"🔄", tip:"<strong>Iterative refinement</strong> means sharing your own draft and asking AI for targeted feedback. You write — AI advises. Powerful for the revising and editing stages.",
@@ -347,8 +463,14 @@ const techniques = [
         discussion_post:"Here is my rough plan for a discussion post on {topic}: [paste plan]. Without revising it, tell me: is my position clear, is my evidence sufficient, and does it invite engagement?",
         minutes:"Here is my rough structure for minutes on {topic}: [paste structure]. Without changing it, tell me: what is missing, what needs to be clearer, and whether the format follows standard practice.",
         abstract:"Here is my rough plan for an abstract on {topic}: [paste plan]. Without changing it, tell me: are all five elements present, and is the order logical?",
-        lit_review:"Here is my plan for a literature review section on {topic}: [paste plan]. Without revising it, tell me: are the themes clearly defined, are sources grouped logically, and is there a gap statement?"
-      },
+        lit_review:"Here is my plan for a literature review section on {topic}: [paste plan]. Without revising it, tell me: are the themes clearly defined, are sources grouped logically, and is there a gap statement?",
+        proposal:"Here is my initial idea for a proposal on {topic}: [paste your idea]. Without changing it, identify: what is unclear, what is missing, and what a reviewer might question.",
+        memo:"Here is my initial plan for a memo on {topic}: [paste plan]. Without changing it, tell me: is the purpose clear, is the audience well defined, and what is missing?",
+        case_study:"Here is my rough plan for a case study on {topic}: [paste plan]. Without changing it, tell me: is the narrative arc clear, is the evidence sufficient, and what is missing?",
+        research_article:"Here is my rough plan for a research article section on {topic}: [paste plan]. Without changing it, tell me: does it follow the expected structure for this section, and what is missing?",
+        newsletter:"Here is my rough plan for a newsletter on {topic}: [paste plan]. Without changing it, tell me: will this engage the target audience, is the key message clear, and what is missing?"
+      ,
+        social_media:"Here is my rough idea for a social media post about {topic}: [paste idea]. Without changing it, tell me: is the core message clear, is the tone appropriate for the platform, and what is missing?"},
       drafting:{
         email:"Here is my draft email about {topic}: [paste draft]. Do not rewrite it. Tell me specifically: which sentence is weakest and why, what is missing, and what one change would most improve it.",
         essay:"Here is my draft introduction for an essay on {topic}: [paste draft]. Do not rewrite it. Tell me: is the hook effective, is my thesis clear and arguable, and what is the most important thing I should fix?",
@@ -359,8 +481,14 @@ const techniques = [
         discussion_post:"Here is my draft discussion post on {topic}: [paste draft]. Do not rewrite it. Tell me: is my position clear, is my argument convincing, and does it invite further discussion?",
         minutes:"Here is my draft minutes for a meeting on {topic}: [paste draft]. Do not rewrite them. Tell me: are decisions clearly recorded, are action points complete, and is the language appropriately neutral?",
         abstract:"Here is my draft abstract for a paper on {topic}: [paste draft]. Do not rewrite it. Tell me: which of the five elements is weakest, what is unclear, and what is the most important fix?",
-        lit_review:"Here is my draft literature review section on {topic}: [paste draft]. Do not rewrite it. Tell me: am I synthesising or just summarising, is the argument coherent, and is there a clear gap statement?"
-      },
+        lit_review:"Here is my draft literature review section on {topic}: [paste draft]. Do not rewrite it. Tell me: am I synthesising or just summarising, is the argument coherent, and is there a clear gap statement?",
+        proposal:"Here is my draft problem statement for a proposal on {topic}: [paste draft]. Do not rewrite it. Tell me: is the problem clearly defined, is the need convincing, and what is the weakest sentence?",
+        memo:"Here is my draft memo on {topic}: [paste draft]. Do not rewrite it. Tell me: is the purpose immediately clear, is the required action specific, and what is the weakest part?",
+        case_study:"Here is my draft opening section of a case study on {topic}: [paste draft]. Do not rewrite it. Tell me: is the context clear, is the problem compelling, and what is the weakest sentence?",
+        research_article:"Here is my draft section of a research article on {topic}: [paste draft]. Do not rewrite it. Tell me: is the purpose of this section clear from the first sentence, is the evidence well integrated, and what is the weakest move?",
+        newsletter:"Here is my draft newsletter on {topic}: [paste draft]. Do not rewrite it. Tell me: does the opening make me want to keep reading, is the key information easy to find, and what is the weakest part?"
+      ,
+        social_media:"Here is my draft social media post about {topic}: [paste draft]. Do not rewrite it. Tell me: is the opening strong enough to stop scrolling, is the message clear, and what is the weakest part?"},
       revising:{
         email:"I have revised my email about {topic}: [paste revised version]. Without rewriting it, tell me: what still needs work, whether the tone is now right, and whether the structure is clear.",
         essay:"I have revised my essay paragraph on {topic}: [paste revised version]. Without rewriting it, tell me: is the argument now clearer, is the evidence well integrated, and is anything still weak?",
@@ -371,8 +499,14 @@ const techniques = [
         discussion_post:"I have revised my discussion post on {topic}: [paste revised version]. Without rewriting it, tell me: is my argument now clear and well supported, and does it invite engagement?",
         minutes:"I have revised my meeting minutes on {topic}: [paste revised version]. Without rewriting them, tell me: are action points now specific and complete, and is anything still unclear?",
         abstract:"I have revised my abstract on {topic}: [paste revised version]. Without rewriting it, tell me: are all five elements now present and clear, and what is the remaining weakness?",
-        lit_review:"I have revised my literature review section on {topic}: [paste revised version]. Without rewriting it, tell me: am I now synthesising effectively, and is the gap statement clear?"
-      },
+        lit_review:"I have revised my literature review section on {topic}: [paste revised version]. Without rewriting it, tell me: am I now synthesising effectively, and is the gap statement clear?",
+        proposal:"I have revised my proposal section on {topic}: [paste revised version]. Without rewriting it, tell me: is the argument now stronger, are the objectives clearer, and what still needs work?",
+        memo:"I have revised my memo on {topic}: [paste revised]. Without rewriting it, tell me: is it now clearer and more direct, and what still needs work?",
+        case_study:"I have revised my case study on {topic}: [paste revised]. Without rewriting it, tell me: is the narrative now clearer and more compelling, and what still needs work?",
+        research_article:"I have revised this section of my research article on {topic}: [paste revised]. Without rewriting it, tell me: is the argument now more coherent, is the evidence better integrated, and what still needs work?",
+        newsletter:"I have revised my newsletter on {topic}: [paste revised]. Without rewriting it, tell me: is it now more engaging and readable, and what still needs work?"
+      ,
+        social_media:"I have revised my social media post about {topic}: [paste revised]. Without rewriting it, tell me: is it now more engaging, is the message clearer, and what still needs work?"},
       editing:{
         email:"I have proofread my email about {topic}: [paste version]. Are there any remaining grammar, punctuation, or tone errors I have missed? List each one with a correction.",
         essay:"I have corrected my essay paragraph on {topic}: [paste version]. Do a final check for grammar, academic register, and coherence errors I may have missed. List each one.",
@@ -383,8 +517,14 @@ const techniques = [
         discussion_post:"I have edited my discussion post on {topic}: [paste version]. Check for any remaining grammar or clarity errors. List each with a correction.",
         minutes:"I have proofread my meeting minutes on {topic}: [paste version]. Check for any remaining grammar errors or unclear phrasing. List each with a correction.",
         abstract:"I have corrected my abstract on {topic}: [paste version]. Do a final grammar and clarity check. List any remaining issues with corrections.",
-        lit_review:"I have edited my literature review section on {topic}: [paste version]. Check for remaining grammar, citation style, or clarity errors. List each with a correction."
-      }
+        lit_review:"I have edited my literature review section on {topic}: [paste version]. Check for remaining grammar, citation style, or clarity errors. List each with a correction.",
+        proposal:"I have proofread my proposal on {topic}: [paste]. Check for any remaining grammar, register, or consistency errors I may have missed. List each with a correction.",
+        memo:"I have proofread my memo on {topic}: [paste]. Check for any remaining errors in grammar, tone, or specificity. List each with a correction.",
+        case_study:"I have proofread my case study on {topic}: [paste]. Check for any remaining grammar, style, or consistency errors. List each with a correction.",
+        research_article:"I have proofread my research article section on {topic}: [paste]. Check for any remaining grammar, hedging, or citation errors. List each with a correction.",
+        newsletter:"I have proofread my newsletter on {topic}: [paste]. Check for any remaining grammar, tone, or consistency errors. List each with a correction."
+      ,
+        social_media:"I have proofread my social media post about {topic}: [paste]. Check for any remaining grammar, tone, or formatting errors. List each with a correction."}
     }
   },
   { name:"Few-shot", icon:"🧩", tip:"<strong>Few-shot prompting</strong> gives the AI one or more examples before your actual request. This helps AI understand exactly what format or style of guidance you need.",
@@ -399,8 +539,14 @@ const techniques = [
         discussion_post:"Example plan — Position: Remote work increases productivity | Evidence: Study X showed 20% increase | Counterpoint: Communication challenges exist | Question: How do you manage focus when working remotely?\nUsing this format, give me a planning template I can fill in for a discussion post on {topic}.",
         minutes:"Example action point: 'Action: H. Guedra to circulate updated policy document to all staff by 15 March.'\nUsing this format, show me how I should write three action points for a meeting on {topic}. Use placeholder names.",
         abstract:"Example abstract structure — Sentence 1: Background context | Sentence 2: Research gap | Sentence 3: Method used | Sentence 4: Key finding | Sentence 5: Significance.\nUsing this model, give me a planning scaffold I can fill in for an abstract on {topic}.",
-        lit_review:"Example theme paragraph structure — Topic sentence (claim about the literature) | Source 1 (finding) | Source 2 (contrasting finding) | Synthesis sentence.\nUsing this as a model, suggest three theme paragraph structures I could develop for a literature review on {topic}."
-      },
+        lit_review:"Example theme paragraph structure — Topic sentence (claim about the literature) | Source 1 (finding) | Source 2 (contrasting finding) | Synthesis sentence.\nUsing this as a model, suggest three theme paragraph structures I could develop for a literature review on {topic}.",
+        proposal:"Example proposal structure — Problem: skills gap in digital literacy | Objective: train 200 employees by Q4 | Method: blended learning programme | Expected outcome: 80% pass rate | Budget: €45,000.\nUsing this as a model, give me a planning scaffold I can fill in for a proposal on {topic}.",
+        memo:"Example memo subject line: \'Update on Q3 Budget Allocation — Action Required by 15 October\'\nUsing this as a model, suggest three possible subject lines for a memo on {topic}. I will choose one myself.",
+        case_study:"Example case study structure — Context: Finnish SME, 50 employees | Problem: 35% staff turnover | Intervention: mentoring programme | Result: turnover reduced to 12% in 18 months | Lesson: structured onboarding retains talent.\nUsing this as a model, give me a planning scaffold I can fill in for a case study on {topic}.",
+        research_article:"Example strong discussion opening: \'The findings of this study confirm that structured peer feedback significantly improves revision quality, consistent with previous research (Smith, 2021; Jones, 2022), while extending the literature by demonstrating this effect in an EFL context.\'\nUsing this as a model, give me feedback on my discussion opening on {topic}: [paste sentence]. Tell me how to strengthen it — do not rewrite it.",
+        newsletter:"Example engaging newsletter headline: \'Your Hybrid Working Options Just Changed — Here\'s What You Need to Know\'\nUsing this as a model, suggest three possible headlines for a newsletter on {topic}. I will choose one myself."
+      ,
+        social_media:"Example post plan — Platform: LinkedIn | Audience: professionals in education | Hook: question about AI | Message: AI literacy matters now | CTA: share your experience.\nUsing this as a model, give me a planning scaffold I can fill in for a post about {topic}."},
       drafting:{
         email:"Example weak opening: 'I am writing because I want to ask something.'\nExample strong opening: 'I am writing to request an extension on the submission deadline for the March report.'\nUsing these examples as a guide, give me feedback on my opening sentence for an email about {topic}: [paste your opening sentence]. Do not rewrite it — tell me how to improve it.",
         essay:"Example weak thesis: 'AI affects society in many ways.'\nExample strong thesis: 'While AI offers significant productivity gains, its unchecked deployment in hiring and healthcare risks entrenching existing inequalities.'\nUsing these as a guide, give me feedback on my thesis for an essay on {topic}: [paste your thesis]. Tell me how to strengthen it — do not rewrite it.",
@@ -411,8 +557,14 @@ const techniques = [
         discussion_post:"Example weak opening: 'I think AI is interesting.'\nExample strong opening: 'AI-generated feedback tools have the potential to transform writing instruction — but only if students remain active evaluators rather than passive recipients.'\nUsing these as a guide, give me feedback on my discussion post opening on {topic}: [paste your sentence]. Tell me how to strengthen it — do not rewrite it.",
         minutes:"Example weak action point: 'Someone will look into the budget.'\nExample strong action point: 'Action: T. Virtanen to prepare a revised Q3 budget proposal and share with the team by 20 April.'\nUsing these as a guide, give me feedback on this action point from my minutes on {topic}: [paste your action point]. Tell me how to improve it — do not rewrite it.",
         abstract:"Example weak findings sentence: 'The results were interesting.'\nExample strong findings sentence: 'The analysis revealed a statistically significant correlation (p < .01) between prompt complexity and output accuracy across all three model conditions.'\nUsing these as a guide, give me feedback on my findings sentence for an abstract on {topic}: [paste your sentence]. Tell me how to improve it — do not rewrite it.",
-        lit_review:"Example weak synthesis: 'Smith (2021) says X. Jones (2022) says Y.'\nExample strong synthesis: 'While Smith (2021) argues that X, Jones (2022) challenges this view by demonstrating Y, suggesting that the relationship between the two is more complex than previously assumed.'\nUsing these as a guide, give me feedback on this passage from my literature review on {topic}: [paste passage]. Tell me how to improve the synthesis — do not rewrite it."
-      },
+        lit_review:"Example weak synthesis: 'Smith (2021) says X. Jones (2022) says Y.'\nExample strong synthesis: 'While Smith (2021) argues that X, Jones (2022) challenges this view by demonstrating Y, suggesting that the relationship between the two is more complex than previously assumed.'\nUsing these as a guide, give me feedback on this passage from my literature review on {topic}: [paste passage]. Tell me how to improve the synthesis — do not rewrite it.",
+        proposal:"Example weak problem statement: \'We want to improve training.\'\nExample strong: \'Current onboarding practices leave 43% of new hires without core digital skills within their first six months, directly impacting team productivity.\'\nUsing these as a guide, give me feedback on my problem statement for a proposal on {topic}: [paste your sentence]. Tell me how to improve it — do not rewrite it.",
+        memo:"Example weak memo opening: \'This memo is about some changes to the process.\'\nExample strong: \'This memo outlines three changes to the expense approval process effective 1 November, which affect all project managers.\'\nUsing these as a guide, give me feedback on my memo opening on {topic}: [paste sentence]. Tell me how to improve it — do not rewrite it.",
+        case_study:"Example weak case study opening: \'This case study is about a company that had some problems.\'\nExample strong: \'In 2022, Metso Outotec faced a critical challenge: a 40% increase in project lead times was threatening key client relationships and market share.\'\nUsing these as a guide, give me feedback on my case study opening on {topic}: [paste sentence]. Tell me how to strengthen it — do not rewrite it.",
+        research_article:"Example weak evidence integration: \'Many studies have looked at this topic.\'\nExample strong: \'A growing body of empirical research (Smith, 2021; Lee & Park, 2023; Virtanen, 2024) demonstrates that formative feedback significantly accelerates second-language writing development.\'\nUsing these as a guide, give me feedback on my evidence integration in this section on {topic}: [paste passage]. Tell me how to improve it — do not rewrite it.",
+        newsletter:"Example weak newsletter opening: \'We are writing to inform you of some updates.\'\nExample strong: \'From 1 January, three things about your working day will change — and we want to make sure you\'re ready.\'\nUsing these as a guide, give me feedback on my newsletter opening on {topic}: [paste sentence]. Tell me how to improve it — do not rewrite it."
+      ,
+        social_media:"Example weak opening: \'Here are some thoughts on AI.\'\nExample strong: \'Most people are using AI wrong. Here\'s what nobody tells you about prompting.\'\nUsing these as a guide, give me feedback on my opening line for a post about {topic}: [paste line]. Tell me how to improve it — do not rewrite it."},
       revising:{
         email:"Example before: 'I am writing because I want to ask about the job.'\nExample after: 'I am writing to enquire about the Project Manager position advertised on your website.'\nUsing these as a guide, identify the weakest sentence in my email about {topic} and explain how I could improve it: [paste email]. Do not rewrite it for me.",
         essay:"Example before: 'AI is used in many things and it affects society.'\nExample after: 'Artificial intelligence is reshaping healthcare, education, and employment at an unprecedented pace.'\nUsing these as a guide, identify the weakest sentence in my essay paragraph on {topic} and explain how I could improve it: [paste paragraph]. Do not rewrite it for me.",
@@ -423,8 +575,14 @@ const techniques = [
         discussion_post:"Example before: 'Studies show this is a problem.'\nExample after: 'A 2023 meta-analysis of 47 studies found that passive social media use is consistently associated with increased anxiety in adolescents.'\nUsing these as a guide, identify the weakest evidence sentence in my discussion post on {topic}: [paste post]. Explain how to strengthen it — do not rewrite it.",
         minutes:"Example weak: 'We talked about the timeline.'\nExample strong: 'The team agreed to extend the project timeline by two weeks to accommodate user testing. Action: R. Nieminen to update the project plan by 5 May.'\nUsing these as a guide, identify the weakest item in my minutes on {topic}: [paste minutes]. Explain how to improve it — do not rewrite it.",
         abstract:"Example weak significance statement: 'This research is useful.'\nExample strong: 'These findings have direct implications for the design of AI-assisted writing tools in higher education, particularly in L2 contexts.'\nUsing these as a guide, identify the weakest sentence in my abstract on {topic}: [paste abstract]. Explain how to improve it — do not rewrite it.",
-        lit_review:"Example weak gap statement: 'More research is needed.'\nExample strong: 'Despite extensive research on AI and writing instruction, no study has examined how real-time AI feedback affects revision behaviour in EFL university students.'\nUsing these as a guide, evaluate my gap statement in this literature review on {topic}: [paste section]. Tell me how to improve it — do not rewrite it."
-      },
+        lit_review:"Example weak gap statement: 'More research is needed.'\nExample strong: 'Despite extensive research on AI and writing instruction, no study has examined how real-time AI feedback affects revision behaviour in EFL university students.'\nUsing these as a guide, evaluate my gap statement in this literature review on {topic}: [paste section]. Tell me how to improve it — do not rewrite it.",
+        proposal:"Example weak objective: \'We will improve outcomes.\'\nExample strong: \'By December 2025, 85% of participants will demonstrate proficiency in data analysis tools as measured by a standardised assessment.\'\nUsing these as a guide, identify the weakest objective in my proposal on {topic}: [paste]. Explain how to improve it — do not rewrite it.",
+        memo:"Example before: \'Please try to let us know by sometime next week if possible.\'\nExample after: \'Please confirm your availability by Friday 18 October at 17:00.\'\nUsing these as a guide, identify the vaguest sentence in my memo on {topic}: [paste]. Explain how to make it more specific — do not rewrite it.",
+        case_study:"Example weak result statement: \'Things improved a lot after the change.\'\nExample strong: \'Following the intervention, employee retention increased by 28% and average project delivery time fell from 14 to 9 weeks.\'\nUsing these as a guide, identify the weakest result statement in my case study on {topic}: [paste]. Explain how to improve it — do not rewrite it.",
+        research_article:"Example weak paragraph ending: \'Therefore, this is an important area.\'\nExample strong: \'These findings suggest that the relationship between feedback literacy and writing development is more complex than current models account for, pointing to a need for more contextualised research.\'\nUsing these as a guide, evaluate my paragraph endings in this section on {topic}: [paste]. Tell me which are weak and how to improve them — do not rewrite them.",
+        newsletter:"Example weak call to action: \'Please get in touch if you have any questions.\'\nExample strong: \'Questions? Email HR@lut.fi by Friday 15 November — we\'ll respond within two working days.\'\nUsing these as a guide, evaluate my call to action in this newsletter on {topic}: [paste]. Tell me how to make it more specific — do not rewrite it."
+      ,
+        social_media:"Example weak call to action: \'Let me know what you think.\'\nExample strong: \'Have you tried this approach? Drop your experience in the comments — I read every one.\'\nUsing these as a guide, evaluate my closing line for this post about {topic}: [paste line]. Tell me how to strengthen it — do not rewrite it."},
       editing:{
         email:"Error: 'I would like to ask you that can we meet' → Corrected: 'I would like to ask whether we could meet.'\nNow identify and correct errors in this email about {topic}: [paste text]. List each in this format: Error | Correction.",
         essay:"Error: 'The researches shows that AI have many benefits' → Corrected: 'The research shows that AI has many benefits.'\nNow correct errors in this essay paragraph on {topic}: [paste paragraph]. List each in this format: Error | Correction.",
@@ -435,8 +593,14 @@ const techniques = [
         discussion_post:"Error: 'Alot of researches shows that social media are bad' → Corrected: 'A growing body of research suggests that social media use is associated with negative mental health outcomes.'\nNow correct this discussion post on {topic}: [paste post]. List each error and correction.",
         minutes:"Error: 'John will do the thing about the report' → Corrected: 'Action: J. Korhonen to submit the Q2 progress report to the steering group by 10 June.'\nNow identify and correct unclear or grammatically incorrect action points in these minutes on {topic}: [paste minutes]. List each issue and correction.",
         abstract:"Error: 'This study look at how AI effect student writing' → Corrected: 'This study examines how AI-generated feedback affects revision behaviour in undergraduate writing.'\nNow correct this abstract on {topic}: [paste abstract]. List each error and correction.",
-        lit_review:"Error: 'Smith (2021) he says that AI is good for writing' → Corrected: 'Smith (2021) argues that AI feedback tools support the revision process.'\nNow correct this literature review section on {topic}: [paste section]. List each error and correction."
-      }
+        lit_review:"Error: 'Smith (2021) he says that AI is good for writing' → Corrected: 'Smith (2021) argues that AI feedback tools support the revision process.'\nNow correct this literature review section on {topic}: [paste section]. List each error and correction.",
+        proposal:"Error: \'We will try to maybe achieve some improvement\' → Corrected: \'We aim to achieve a 20% improvement in X by [date].\' Now identify and correct vague or ungrammatical language in this proposal on {topic}: [paste]. List each error and correction.",
+        memo:"Error: \'We would like to inform you that the meeting has been rescheduled\' → Corrected: \'The project review meeting has been rescheduled to Tuesday 22 October at 14:00.\'\nNow correct any vague or wordy sentences in this memo on {topic}: [paste]. List each issue and correction.",
+        case_study:"Error: \'The company have decided to implement a new system\' → Corrected: \'The company decided to implement a new system.\'\nNow correct errors in this case study on {topic}: [paste]. List each error and correction.",
+        research_article:"Error: \'AI always improves student performance\' → Corrected: \'AI-assisted feedback has been shown to improve student performance in several controlled studies (Smith, 2022; Lee, 2023).\'\nNow identify any unhedged or unsupported claims in this section on {topic}: [paste]. List each with a corrected version.",
+        newsletter:"Error: \'Staff is invited to attend the meeting on next Tuesday\' → Corrected: \'Staff are invited to attend the meeting on Tuesday 19 November.\'\nNow correct errors in this newsletter on {topic}: [paste]. List each error and correction."
+      ,
+        social_media:"Error: \'Excited to share some thought\'s about this topic!\' → Corrected: \'Excited to share some thoughts on this topic!\'\nNow identify and correct errors in this social media post about {topic}: [paste]. List each error and correction."}
     }
   },
   { name:"Socratic", icon:"❓", tip:"<strong>Socratic prompting</strong> asks AI to guide you through a task by asking questions rather than giving answers. It helps you think critically and develop your own ideas.",
@@ -451,8 +615,14 @@ const techniques = [
         discussion_post:"I need to write a discussion post on {topic}. Ask me questions that help me clarify my position and the evidence I want to use, without telling me what to say.",
         minutes:"I need to write up minutes for a meeting on {topic}. Ask me questions to help me recall and organise the key decisions and action points before I start writing.",
         abstract:"I am writing an abstract for a paper on {topic}. Ask me a series of questions — one for each part of the abstract — to help me identify what to write in each section myself.",
-        lit_review:"I am planning a literature review section on {topic}. Ask me questions that help me identify themes, organise sources, and formulate a gap statement — without giving me the answers."
-      },
+        lit_review:"I am planning a literature review section on {topic}. Ask me questions that help me identify themes, organise sources, and formulate a gap statement — without giving me the answers.",
+        proposal:"I need to plan a proposal on {topic}. Instead of giving me an outline, ask me a series of questions that help me identify the problem, the objectives, the method, and the expected impact before I start writing.",
+        memo:"I need to write a memo on {topic}. Ask me questions that help me clarify the purpose, the audience, the key message, and the required action before I start writing.",
+        case_study:"I need to write a case study on {topic}. Ask me questions that help me identify the context, the problem, the solution, the evidence, and the lesson before I start writing.",
+        research_article:"I am planning a section of a research article on {topic}. Ask me questions that help me identify the purpose of this section, the key claims I will make, and how I will support them with evidence.",
+        newsletter:"I need to write a newsletter on {topic}. Ask me questions that help me identify the key message, the most important information for the audience, and how to make the opening compelling."
+      ,
+        social_media:"I need to write a social media post about {topic}. Instead of giving me a structure, ask me questions that help me identify the platform, the audience, the key message, and the right tone before I start writing."},
       drafting:{
         email:"I have this plan for an email about {topic}: [paste plan]. Before I start drafting, ask me three questions that challenge me to think more carefully about my audience, tone, and key message.",
         essay:"I have this outline for an essay on {topic}: [paste outline]. Before I start drafting, ask me questions that help me think more deeply about my argument and whether my evidence is strong enough.",
@@ -463,8 +633,14 @@ const techniques = [
         discussion_post:"I am about to draft a discussion post on {topic}. Before I start, ask me questions that help me test whether my position is clear and my evidence is convincing.",
         minutes:"I am about to write up the minutes for a meeting on {topic}. Before I start, ask me questions to help me check I have captured all the key decisions and action points clearly.",
         abstract:"I am about to draft an abstract for a paper on {topic}. Before I write, ask me one question for each of the five elements to check I know what to include in each.",
-        lit_review:"I am about to draft a literature review section on {topic}. Before I write, ask me questions that help me check whether my themes are clear, my sources are organised, and I have a gap statement."
-      },
+        lit_review:"I am about to draft a literature review section on {topic}. Before I write, ask me questions that help me check whether my themes are clear, my sources are organised, and I have a gap statement.",
+        proposal:"I have this plan for a proposal on {topic}: [paste plan]. Before I start drafting, ask me three questions that challenge me to think more carefully about the problem, the evidence for it, and the feasibility of my solution.",
+        memo:"I have this plan for a memo on {topic}: [paste plan]. Before I start drafting, ask me questions that help me check whether my purpose is specific enough and whether my required action is clear.",
+        case_study:"I have this plan for a case study on {topic}: [paste plan]. Before I start drafting, ask me questions that help me think more carefully about how to make the problem compelling and the evidence convincing.",
+        research_article:"I have this plan for a section of a research article on {topic}: [paste plan]. Before I start drafting, ask me questions that help me think more carefully about the claims I am making and how I will support them.",
+        newsletter:"I have this plan for a newsletter on {topic}: [paste plan]. Before I start drafting, ask me questions that help me think about how to make the opening engaging and the key message impossible to miss."
+      ,
+        social_media:"I am about to draft a social media post about {topic}. Before I start, ask me questions that help me check whether my message is focused enough and my opening will be compelling."},
       revising:{
         email:"Here is my draft email about {topic}: [paste draft]. Ask me a series of questions that help me identify its weaknesses and decide how to improve it. Do not tell me the answers.",
         essay:"Here is my draft essay paragraph on {topic}: [paste paragraph]. Ask me questions that help me evaluate whether my argument is clear, my evidence is sufficient, and my academic style is appropriate. Do not rewrite it.",
@@ -475,8 +651,14 @@ const techniques = [
         discussion_post:"Here is my draft discussion post on {topic}: [paste post]. Ask me questions that help me evaluate whether my argument is persuasive and whether it invites engagement. Do not rewrite it.",
         minutes:"Here is my draft minutes for a meeting on {topic}: [paste draft]. Ask me questions that help me check whether all decisions and action points are complete and clearly recorded.",
         abstract:"Here is my draft abstract on {topic}: [paste draft]. Ask me one question for each of the five elements to help me evaluate whether each part is doing its job.",
-        lit_review:"Here is my draft literature review section on {topic}: [paste section]. Ask me questions that help me evaluate whether I am synthesising effectively and whether my gap statement is compelling."
-      },
+        lit_review:"Here is my draft literature review section on {topic}: [paste section]. Ask me questions that help me evaluate whether I am synthesising effectively and whether my gap statement is compelling.",
+        proposal:"Here is my draft proposal on {topic}: [paste draft]. Ask me questions that help me evaluate whether the problem is well defined, the method is appropriate, and the outcomes are measurable. Do not tell me the answers.",
+        memo:"Here is my memo on {topic}: [paste]. Ask me questions that help me evaluate whether the purpose is clear, the tone is right, and the action required is specific. Do not rewrite it.",
+        case_study:"Here is my case study on {topic}: [paste]. Ask me questions that help me evaluate whether the narrative is compelling, the evidence is specific, and the lesson is clear. Do not rewrite it.",
+        research_article:"Here is my draft section of a research article on {topic}: [paste]. Ask me questions that help me evaluate whether my argument is coherent, my evidence is sufficient, and my claims are appropriately hedged. Do not rewrite it.",
+        newsletter:"Here is my newsletter on {topic}: [paste]. Ask me questions that help me evaluate whether the key message is clear, the tone is engaging, and the call to action is specific. Do not rewrite it."
+      ,
+        social_media:"Here is my draft social media post about {topic}: [paste]. Ask me questions that help me evaluate whether the hook is strong, the message is clear, and the tone is right for the platform. Do not rewrite it."},
       editing:{
         email:"Here is my email about {topic}: [paste text]. Ask me questions that help me notice potential errors in grammar, tone, or structure myself. Do not correct them for me.",
         essay:"Here is my essay paragraph on {topic}: [paste paragraph]. Ask me questions that help me identify grammar, register, or coherence issues on my own. Do not correct them for me.",
@@ -487,8 +669,14 @@ const techniques = [
         discussion_post:"Here is my discussion post on {topic}: [paste post]. Ask me questions that help me identify any grammar or clarity issues on my own.",
         minutes:"Here is my meeting minutes on {topic}: [paste minutes]. Ask me questions that help me notice any unclear phrasing or missing information myself.",
         abstract:"Here is my abstract on {topic}: [paste abstract]. Ask me questions that help me identify any errors or weaknesses in language or structure on my own.",
-        lit_review:"Here is my literature review section on {topic}: [paste section]. Ask me questions that help me notice grammar, citation, or clarity issues myself."
-      }
+        lit_review:"Here is my literature review section on {topic}: [paste section]. Ask me questions that help me notice grammar, citation, or clarity issues myself.",
+        proposal:"Here is my proposal on {topic}: [paste]. Ask me questions that help me notice any vague language, passive constructions hiding responsibility, or missing specifics. Do not correct them for me.",
+        memo:"Here is my memo on {topic}: [paste]. Ask me questions that help me notice any grammatical errors, vague language, or missing specifics. Do not correct them for me.",
+        case_study:"Here is my case study on {topic}: [paste]. Ask me questions that help me notice any inconsistencies in tense, vague language, or grammatical errors. Do not correct them for me.",
+        research_article:"Here is my research article section on {topic}: [paste]. Ask me questions that help me notice unhedged claims, citation errors, or register issues. Do not correct them for me.",
+        newsletter:"Here is my newsletter on {topic}: [paste]. Ask me questions that help me notice any grammatical errors, inconsistencies, or unclear phrasing. Do not correct them for me."
+      ,
+        social_media:"Here is my social media post about {topic}: [paste]. Ask me questions that help me notice any grammatical errors, unclear phrasing, or tone issues. Do not correct them for me."}
     }
   },
   { name:"Constraint", icon:"🎯", tip:"<strong>Constraint-based prompting</strong> sets deliberate limitations — on length, vocabulary, or structure — to sharpen your writing and force clearer thinking.",
@@ -503,8 +691,14 @@ const techniques = [
         discussion_post:"I need to plan a discussion post on {topic}. Apply this constraint: my position must be stated in one sentence of no more than 15 words. Help me draft and refine this sentence.",
         minutes:"I need to plan the minutes for a meeting on {topic}. Apply this constraint: every action point must be expressible in one sentence containing: who, what, and by when. Help me test this for the main decisions.",
         abstract:"I am planning an abstract for a paper on {topic}. Apply this constraint: the entire abstract must be no more than 150 words. Help me allocate a maximum word count to each of the five elements.",
-        lit_review:"I am planning a literature review section on {topic}. Apply this constraint: I must be able to summarise each source's contribution in one sentence. Help me practise this for the key sources in my area."
-      },
+        lit_review:"I am planning a literature review section on {topic}. Apply this constraint: I must be able to summarise each source's contribution in one sentence. Help me practise this for the key sources in my area.",
+        proposal:"I am planning a proposal on {topic}. Apply this constraint: I must be able to state the entire rationale in three sentences — problem, solution, impact. Help me develop and test these three sentences.",
+        memo:"I am planning a memo on {topic}. Apply this constraint: the entire memo must be readable in under 2 minutes (approximately 300 words). Help me decide what to include and what to cut.",
+        case_study:"I am planning a case study on {topic}. Apply this constraint: I must be able to summarise the entire case — problem, solution, result — in two sentences. Help me draft and test these sentences.",
+        research_article:"I am planning a section of a research article on {topic}. Apply this constraint: every claim I plan to make must be linked to either data from my study or a citation from the literature. Help me test my plan against this constraint.",
+        newsletter:"I am planning a newsletter on {topic}. Apply this constraint: the most important information must appear in the first 50 words. Help me identify what that information is and test whether my plan meets this constraint."
+      ,
+        social_media:"I am planning a social media post about {topic}. Apply this constraint: the entire message must be expressible in one sentence of no more than 20 words. Help me develop and test this sentence before I write the full post."},
       drafting:{
         email:"I am drafting an email about {topic}. Apply this constraint: my email must be no longer than 100 words. I have drafted this opening: [paste your opening]. Tell me if it is concise enough and how many words I have left for the rest.",
         essay:"I am drafting an essay introduction on {topic}. Apply this constraint: my thesis must be exactly one sentence and must contain a clear claim and a concession. Here is my attempt: [paste thesis]. Tell me whether it meets the constraint and how to improve it.",
@@ -515,8 +709,14 @@ const techniques = [
         discussion_post:"I am drafting a discussion post on {topic}. Apply this constraint: I must use at least one specific piece of evidence (a statistic, study, or example) and the post must be no longer than 150 words. Here is my draft: [paste draft]. Tell me whether it meets both constraints.",
         minutes:"I am writing action points for a meeting on {topic}. Apply this constraint: each action point must be no longer than 20 words and must contain a name, a task, and a deadline. Here are my action points: [paste]. Tell me which ones fail the constraint and why.",
         abstract:"I am drafting an abstract on {topic}. Apply this constraint: each of the five sentences must begin with a different type of clause (e.g. noun phrase, verb phrase, adverbial). Here is my draft: [paste]. Tell me whether it meets this constraint.",
-        lit_review:"I am drafting a literature review section on {topic}. Apply this constraint: I must not simply report what each source says — every sentence mentioning a source must also connect it to another source or to my argument. Here is my draft: [paste]. Tell me which sentences fail this constraint."
-      },
+        lit_review:"I am drafting a literature review section on {topic}. Apply this constraint: I must not simply report what each source says — every sentence mentioning a source must also connect it to another source or to my argument. Here is my draft: [paste]. Tell me which sentences fail this constraint.",
+        proposal:"I am drafting a proposal on {topic}. Apply this constraint: my problem statement must be no longer than three sentences and must include a specific statistic or evidence. Here is my attempt: [paste]. Tell me whether it meets the constraint.",
+        memo:"I am drafting a memo on {topic}. Apply this constraint: the memo must be no longer than 250 words. Here is my draft: [paste]. Tell me what to cut — do not rewrite it.",
+        case_study:"I am drafting a case study on {topic}. Apply this constraint: every claim about results must be supported by a specific number or measurable outcome. Here is my draft: [paste]. Tell me which claims lack evidence.",
+        research_article:"I am drafting a section of a research article on {topic}. Apply this constraint: I must not begin any sentence with \'This study...\' more than once per paragraph. Here is my draft: [paste]. Tell me where I violate this.",
+        newsletter:"I am drafting a newsletter on {topic}. Apply this constraint: the opening paragraph must be no longer than 40 words and must answer: what is happening, who is affected, and when. Here is my attempt: [paste]. Tell me whether it meets the constraint."
+      ,
+        social_media:"I am drafting a social media post about {topic}. Apply this constraint: the opening line must be no longer than 10 words and must make the reader want to keep reading. Here is my attempt: [paste line]. Tell me whether it meets the constraint."},
       revising:{
         email:"Here is my draft email about {topic}: [paste draft]. Apply this constraint: remove every word that is not essential to the meaning. Tell me which words or phrases I could cut — do not rewrite it for me.",
         essay:"Here is my essay paragraph on {topic}: [paste paragraph]. Apply this constraint: every claim must be followed by evidence within the same paragraph. Tell me which claims are unsupported — do not rewrite it for me.",
@@ -527,8 +727,14 @@ const techniques = [
         discussion_post:"Here is my discussion post on {topic}: [paste post]. Apply this constraint: every opinion must be backed by a specific source or example. Tell me which opinions are unsupported — do not rewrite the post.",
         minutes:"Here is my minutes on {topic}: [paste minutes]. Apply this constraint: every action point must include a named person, a specific deliverable, and a deadline. Tell me which action points fail this — do not rewrite them.",
         abstract:"Here is my abstract on {topic}: [paste abstract]. Apply this constraint: it must be no longer than 150 words. Tell me what to cut and why — do not rewrite it for me.",
-        lit_review:"Here is my literature review section on {topic}: [paste section]. Apply this constraint: no more than two consecutive sentences may be about the same source. Tell me where I violate this constraint — do not rewrite the section for me."
-      },
+        lit_review:"Here is my literature review section on {topic}: [paste section]. Apply this constraint: no more than two consecutive sentences may be about the same source. Tell me where I violate this constraint — do not rewrite the section for me.",
+        proposal:"Here is my proposal section on {topic}: [paste section]. Apply this constraint: every objective must be SMART (Specific, Measurable, Achievable, Relevant, Time-bound). Tell me which objectives fail this — do not rewrite them.",
+        memo:"Here is my memo on {topic}: [paste]. Apply this constraint: no sentence may be longer than 25 words. Identify which sentences exceed this — do not rewrite them, just flag and explain.",
+        case_study:"Here is my case study on {topic}: [paste]. Apply this constraint: every result or outcome must include a specific figure or measurable indicator. Identify which results fail this — do not rewrite them.",
+        research_article:"Here is my research article section on {topic}: [paste]. Apply this constraint: every paragraph must contain at least one hedging expression (\'suggests\', \'indicates\', \'may\', \'appears to\'). Identify paragraphs that make unhedged claims — do not rewrite them.",
+        newsletter:"Here is my newsletter on {topic}: [paste]. Apply this constraint: no paragraph should be longer than 60 words. Identify which paragraphs exceed this — do not rewrite them, just flag and explain."
+      ,
+        social_media:"Here is my social media post about {topic}: [paste]. Apply this constraint: every sentence must earn its place — flag any sentence that does not add new information or value. Do not rewrite, just identify."},
       editing:{
         email:"Here is my email about {topic}: [paste text]. Apply this constraint: flag every sentence over 25 words as too long. List each flagged sentence and suggest how I could split it.",
         essay:"Here is my essay paragraph on {topic}: [paste paragraph]. Apply this constraint: flag any use of informal language or first person ('I think', 'I feel', 'kind of'). List each instance and suggest a more academic alternative.",
@@ -539,8 +745,14 @@ const techniques = [
         discussion_post:"Here is my discussion post on {topic}: [paste post]. Apply this constraint: flag any claim that is not supported by specific evidence. List each unsupported claim.",
         minutes:"Here is my minutes on {topic}: [paste minutes]. Apply this constraint: flag any passive constructions that obscure who is responsible for an action (e.g. 'it was agreed' → who agreed?). List each one.",
         abstract:"Here is my abstract on {topic}: [paste abstract]. Apply this constraint: flag any sentence that uses more than 30 words. List each one and suggest how to make it more concise.",
-        lit_review:"Here is my literature review section on {topic}: [paste section]. Apply this constraint: flag every sentence that starts with an author name (e.g. 'Smith argues…') — these may be over-summarising rather than synthesising. List each one and suggest an alternative structure."
-      }
+        lit_review:"Here is my literature review section on {topic}: [paste section]. Apply this constraint: flag every sentence that starts with an author name (e.g. 'Smith argues…') — these may be over-summarising rather than synthesising. List each one and suggest an alternative structure.",
+        proposal:"Here is my proposal on {topic}: [paste]. Apply this constraint: flag every passive construction where the agent is unclear (e.g. \'it will be implemented\'). List each one and suggest an active alternative.",
+        memo:"Here is my memo on {topic}: [paste]. Apply this constraint: flag every phrase that could be said in fewer words without losing meaning. List each with a suggested shorter version.",
+        case_study:"Here is my case study on {topic}: [paste]. Apply this constraint: flag every sentence in the passive voice where an active construction would be clearer. List each one with a suggested active version.",
+        research_article:"Here is my research article section on {topic}: [paste]. Apply this constraint: flag every claim made without a citation or supporting data. List each one.",
+        newsletter:"Here is my newsletter on {topic}: [paste]. Apply this constraint: flag every sentence over 30 words. List each one and suggest how to split or simplify it."
+      ,
+        social_media:"Here is my social media post about {topic}: [paste]. Apply this constraint: flag every sentence over 20 words. List each one and suggest how to shorten it."}
     }
   },
   { name:"Audience", icon:"👥", tip:"<strong>Audience awareness prompting</strong> asks AI to help you adapt your language, tone, and content for a specific reader. Essential for professional and academic writing.",
@@ -555,8 +767,14 @@ const techniques = [
         discussion_post:"I am planning a discussion post on {topic} for [describe the course or forum context]. What tone is appropriate, how much technical language can I use, and what would engage this specific audience?",
         minutes:"I need to write up minutes for a meeting on {topic}. The audience includes [describe — e.g. both technical staff and senior management who were not present]. How should I adjust the level of detail and language for both groups?",
         abstract:"I am writing an abstract for a paper on {topic}. My intended audience is [describe — e.g. specialists in the field / conference attendees from related disciplines]. What terminology, level of detail, and framing is appropriate?",
-        lit_review:"I am writing a literature review section on {topic} for a thesis aimed at [describe audience — e.g. an academic supervisor and external examiners in the field]. What should I assume they know, and how should I engage critically with the sources?"
-      },
+        lit_review:"I am writing a literature review section on {topic} for a thesis aimed at [describe audience — e.g. an academic supervisor and external examiners in the field]. What should I assume they know, and how should I engage critically with the sources?",
+        proposal:"I am planning a proposal on {topic} for [describe your audience — e.g. a university research committee / a company board]. What should I prioritise, what can I assume they know, and what tone is appropriate?",
+        memo:"I am writing a memo on {topic} for [describe audience — e.g. all departmental staff / senior leadership]. What tone, level of detail, and structure is appropriate for this specific audience?",
+        case_study:"I am writing a case study on {topic} for [describe audience — e.g. business students / potential clients / industry peers]. What should I emphasise, what can I assume they know, and what format would work best?",
+        research_article:"I am writing a section of a research article on {topic} for [describe target journal or audience]. What level of technical detail, what citation density, and what rhetorical moves are expected in this venue?",
+        newsletter:"I am writing a newsletter on {topic} for [describe audience — e.g. all staff / department heads / student body]. What tone, length, and structure would work best for this specific audience?"
+      ,
+        social_media:"I am planning a social media post about {topic} for [describe platform and audience — e.g. LinkedIn / senior professionals, Instagram / students, X / academics]. What tone, length, format, and content priorities are appropriate for this specific platform and audience?"},
       drafting:{
         email:"I am drafting an email about {topic} to [describe your reader]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the tone appropriate for this reader, is the language at the right level, and is anything likely to confuse or alienate them?",
         essay:"I am drafting an essay on {topic} for an academic reader. Here is my introduction: [paste draft]. Without rewriting it, tell me: does the language level match an academic audience, is any terminology unexplained, and is the argument framed in a way this reader would find credible?",
@@ -567,8 +785,14 @@ const techniques = [
         discussion_post:"I am drafting a discussion post on {topic} for [describe the course or context]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the register appropriate, is the argument accessible for this audience, and does it invite engagement from these readers?",
         minutes:"I am writing minutes for a meeting on {topic} to be shared with [describe the audience]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the level of detail right for this audience, and is the language accessible?",
         abstract:"I am drafting an abstract on {topic} for [describe your target publication or audience]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the terminology appropriate, is the framing right for this audience, and is anything likely to confuse or exclude a reader from this context?",
-        lit_review:"I am drafting a literature review section on {topic} for [describe audience — e.g. a thesis examiner]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the critical engagement sufficient for this reader, is any terminology unexplained, and is the argument coherent?"
-      },
+        lit_review:"I am drafting a literature review section on {topic} for [describe audience — e.g. a thesis examiner]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the critical engagement sufficient for this reader, is any terminology unexplained, and is the argument coherent?",
+        proposal:"I am drafting a proposal on {topic} for [describe audience]. Here is my draft introduction: [paste draft]. Without rewriting it, tell me: is the language appropriate for this audience, is the problem framed in a way they will find compelling, and what might they question?",
+        memo:"I am drafting a memo on {topic} for [describe audience]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the tone appropriate, is the level of detail right, and is the action point clear for this audience?",
+        case_study:"I am drafting a case study on {topic} for [describe audience]. Here is my opening section: [paste draft]. Without rewriting it, tell me: is the context accessible for this audience and is the problem framed in a way they will find relevant?",
+        research_article:"I am drafting a section of a research article on {topic} for [describe journal/audience]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the level of technical detail appropriate, and does the writing match the conventions of this field?",
+        newsletter:"I am drafting a newsletter on {topic} for [describe audience]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the tone right for this audience and is the key information presented in the most accessible way?"
+      ,
+        social_media:"I am drafting a social media post about {topic} for [describe platform and audience]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the tone right for this platform, is the vocabulary appropriate for this audience, and is anything likely to misfire?"},
       revising:{
         email:"Here is my revised email about {topic}: [paste revised version]. My reader is [describe]. Without rewriting it, tell me: is the tone now appropriate for this reader, and is there anything that could still seem unclear or inappropriate?",
         essay:"Here is my revised essay paragraph on {topic}: [paste revised version]. My reader is an academic in the field. Without rewriting it, tell me: does the language now meet the expectations of an academic reader, and is the argument appropriately evidenced?",
@@ -579,8 +803,14 @@ const techniques = [
         discussion_post:"Here is my revised discussion post on {topic}: [paste revised version]. The forum is [describe context]. Without rewriting it, tell me: is the tone and register now appropriate, and does it invite engagement from this audience?",
         minutes:"Here is my revised minutes for a meeting on {topic}: [paste revised version]. The audience is [describe]. Without rewriting them, tell me: is the level of detail now appropriate, and is the language clear for all intended readers?",
         abstract:"Here is my revised abstract on {topic}: [paste revised version]. The target audience is [describe]. Without rewriting it, tell me: is the framing now appropriate for this audience, and is any term still likely to confuse them?",
-        lit_review:"Here is my revised literature review section on {topic}: [paste revised version]. My audience is [describe]. Without rewriting it, tell me: is the level of critical engagement now sufficient, and is the argument well-positioned for this reader?"
-      },
+        lit_review:"Here is my revised literature review section on {topic}: [paste revised version]. My audience is [describe]. Without rewriting it, tell me: is the level of critical engagement now sufficient, and is the argument well-positioned for this reader?",
+        proposal:"Here is my revised proposal on {topic}: [paste]. My audience is [describe]. Without rewriting it, tell me: is the tone right for this audience, is the evidence type they expect present, and is anything likely to undermine credibility?",
+        memo:"Here is my revised memo on {topic}: [paste]. My audience is [describe]. Without rewriting it, tell me: is the tone now appropriate and is the action point clear for this reader?",
+        case_study:"Here is my revised case study on {topic}: [paste]. My audience is [describe]. Without rewriting it, tell me: is the language and framing appropriate for this audience, and is anything likely to seem unconvincing to them?",
+        research_article:"Here is my revised research article section on {topic}: [paste]. The target venue is [describe]. Without rewriting it, tell me: does the argumentation and evidence meet the standards this audience would expect?",
+        newsletter:"Here is my revised newsletter on {topic}: [paste]. My audience is [describe]. Without rewriting it, tell me: is the tone and content now well matched to this audience, and is anything likely to be unclear or off-putting?"
+      ,
+        social_media:"Here is my revised social media post about {topic}: [paste]. My platform and audience are [describe]. Without rewriting it, tell me: is the tone and content now well matched to this audience, and is there anything that could be misread?"},
       editing:{
         email:"Here is my email about {topic}: [paste text]. My reader is [describe]. Flag any words, phrases, or sentences that are not appropriate for this reader — too formal, too informal, too technical, or likely to confuse. List each one with a suggested alternative.",
         essay:"Here is my essay paragraph on {topic}: [paste paragraph]. My reader is an academic in the field. Flag any informal language, unexplained terms, or unsupported claims that would undermine my credibility with this reader.",
@@ -591,8 +821,14 @@ const techniques = [
         discussion_post:"Here is my discussion post on {topic}: [paste post]. The forum is [describe]. Flag any language that is inappropriate for this context — too casual, too technical, or likely to alienate this audience.",
         minutes:"Here is my minutes on {topic}: [paste minutes]. The audience includes [describe]. Flag any language that is too technical for non-specialist readers, or any phrasing that is unclear or unnecessarily formal.",
         abstract:"Here is my abstract on {topic}: [paste abstract]. The target audience is [describe]. Flag any terms that may be unfamiliar to this audience and any sentences that are unnecessarily complex.",
-        lit_review:"Here is my literature review section on {topic}: [paste section]. My audience is [describe]. Flag any unexplained jargon, any assumptions about prior knowledge that may not be warranted, and any sentences that are harder to read than necessary."
-      }
+        lit_review:"Here is my literature review section on {topic}: [paste section]. My audience is [describe]. Flag any unexplained jargon, any assumptions about prior knowledge that may not be warranted, and any sentences that are harder to read than necessary.",
+        proposal:"Here is my proposal on {topic}: [paste]. My audience is [describe]. Flag any language that is too technical, too vague, or inappropriate for this audience. List each instance with a suggested alternative.",
+        memo:"Here is my memo on {topic}: [paste]. My audience is [describe]. Flag any language that is too formal, too informal, or potentially unclear for this reader. List each instance with a suggestion.",
+        case_study:"Here is my case study on {topic}: [paste]. My audience is [describe]. Flag any jargon that needs explaining, any overly complex sentences, or any tone mismatches. List each with a suggestion.",
+        research_article:"Here is my research article section on {topic}: [paste]. The target journal is [describe]. Flag any language that does not match the conventions of this field — jargon that needs defining, register issues, or unacceptable hedging levels.",
+        newsletter:"Here is my newsletter on {topic}: [paste]. My audience is [describe]. Flag any language that is too formal, too casual, or potentially unclear for this readership. List each instance with a suggestion."
+      ,
+        social_media:"Here is my social media post about {topic}: [paste]. My platform and audience are [describe]. Flag any language that is too formal, too casual, or unclear for this context. List each instance with a suggestion."}
     }
   }
 ];
