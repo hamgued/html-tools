@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Builder Workshop</title>
+<style>
+  :root {
+    --green: #2e7d32; --amber: #e65100; --blue: #1565c0; --blue-dark: #0d47a1;
+    --light-blue: #e3f2fd; --light-green: #e8f5e9;
+    --grey: #f5f5f5; --text: #212121; --muted: #757575;
+    --shadow: 0 2px 12px rgba(0,0,0,0.09); --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+  header { background: #ffffff; border-bottom: 1px solid #e0e6ed; padding: 0 24px; flex-shrink: 0; display: flex; align-items: center; min-height: 58px; }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; color: #1a237e; }
+  .header-left p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .header-left a { color: var(--blue); text-decoration: none; }
+  .header-left a:hover { text-decoration: underline; }
+
+  .main { flex: 1; overflow-y: auto; padding: 28px 32px; }
+  .panel-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+  .panel-desc { font-size: 0.81rem; color: var(--muted); margin-bottom: 24px; }
+
+  /* TIMELINE */
+  .steps-timeline { position: relative; max-width: 680px; }
+  .steps-timeline::before { content: ''; position: absolute; left: 15px; top: 24px; bottom: 24px; width: 2px; background: #dde3ef; border-radius: 2px; z-index: 0; }
+  .step-row { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 14px; position: relative; }
+  .step-row:last-child { margin-bottom: 0; }
+  .step-dot { width: 32px; height: 32px; border-radius: 50%; background: white; border: 2px solid #dde3ef; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; color: #aab4c0; flex-shrink: 0; position: relative; z-index: 1; transition: all 0.2s; }
+  .step-row.done .step-dot { background: var(--blue); border-color: var(--blue); color: white; }
+  .step-row.active .step-dot { background: var(--blue); border-color: var(--blue); color: white; box-shadow: 0 0 0 4px #d0e3ff; }
+  .step-content { flex: 1; min-width: 0; }
+  .card-section { background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+  .card-section h3 { font-size: 0.88rem; font-weight: 700; margin-bottom: 14px; }
+
+  /* TECHNIQUE GRID */
+  .technique-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px,1fr)); gap: 8px; margin-bottom: 12px; }
+  .technique-card { border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 10px; cursor: pointer; transition: all 0.15s; text-align: center; background: var(--grey); }
+  .technique-card:hover, .technique-card.selected { border-color: var(--blue); background: var(--light-blue); }
+  .technique-icon { font-size: 1.2rem; margin-bottom: 4px; }
+  .technique-name { font-size: 0.74rem; font-weight: 700; }
+  .technique-desc { font-size: 0.67rem; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+  .tip-box { background: var(--light-blue); border-left: 3px solid var(--blue); border-radius: 0 8px 8px 0; padding: 10px 13px; font-size: 0.79rem; line-height: 1.5; display: none; }
+  .tip-box.show { display: block; }
+  .tip-box strong { color: var(--blue); }
+
+  /* FORM */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .form-label { font-size: 0.73rem; font-weight: 700; display: block; margin-bottom: 4px; }
+  select, input[type=text] { width: 100%; padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 7px; font-size: 0.81rem; font-family: inherit; transition: border-color 0.15s; }
+  select:focus, input[type=text]:focus { outline: none; border-color: var(--blue); }
+
+  /* OUTPUT */
+  .output-label { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; font-weight: 700; }
+  .prompt-output { background: #1a1a2e; border-radius: 8px; padding: 14px; font-family: 'Courier New', monospace; font-size: 0.79rem; color: #a8d8a8; line-height: 1.6; min-height: 56px; white-space: pre-wrap; word-break: break-word; margin-bottom: 10px; }
+  .btn { padding: 8px 18px; border-radius: 8px; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .btn-primary { background: var(--blue); color: white; } .btn-primary:hover { background: var(--blue-dark); }
+
+  /* CHECKLIST */
+  .checklist-anim { display: flex; flex-direction: column; gap: 9px; }
+  .check-anim { display: flex; align-items: flex-start; gap: 10px; font-size: 0.83rem; line-height: 1.45; transition: color 0.3s; }
+  .chk-box { font-size: 1.05rem; flex-shrink: 0; line-height: 1.2; color: var(--blue); transition: all 0.2s; min-width: 16px; display: inline-block; }
+  .chk-text { transition: color 0.4s; }
+  .check-anim.ticked .chk-box { color: var(--green); }
+  .check-anim.ticked .chk-text { color: var(--muted); }
+  @keyframes tickPop { 0%{transform:scale(1)} 40%{transform:scale(1.4)} 70%{transform:scale(0.9)} 100%{transform:scale(1)} }
+  .check-anim.ticking .chk-box { animation: tickPop 0.35s ease forwards; }
+
+  @media (max-width: 580px) {
+    .main { padding: 16px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>✍️ Prompt Builder Workshop</h1>
+    <p>LAB/LUT Language Centre · <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></p>
+  </div>
+</header>
+
+<div class="main">
+  <div class="panel-title">Build Your AI Prompt</div>
+  <p class="panel-desc">Select a technique, define your context, then copy your prompt into any AI tool.</p>
+
+  <div class="steps-timeline" id="stepsTimeline">
+
+    <div class="step-row active" id="step1">
+      <div class="step-dot">1</div>
+      <div class="step-content">
+        <div class="card-section">
+          <h3>Choose a Prompting Technique</h3>
+          <div class="technique-grid" id="techniqueGrid"></div>
+          <div class="tip-box" id="techniqueTip"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-row" id="step2">
+      <div class="step-dot">2</div>
+      <div class="step-content">
+        <div class="card-section">
+          <h3>Define Your Writing Context</h3>
+          <div class="form-row">
+            <div>
+              <label class="form-label">Writing Stage</label>
+              <select id="stageSelect" onchange="updatePreview()">
+                <option value="">Select stage…</option>
+                <option value="prewriting">Prewriting (brainstorm / plan)</option>
+                <option value="drafting">Drafting (write first draft)</option>
+                <option value="revising">Revising (improve structure)</option>
+                <option value="editing">Editing &amp; Proofreading</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Text Type</label>
+              <select id="typeSelect" onchange="updatePreview()">
+                <option value="">Select type…</option>
+                <option value="email">Professional email</option>
+                <option value="essay">Academic essay</option>
+                <option value="report">Report</option>
+                <option value="summary">Summary</option>
+                <option value="presentation">Presentation outline</option>
+                <option value="cover_letter">Cover letter</option>
+                <option value="discussion_post">Discussion post</option>
+                <option value="minutes">Meeting minutes</option>
+                <option value="abstract">Abstract</option>
+                <option value="lit_review">Literature review section</option>
+              </select>
+            </div>
+          </div>
+          <label class="form-label">Your Topic / Main Idea</label>
+          <input type="text" id="topicInput" oninput="updatePreview()" placeholder="e.g. sustainability in engineering, AI in healthcare…">
+        </div>
+      </div>
+    </div>
+
+    <div class="step-row" id="step3">
+      <div class="step-dot">3</div>
+      <div class="step-content">
+        <div class="card-section">
+          <h3>Your Generated Prompt</h3>
+          <div class="output-label">Copy and paste into ChatGPT, Copilot, or any AI tool:</div>
+          <div class="prompt-output" id="promptOutput">← Select a technique and fill in the fields above.</div>
+          <button class="btn btn-primary" onclick="copyPrompt()">📋 Copy Prompt</button>
+          <span id="copyConfirm" style="font-size:0.75rem;color:var(--green);margin-left:10px;display:none;">✅ Copied!</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-row" id="step4">
+      <div class="step-dot">4</div>
+      <div class="step-content">
+        <div class="card-section">
+          <h3>Responsible AI Writing Checklist</h3>
+          <p style="font-size:0.79rem;color:var(--muted);margin-bottom:14px;">Before submitting work that involved AI assistance:</p>
+          <div class="checklist-anim" id="checklistAnim">
+            <div class="check-anim"><span class="chk-box">☐</span><span class="chk-text">I have disclosed my AI use to my instructor (if required).</span></div>
+            <div class="check-anim"><span class="chk-box">☐</span><span class="chk-text">I have verified all AI-generated facts and claims myself.</span></div>
+            <div class="check-anim"><span class="chk-box">☐</span><span class="chk-text">The final text reflects my own ideas and understanding.</span></div>
+            <div class="check-anim"><span class="chk-box">☐</span><span class="chk-text">I have not submitted AI output directly without my own contribution.</span></div>
+            <div class="check-anim"><span class="chk-box">☐</span><span class="chk-text">I have reviewed the task's AI Traffic Light rating (🟢🟠🔴).</span></div>
+            <div class="check-anim"><span class="chk-box">☐</span><span class="chk-text">I have considered potential biases in the AI output.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// TEXT TYPE LABELS (for display in tips)
+const typeLabels = { email:"professional email", essay:"academic essay", report:"report", summary:"summary", presentation:"presentation", cover_letter:"cover letter", discussion_post:"discussion post", minutes:"meeting minutes", abstract:"abstract", lit_review:"literature review section" };
+
+const techniques = [
+  { name:"Role-based", icon:"🎭", tip:"<strong>Role-based prompting</strong> tells the AI to adopt a specific persona or expertise. This shapes the tone, depth, and focus of the guidance you receive.",
+    templates:{
+      prewriting:{
+        email:"You are a professional business communication coach. I need to write an email about {topic}. What 5 key points should I cover, and what order would be most effective?",
+        essay:"You are an academic writing tutor. I want to write an essay on {topic}. Help me develop a strong thesis statement and identify three supporting arguments I could make.",
+        report:"You are a professional report writer. I am planning a report on {topic}. What sections should I include and what should each section aim to do?",
+        summary:"You are an expert in academic reading. I need to summarise a text on {topic}. What are the key elements I should look for and capture in my summary?",
+        presentation:"You are a presentation coach. I am planning a presentation on {topic}. Suggest an engaging structure: an opening hook, three main points, and a memorable closing.",
+        cover_letter:"You are a careers adviser. I am writing a cover letter for a position related to {topic}. What key points should I address, and in what order?",
+        discussion_post:"You are an online learning facilitator. I need to write a discussion post on {topic}. What should my post include to be both substantive and engaging?",
+        minutes:"You are an experienced meeting facilitator. I need to write minutes for a meeting on {topic}. What structure and key sections should I use?",
+        abstract:"You are an academic writing tutor. I am writing an abstract for a paper on {topic}. What elements must I include and what is the ideal order?",
+        lit_review:"You are a research supervisor. I am planning a literature review section on {topic}. What themes should I look for and how should I organise the section?"
+      },
+      drafting:{
+        email:"You are a professional communication coach. I am writing an email about {topic}. Without writing it for me, tell me: what should my opening sentence achieve, what should the body paragraph do, and how should I close?",
+        essay:"You are an academic writing tutor. I am drafting an introduction for an essay on {topic}. Guide me: what should my first sentence do, what background context is essential, and how should I phrase my thesis?",
+        report:"You are a professional report writer. I am drafting the introduction to a report on {topic}. What should I state in the first sentence, and what three things must this section tell the reader?",
+        summary:"You are an academic writing coach. I am writing a summary of a text on {topic}. Guide me through what my first sentence must establish and what each subsequent sentence should add.",
+        presentation:"You are a presentation coach. I am writing speaker notes for my opening slide on {topic}. What should I say in my first sentence to engage the audience, and what three things should I cover?",
+        cover_letter:"You are a careers adviser. I am drafting my cover letter for a role related to {topic}. Without writing it for me, guide me: what should my opening paragraph achieve and what evidence should I include in the body?",
+        discussion_post:"You are a learning facilitator. I am drafting a discussion post on {topic}. Guide me: what position should I state upfront, what evidence should I use, and how should I invite further discussion?",
+        minutes:"You are a professional minute-taker. I am drafting minutes for a meeting on {topic}. What must I include for each agenda item, and how should I phrase decisions and action points?",
+        abstract:"You are an academic writing tutor. I am drafting an abstract for a paper on {topic}. Walk me through what each sentence in a 5-sentence abstract should do — without writing it for me.",
+        lit_review:"You are a research supervisor. I am drafting a literature review section on {topic}. Guide me: how should I open the section, how should I group sources, and how should I end with a gap statement?"
+      },
+      revising:{
+        email:"You are a professional editor. Here is my draft email about {topic}: [paste draft]. Without rewriting it, tell me specifically what is unclear, what the tone issues are, and what structural changes would improve it.",
+        essay:"You are an academic writing tutor. Here is my draft essay paragraph on {topic}: [paste paragraph]. Without rewriting it, identify weaknesses in the argument, suggest where I need more evidence, and flag any issues with academic style.",
+        report:"You are a professional editor. Here is my report section on {topic}: [paste section]. Point out what is unclear, what is missing, and how I could improve the formal register — but let me make the changes.",
+        summary:"You are an academic writing coach. Here is my summary of {topic}: [paste summary]. Without rewriting it, tell me: is the main idea clear, is anything missing, and is anything unnecessary?",
+        presentation:"You are a presentation coach. Here is my speaker note for a slide on {topic}: [paste note]. Without rewriting it, tell me what is unclear, what could be cut, and how I could make it more engaging.",
+        cover_letter:"You are a careers adviser. Here is my cover letter draft for a role related to {topic}: [paste draft]. Without rewriting it, identify what is weak, what is missing, and how I could make my case more convincing.",
+        discussion_post:"You are a learning facilitator. Here is my discussion post on {topic}: [paste post]. Without rewriting it, tell me if my argument is clear, whether I have supported it adequately, and how I could invite more engagement.",
+        minutes:"You are a professional editor. Here are my draft minutes for a meeting on {topic}: [paste draft]. Without rewriting, tell me what is unclear, what is missing, and whether action points are specific enough.",
+        abstract:"You are a research supervisor. Here is my draft abstract for a paper on {topic}: [paste abstract]. Without rewriting it, tell me which elements are missing, which sentences are unclear, and whether it accurately represents the paper.",
+        lit_review:"You are a research supervisor. Here is my literature review section on {topic}: [paste section]. Without rewriting it, tell me: is the argument coherent, are sources integrated or just listed, and is there a clear gap statement?"
+      },
+      editing:{
+        email:"You are a professional proofreader. Check this email about {topic} for grammar, punctuation, and tone errors: [paste text]. List each error, its type, and your suggested correction.",
+        essay:"You are an academic proofreader. Check this essay paragraph on {topic} for grammar, academic register, and coherence issues: [paste paragraph]. List each error and your suggested correction.",
+        report:"You are a professional editor. Proofread this report section on {topic}: [paste section]. List all errors in grammar, formatting, and register with suggested corrections.",
+        summary:"You are an academic proofreader. Check this summary of {topic} for language errors: [paste summary]. List each error and correction clearly.",
+        presentation:"You are a presentation coach. Proofread these speaker notes on {topic}: [paste notes]. List each error and suggested correction.",
+        cover_letter:"You are a careers adviser. Proofread this cover letter related to {topic}: [paste text]. List any grammar, tone, or style errors with corrections.",
+        discussion_post:"You are an academic writing tutor. Proofread this discussion post on {topic}: [paste post]. List any grammar or register errors with corrections.",
+        minutes:"You are a professional editor. Proofread these meeting minutes on {topic}: [paste minutes]. Flag any unclear phrasing, missing information, or language errors.",
+        abstract:"You are an academic proofreader. Check this abstract on {topic} for grammar and clarity: [paste abstract]. List each issue and your suggested fix.",
+        lit_review:"You are a research supervisor. Proofread this literature review section on {topic}: [paste section]. Flag language errors, unclear sentences, and any places where citation style is inconsistent."
+      }
+    }
+  },
+  { name:"Step-by-step", icon:"🪜", tip:"<strong>Step-by-step prompting</strong> asks the AI to reason through a task in stages. This helps you understand the process, not just receive a result.",
+    templates:{
+      prewriting:{
+        email:"Help me plan an email about {topic}. Think step by step: 1) who is my audience and what do they need to know, 2) what is the single main purpose of this email, 3) what three points must I include?",
+        essay:"Help me plan an essay on {topic}. Think step by step: 1) what is the central argument I want to make, 2) what three points would support it, 3) what counterargument should I address?",
+        report:"Help me plan a report on {topic}. Think step by step: 1) what is the scope and purpose, 2) what sections are needed, 3) what evidence or data should each section draw on?",
+        summary:"Help me plan a summary of a text on {topic}. Think step by step: 1) what is the author's main claim, 2) what are the two or three supporting points, 3) what conclusion do they reach?",
+        presentation:"Help me plan a presentation on {topic}. Think step by step: 1) what does my audience already know and what do I want them to leave knowing, 2) what three key messages should I build around, 3) what would make a strong closing?",
+        cover_letter:"Help me plan a cover letter for a role related to {topic}. Think step by step: 1) what is the employer looking for, 2) what three pieces of evidence show I am a strong fit, 3) what should my closing paragraph achieve?",
+        discussion_post:"Help me plan a discussion post on {topic}. Think step by step: 1) what position will I take, 2) what evidence supports it, 3) what question can I pose to invite responses?",
+        minutes:"Help me plan the structure of my meeting minutes on {topic}. Think step by step: 1) what information goes in the header, 2) how should I record each agenda item, 3) how should I format action points?",
+        abstract:"Help me plan an abstract for a paper on {topic}. Think step by step: 1) what is the research problem, 2) what method did I use, 3) what are the main findings, 4) what is the significance?",
+        lit_review:"Help me plan a literature review section on {topic}. Think step by step: 1) what are the main themes in the literature, 2) how should I group the sources, 3) what gap will I identify at the end?"
+      },
+      drafting:{
+        email:"I am writing an email about {topic}. Walk me through the drafting process step by step: what should I write first, what should each paragraph accomplish, and what must my closing sentence do? Do not write the email for me.",
+        essay:"I am drafting an introduction for an essay on {topic}. Walk me through the process step by step: what should my opening sentence do, what context must I give, and how do I write a strong thesis? Do not write it for me.",
+        report:"I am drafting the introduction to a report on {topic}. Walk me through the process step by step: what must I establish in the first sentence, what should the body of the introduction cover, and how should it end? Do not write it for me.",
+        summary:"I am writing a summary of a text on {topic}. Walk me through the process step by step: what should my first sentence establish, what should the middle sentences do, and how should I close? Do not write it for me.",
+        presentation:"I am writing speaker notes for an opening slide on {topic}. Walk me through the process step by step: what should I say to open strongly, what do I need to cover, and how do I signal the transition to the next slide? Do not write it for me.",
+        cover_letter:"I am drafting a cover letter for a role related to {topic}. Walk me through the process step by step: what should each paragraph do and what evidence should I include? Do not write it for me.",
+        discussion_post:"I am writing a discussion post on {topic}. Walk me through the process step by step: how should I open, what should my argument include, and how should I end to invite replies? Do not write it for me.",
+        minutes:"I am writing up minutes for a meeting on {topic}. Walk me through the process step by step: what must I record for each agenda item, how do I phrase decisions, and how do I format action points? Do not write them for me.",
+        abstract:"I am drafting an abstract for a paper on {topic}. Walk me through the process step by step: what should each of the five sentences accomplish? Do not write it for me.",
+        lit_review:"I am drafting a literature review section on {topic}. Walk me through the process step by step: how do I open, how do I move between sources, and how do I end with a research gap? Do not write it for me."
+      },
+      revising:{
+        email:"Revise my thinking on this draft email about {topic} step by step: [paste draft]. 1) Is the subject line effective? 2) Is the opening clear? 3) Is the main message easy to follow? 4) Is the closing appropriate? Give me questions to ask myself, not a rewrite.",
+        essay:"Help me revise this essay paragraph on {topic} step by step: [paste paragraph]. 1) Is the topic sentence clear? 2) Is the argument supported by evidence? 3) Is the academic register appropriate? 4) Does it link to the next paragraph? Give me feedback, not a rewrite.",
+        report:"Help me revise this report section on {topic} step by step: [paste section]. 1) Is the purpose of this section clear? 2) Is the evidence sufficient? 3) Is the register formal enough? Give me specific feedback, not a rewrite.",
+        summary:"Help me revise this summary of {topic} step by step: [paste summary]. 1) Is the main idea stated clearly? 2) Are the supporting points accurate? 3) Is anything unnecessary? Give me questions to guide my revision, not a rewrite.",
+        presentation:"Help me revise these speaker notes on {topic} step by step: [paste notes]. 1) Is the opening engaging? 2) Are the key points clear? 3) Is the timing realistic? Give me feedback to guide my revision, not a rewrite.",
+        cover_letter:"Help me revise this cover letter for a role related to {topic} step by step: [paste draft]. 1) Does the opening create a strong impression? 2) Is the evidence specific? 3) Is the tone appropriate? Give me targeted feedback, not a rewrite.",
+        discussion_post:"Help me revise this discussion post on {topic} step by step: [paste post]. 1) Is my position clear from the start? 2) Is my argument well supported? 3) Does it invite engagement? Give me questions to guide my revision, not a rewrite.",
+        minutes:"Help me revise these meeting minutes on {topic} step by step: [paste minutes]. 1) Are decisions clearly recorded? 2) Are action points specific with owners and deadlines? 3) Is the language clear and neutral? Give me feedback, not a rewrite.",
+        abstract:"Help me revise this abstract on {topic} step by step: [paste abstract]. 1) Is the research problem clear? 2) Is the method stated? 3) Are the findings specific? 4) Is the significance explained? Give me targeted feedback, not a rewrite.",
+        lit_review:"Help me revise this literature review section on {topic} step by step: [paste section]. 1) Is the argument coherent? 2) Are sources synthesised or just listed? 3) Is there a clear gap statement? Give me feedback questions, not a rewrite."
+      },
+      editing:{
+        email:"Proofread this email about {topic} step by step: [paste text]. 1) Check grammar, 2) check punctuation, 3) check spelling, 4) check tone. List each error and correction separately.",
+        essay:"Proofread this essay paragraph on {topic} step by step: [paste paragraph]. 1) Check grammar and syntax, 2) check academic register, 3) check citation style, 4) check sentence coherence. List each issue and correction.",
+        report:"Proofread this report section on {topic} step by step: [paste section]. 1) Check grammar, 2) check formatting consistency, 3) check factual phrasing. List all corrections.",
+        summary:"Proofread this summary of {topic} step by step: [paste summary]. 1) Check grammar, 2) check conciseness, 3) check accuracy of paraphrase. List each error and correction.",
+        presentation:"Proofread these speaker notes on {topic} step by step: [paste notes]. 1) Fix typos, 2) check sentence length, 3) flag anything that would be awkward to say aloud. List each issue.",
+        cover_letter:"Proofread this cover letter for a role related to {topic} step by step: [paste text]. 1) Check grammar, 2) check tone and formality, 3) flag any clichés. List each issue and correction.",
+        discussion_post:"Proofread this discussion post on {topic} step by step: [paste post]. 1) Check grammar, 2) check that claims are clearly expressed, 3) check register. List each issue and correction.",
+        minutes:"Proofread these meeting minutes on {topic} step by step: [paste minutes]. 1) Check grammar, 2) check that action points are complete and unambiguous, 3) check neutral language. List all issues.",
+        abstract:"Proofread this abstract on {topic} step by step: [paste abstract]. 1) Check grammar, 2) check that each element is present, 3) check conciseness. List each issue and correction.",
+        lit_review:"Proofread this literature review section on {topic} step by step: [paste section]. 1) Check grammar, 2) check citation consistency, 3) flag any unclear or unsupported claims. List all issues."
+      }
+    }
+  },
+  { name:"Format control", icon:"📝", tip:"<strong>Format control prompting</strong> specifies the structure, length, or output format you want. Use it to get planning scaffolds and checklists tailored to your text type.",
+    templates:{
+      prewriting:{
+        email:"Give me a bullet-point planning template for an email about {topic}. Include: purpose, audience, 3 key points, and desired action. Use labels only — no example content.",
+        essay:"Give me a structured planning template for an essay on {topic}. Use this format: Thesis | Point 1 (claim + evidence) | Point 2 (claim + evidence) | Point 3 (claim + evidence) | Counterargument | Conclusion. Labels only.",
+        report:"Give me a numbered section outline for a report on {topic}. Include: title, executive summary, introduction, findings (with sub-sections), discussion, recommendations, references. One sentence per section explaining its purpose.",
+        summary:"Give me a 4-point planning template for summarising a text on {topic}: Main claim | Key supporting point 1 | Key supporting point 2 | Author's conclusion. Labels and brief descriptions only.",
+        presentation:"Give me a slide-by-slide planning template for a 5-minute presentation on {topic}. For each slide: slide number, title, and one sentence on what I should convey. Do not write my content.",
+        cover_letter:"Give me a paragraph-by-paragraph planning template for a cover letter for a role related to {topic}. Label each paragraph and state its purpose in one sentence.",
+        discussion_post:"Give me a planning template for a 150-word discussion post on {topic}: opening position, supporting evidence, counterpoint acknowledged, closing question. Labels and descriptions only.",
+        minutes:"Give me a template for meeting minutes on {topic} with labelled sections: header information, attendees, agenda items (each with discussion, decision, action points), and next steps.",
+        abstract:"Give me a 5-sentence abstract planning template for a paper on {topic}. Label each sentence: 1-Background, 2-Gap/Problem, 3-Method, 4-Findings, 5-Significance. Do not write my content.",
+        lit_review:"Give me a planning template for a literature review section on {topic}. Include: opening framing sentence purpose, Theme 1 (sources + argument), Theme 2 (sources + argument), Theme 3 (sources + argument), gap statement. Labels only."
+      },
+      drafting:{
+        email:"I am writing a formal email about {topic}. Give me a sentence-starter scaffold only — not the full email. Provide: one option for an opening sentence, one option for introducing my main point, and one option for a closing sentence. I will write the rest myself.",
+        essay:"I am drafting an introduction for an essay on {topic}. Give me three sentence-starter options only: one for a hook, one for providing background context, and one for a thesis. I will choose and develop them myself.",
+        report:"I am drafting the introduction to a report on {topic}. Give me sentence-starter options only: one to state the purpose, one to describe the scope, and one to outline the structure. I will complete them myself.",
+        summary:"I am writing a summary of a text on {topic}. Give me a sentence scaffold only: one starter for introducing the author's main claim, one for adding a key point, and one for the concluding idea. I will write the full sentences myself.",
+        presentation:"I am writing speaker notes for my opening slide on {topic}. Give me sentence-starter options only: one to open with impact, one to introduce the topic, and one to signal what comes next. I will complete them myself.",
+        cover_letter:"I am drafting a cover letter for a role related to {topic}. Give me sentence-starter options only — one for the opening paragraph, one for introducing evidence, one for closing. Do not write the paragraphs for me.",
+        discussion_post:"I am writing a discussion post on {topic}. Give me sentence-starter options only: one for stating my position, one for introducing evidence, one for inviting discussion. I will develop them myself.",
+        minutes:"I am writing up minutes for a meeting on {topic}. Give me a phrasing scaffold for: recording a decision, recording an action point (with owner and deadline), and noting a tabled item. Do not write my minutes for me.",
+        abstract:"I am drafting an abstract for a paper on {topic}. Give me a sentence-starter for each of the five parts: Background, Problem, Method, Findings, and Significance. I will complete each sentence myself.",
+        lit_review:"I am drafting a literature review section on {topic}. Give me sentence-starter options for: opening the section, introducing a new theme, comparing two sources, and writing a gap statement. I will use them as prompts only."
+      },
+      revising:{
+        email:"Rewrite only the weakest sentence in this email about {topic}: [paste email]. Identify which sentence it is, explain why it is weak, and give one improved version. Leave the rest for me to revise.",
+        essay:"Identify the one weakest sentence in this essay paragraph on {topic}: [paste paragraph]. Explain why it is weak and give one improved version. Do not rewrite the whole paragraph.",
+        report:"Identify the one most problematic sentence in this report section on {topic}: [paste section]. Explain the issue and suggest one improved version. Leave the rest for me.",
+        summary:"Identify the one sentence in this summary of {topic} that is least accurate or least clear: [paste summary]. Explain the issue and suggest one improved version. Leave the rest for me.",
+        presentation:"Identify the one most awkward phrase in these speaker notes on {topic}: [paste notes]. Explain why it is problematic and suggest one alternative. Leave the rest for me.",
+        cover_letter:"Identify the weakest paragraph in this cover letter for a role related to {topic}: [paste draft]. Explain what is missing or unconvincing and suggest how I could improve it — do not rewrite it for me.",
+        discussion_post:"Identify the weakest part of this discussion post on {topic}: [paste post]. Explain the issue and suggest how I could address it. Do not rewrite the post for me.",
+        minutes:"Identify any action points in these minutes on {topic} that are unclear or incomplete: [paste minutes]. Explain what is missing and suggest how to phrase them — do not rewrite the whole document.",
+        abstract:"Identify the weakest sentence in this abstract on {topic}: [paste abstract]. Explain what the issue is and give one improved version. Leave the rest for me.",
+        lit_review:"Identify the section of this literature review on {topic} where I am summarising rather than synthesising: [paste section]. Explain the difference with a specific example from my text, and suggest how I could improve that passage."
+      },
+      editing:{
+        email:"Proofread this email about {topic}: [paste text]. List errors in a table with three columns: Error | Type | Correction.",
+        essay:"Proofread this essay paragraph on {topic}: [paste paragraph]. List all errors with corrections in this format: Error | Type | Correction.",
+        report:"Proofread this report section on {topic}: [paste section]. List all corrections in a numbered table: Number | Error | Type | Correction.",
+        summary:"Proofread this summary of {topic}: [paste summary]. Mark each error with [ERROR] and give the correction immediately after in [CORRECTION: …] format.",
+        presentation:"Proofread these speaker notes on {topic}: [paste notes]. List each error as: Location | Error | Suggested fix.",
+        cover_letter:"Proofread this cover letter for a role related to {topic}: [paste text]. List errors in this format: Error | Type | Correction.",
+        discussion_post:"Proofread this discussion post on {topic}: [paste post]. List each error and correction in a clear table.",
+        minutes:"Proofread these meeting minutes on {topic}: [paste minutes]. List errors in this format: Section | Error | Correction.",
+        abstract:"Proofread this abstract on {topic}: [paste abstract]. List each error and correction in this format: Sentence number | Error | Correction.",
+        lit_review:"Proofread this literature review section on {topic}: [paste section]. List grammar errors, citation inconsistencies, and unclear phrasing in a numbered table."
+      }
+    }
+  },
+  { name:"Iterative refine", icon:"🔄", tip:"<strong>Iterative refinement</strong> means sharing your own draft and asking AI for targeted feedback. You write — AI advises. Powerful for the revising and editing stages.",
+    templates:{
+      prewriting:{
+        email:"Here is my initial plan for an email about {topic}: [paste your plan]. Without changing it for me, identify: what is unclear, what is missing, and what could be reorganised.",
+        essay:"Here is my rough essay plan on {topic}: [paste plan]. Without changing it for me, tell me: is the argument coherent, are there gaps in the evidence, and is the structure logical?",
+        report:"Here is my initial report outline on {topic}: [paste outline]. Without revising it for me, tell me: what is missing, what overlaps, and what the reader might find unclear.",
+        summary:"Here is my rough plan for a summary of {topic}: [paste plan]. Without changing it, tell me: is the main idea captured, are any key points missing, and is anything unnecessary?",
+        presentation:"Here is my initial presentation outline on {topic}: [paste outline]. Without revising it, tell me: does it have a clear flow, is anything missing, and what might confuse the audience?",
+        cover_letter:"Here is my initial plan for a cover letter for a role related to {topic}: [paste plan]. Without changing it, tell me: what is weak, what is missing, and what would a recruiter want to see?",
+        discussion_post:"Here is my rough plan for a discussion post on {topic}: [paste plan]. Without revising it, tell me: is my position clear, is my evidence sufficient, and does it invite engagement?",
+        minutes:"Here is my rough structure for minutes on {topic}: [paste structure]. Without changing it, tell me: what is missing, what needs to be clearer, and whether the format follows standard practice.",
+        abstract:"Here is my rough plan for an abstract on {topic}: [paste plan]. Without changing it, tell me: are all five elements present, and is the order logical?",
+        lit_review:"Here is my plan for a literature review section on {topic}: [paste plan]. Without revising it, tell me: are the themes clearly defined, are sources grouped logically, and is there a gap statement?"
+      },
+      drafting:{
+        email:"Here is my draft email about {topic}: [paste draft]. Do not rewrite it. Tell me specifically: which sentence is weakest and why, what is missing, and what one change would most improve it.",
+        essay:"Here is my draft introduction for an essay on {topic}: [paste draft]. Do not rewrite it. Tell me: is the hook effective, is my thesis clear and arguable, and what is the most important thing I should fix?",
+        report:"Here is my draft introduction to a report on {topic}: [paste draft]. Do not rewrite it. Tell me: is the purpose clear, is the scope defined, and what is missing?",
+        summary:"Here is my draft summary of {topic}: [paste draft]. Do not rewrite it. Tell me: is the main idea stated clearly in the first sentence, is anything inaccurate, and what should I cut or add?",
+        presentation:"Here is my draft speaker note for an opening slide on {topic}: [paste draft]. Do not rewrite it. Tell me: will it engage the audience, is it too long or too short, and what is the weakest part?",
+        cover_letter:"Here is my draft cover letter for a role related to {topic}: [paste draft]. Do not rewrite it. Tell me: is my opening compelling, is my evidence specific enough, and what would a recruiter question?",
+        discussion_post:"Here is my draft discussion post on {topic}: [paste draft]. Do not rewrite it. Tell me: is my position clear, is my argument convincing, and does it invite further discussion?",
+        minutes:"Here is my draft minutes for a meeting on {topic}: [paste draft]. Do not rewrite them. Tell me: are decisions clearly recorded, are action points complete, and is the language appropriately neutral?",
+        abstract:"Here is my draft abstract for a paper on {topic}: [paste draft]. Do not rewrite it. Tell me: which of the five elements is weakest, what is unclear, and what is the most important fix?",
+        lit_review:"Here is my draft literature review section on {topic}: [paste draft]. Do not rewrite it. Tell me: am I synthesising or just summarising, is the argument coherent, and is there a clear gap statement?"
+      },
+      revising:{
+        email:"I have revised my email about {topic}: [paste revised version]. Without rewriting it, tell me: what still needs work, whether the tone is now right, and whether the structure is clear.",
+        essay:"I have revised my essay paragraph on {topic}: [paste revised version]. Without rewriting it, tell me: is the argument now clearer, is the evidence well integrated, and is anything still weak?",
+        report:"I have revised this report section on {topic}: [paste revised version]. Without rewriting it, tell me: is it now sufficiently formal, is the argument clear, and what remains to improve?",
+        summary:"I have revised my summary of {topic}: [paste revised version]. Without rewriting it, tell me: is it now accurate and concise, and is there anything I should still change?",
+        presentation:"I have revised my speaker notes on {topic}: [paste revised version]. Without rewriting them, tell me: are they now clear and natural to say aloud, and what if anything still needs work?",
+        cover_letter:"I have revised my cover letter for a role related to {topic}: [paste revised version]. Without rewriting it, tell me: is it more compelling now, and what is still the weakest part?",
+        discussion_post:"I have revised my discussion post on {topic}: [paste revised version]. Without rewriting it, tell me: is my argument now clear and well supported, and does it invite engagement?",
+        minutes:"I have revised my meeting minutes on {topic}: [paste revised version]. Without rewriting them, tell me: are action points now specific and complete, and is anything still unclear?",
+        abstract:"I have revised my abstract on {topic}: [paste revised version]. Without rewriting it, tell me: are all five elements now present and clear, and what is the remaining weakness?",
+        lit_review:"I have revised my literature review section on {topic}: [paste revised version]. Without rewriting it, tell me: am I now synthesising effectively, and is the gap statement clear?"
+      },
+      editing:{
+        email:"I have proofread my email about {topic}: [paste version]. Are there any remaining grammar, punctuation, or tone errors I have missed? List each one with a correction.",
+        essay:"I have corrected my essay paragraph on {topic}: [paste version]. Do a final check for grammar, academic register, and coherence errors I may have missed. List each one.",
+        report:"I have corrected my report section on {topic}: [paste version]. Check for any remaining grammar, formatting, or register errors. List each one with a correction.",
+        summary:"I have edited my summary of {topic}: [paste version]. Check for any remaining language errors or awkward phrasing. List each with a correction.",
+        presentation:"I have edited my speaker notes on {topic}: [paste version]. Check for any remaining errors or phrases that would be awkward to say aloud. List each with a correction.",
+        cover_letter:"I have proofread my cover letter for a role related to {topic}: [paste version]. Check for any remaining errors in grammar, tone, or style. List each with a correction.",
+        discussion_post:"I have edited my discussion post on {topic}: [paste version]. Check for any remaining grammar or clarity errors. List each with a correction.",
+        minutes:"I have proofread my meeting minutes on {topic}: [paste version]. Check for any remaining grammar errors or unclear phrasing. List each with a correction.",
+        abstract:"I have corrected my abstract on {topic}: [paste version]. Do a final grammar and clarity check. List any remaining issues with corrections.",
+        lit_review:"I have edited my literature review section on {topic}: [paste version]. Check for remaining grammar, citation style, or clarity errors. List each with a correction."
+      }
+    }
+  },
+  { name:"Few-shot", icon:"🧩", tip:"<strong>Few-shot prompting</strong> gives the AI one or more examples before your actual request. This helps AI understand exactly what format or style of guidance you need.",
+    templates:{
+      prewriting:{
+        email:"Example brainstorm for 'Meeting postponement': 1) Apologise for inconvenience, 2) State new date/time, 3) Offer to answer questions.\nNow give me a brainstorm list in the same format for an email about {topic}. Do not write the email.",
+        essay:"Example thesis for 'Social media and mental health': 'While social media provides connection, its addictive design poses significant risks to adolescent mental health.'\nUsing this as a model, suggest three possible thesis statements I could use for an essay on {topic}. I will choose and develop one myself.",
+        report:"Example section headings for a report on 'Remote working': 1.0 Introduction, 1.1 Background, 2.0 Findings, 2.1 Productivity, 2.2 Wellbeing, 3.0 Recommendations.\nUsing this as a model, suggest a section heading structure for a report on {topic}.",
+        summary:"Example plan — Main idea: Climate change is accelerating | Key detail 1: Rising global temperatures | Key detail 2: Policy gaps | Conclusion: Urgent action needed.\nUsing this format, give me a planning template I can fill in for a summary of {topic}.",
+        presentation:"Example — Slide 1: Title + hook question | Slide 2: Background (key facts) | Slide 3: Main argument | Slide 4: Evidence | Slide 5: Conclusion + call to action.\nUsing this as a model, suggest a 5-slide planning structure for a presentation on {topic}.",
+        cover_letter:"Example plan — Paragraph 1: Why I am applying and my key strength | Paragraph 2: Evidence 1 (specific achievement) | Paragraph 3: Evidence 2 (relevant skill) | Paragraph 4: Why this organisation, what I bring.\nUsing this model, give me a planning framework I can fill in for a cover letter for a role related to {topic}.",
+        discussion_post:"Example plan — Position: Remote work increases productivity | Evidence: Study X showed 20% increase | Counterpoint: Communication challenges exist | Question: How do you manage focus when working remotely?\nUsing this format, give me a planning template I can fill in for a discussion post on {topic}.",
+        minutes:"Example action point: 'Action: H. Guedra to circulate updated policy document to all staff by 15 March.'\nUsing this format, show me how I should write three action points for a meeting on {topic}. Use placeholder names.",
+        abstract:"Example abstract structure — Sentence 1: Background context | Sentence 2: Research gap | Sentence 3: Method used | Sentence 4: Key finding | Sentence 5: Significance.\nUsing this model, give me a planning scaffold I can fill in for an abstract on {topic}.",
+        lit_review:"Example theme paragraph structure — Topic sentence (claim about the literature) | Source 1 (finding) | Source 2 (contrasting finding) | Synthesis sentence.\nUsing this as a model, suggest three theme paragraph structures I could develop for a literature review on {topic}."
+      },
+      drafting:{
+        email:"Example weak opening: 'I am writing because I want to ask something.'\nExample strong opening: 'I am writing to request an extension on the submission deadline for the March report.'\nUsing these examples as a guide, give me feedback on my opening sentence for an email about {topic}: [paste your opening sentence]. Do not rewrite it — tell me how to improve it.",
+        essay:"Example weak thesis: 'AI affects society in many ways.'\nExample strong thesis: 'While AI offers significant productivity gains, its unchecked deployment in hiring and healthcare risks entrenching existing inequalities.'\nUsing these as a guide, give me feedback on my thesis for an essay on {topic}: [paste your thesis]. Tell me how to strengthen it — do not rewrite it.",
+        report:"Example weak opening: 'This report is about remote work.'\nExample strong opening: 'This report examines the impact of hybrid working on employee wellbeing in Finnish SMEs between 2022 and 2024, drawing on survey data from 200 respondents.'\nUsing these as a guide, give me feedback on my report introduction opening for {topic}: [paste your sentence]. Tell me how to improve it — do not rewrite it.",
+        summary:"Example weak summary sentence: 'The article talks about climate change.'\nExample strong summary sentence: 'The article argues that accelerating climate change demands immediate policy reform, drawing on data from three longitudinal studies.'\nUsing these as a guide, give me feedback on my summary opening for {topic}: [paste your sentence]. Tell me how to strengthen it — do not rewrite it.",
+        presentation:"Example weak speaker note opening: 'Good morning. Today I will talk about AI.'\nExample strong opening: 'By the time you leave this room, the way you think about AI in education will have changed. Here is why.'\nUsing these as a guide, give me feedback on my opening speaker note for a presentation on {topic}: [paste your sentence]. Tell me how to improve it — do not rewrite it.",
+        cover_letter:"Example weak opening: 'I am applying for the job I saw advertised.'\nExample strong opening: 'I am applying for the Content Strategist position at Reaktor because my background in EFL curriculum design and AI literacy gives me a distinctive perspective on your work.'\nUsing these as a guide, give me feedback on my cover letter opening for a role related to {topic}: [paste your sentence]. Tell me how to improve it — do not rewrite it.",
+        discussion_post:"Example weak opening: 'I think AI is interesting.'\nExample strong opening: 'AI-generated feedback tools have the potential to transform writing instruction — but only if students remain active evaluators rather than passive recipients.'\nUsing these as a guide, give me feedback on my discussion post opening on {topic}: [paste your sentence]. Tell me how to strengthen it — do not rewrite it.",
+        minutes:"Example weak action point: 'Someone will look into the budget.'\nExample strong action point: 'Action: T. Virtanen to prepare a revised Q3 budget proposal and share with the team by 20 April.'\nUsing these as a guide, give me feedback on this action point from my minutes on {topic}: [paste your action point]. Tell me how to improve it — do not rewrite it.",
+        abstract:"Example weak findings sentence: 'The results were interesting.'\nExample strong findings sentence: 'The analysis revealed a statistically significant correlation (p < .01) between prompt complexity and output accuracy across all three model conditions.'\nUsing these as a guide, give me feedback on my findings sentence for an abstract on {topic}: [paste your sentence]. Tell me how to improve it — do not rewrite it.",
+        lit_review:"Example weak synthesis: 'Smith (2021) says X. Jones (2022) says Y.'\nExample strong synthesis: 'While Smith (2021) argues that X, Jones (2022) challenges this view by demonstrating Y, suggesting that the relationship between the two is more complex than previously assumed.'\nUsing these as a guide, give me feedback on this passage from my literature review on {topic}: [paste passage]. Tell me how to improve the synthesis — do not rewrite it."
+      },
+      revising:{
+        email:"Example before: 'I am writing because I want to ask about the job.'\nExample after: 'I am writing to enquire about the Project Manager position advertised on your website.'\nUsing these as a guide, identify the weakest sentence in my email about {topic} and explain how I could improve it: [paste email]. Do not rewrite it for me.",
+        essay:"Example before: 'AI is used in many things and it affects society.'\nExample after: 'Artificial intelligence is reshaping healthcare, education, and employment at an unprecedented pace.'\nUsing these as a guide, identify the weakest sentence in my essay paragraph on {topic} and explain how I could improve it: [paste paragraph]. Do not rewrite it for me.",
+        report:"Example before: 'The results were good.'\nExample after: 'The results demonstrated a 23% improvement in efficiency across all test sites.'\nUsing these as a guide, identify the vaguest sentence in my report section on {topic} and explain how I could make it more precise: [paste section]. Do not rewrite it for me.",
+        summary:"Example before: 'The article talks about climate change.'\nExample after: 'The article analyses three policy responses to climate change in northern Europe.'\nUsing these as a guide, identify the weakest sentence in my summary of {topic} and explain how I could improve it: [paste summary]. Do not rewrite it for me.",
+        presentation:"Example before: 'AI is important.'\nExample after: 'AI is already making decisions that affect your career, your health, and your daily life.'\nUsing these as a guide, identify the weakest point in my speaker notes on {topic} and explain how I could strengthen it: [paste notes]. Do not rewrite them for me.",
+        cover_letter:"Example before: 'I have experience in this area.'\nExample after: 'I led a cross-functional team of six to redesign the onboarding process, reducing staff turnover by 18% in the first year.'\nUsing these as a guide, identify the weakest evidence claim in my cover letter for a role related to {topic}: [paste draft]. Explain how to make it more specific — do not rewrite it.",
+        discussion_post:"Example before: 'Studies show this is a problem.'\nExample after: 'A 2023 meta-analysis of 47 studies found that passive social media use is consistently associated with increased anxiety in adolescents.'\nUsing these as a guide, identify the weakest evidence sentence in my discussion post on {topic}: [paste post]. Explain how to strengthen it — do not rewrite it.",
+        minutes:"Example weak: 'We talked about the timeline.'\nExample strong: 'The team agreed to extend the project timeline by two weeks to accommodate user testing. Action: R. Nieminen to update the project plan by 5 May.'\nUsing these as a guide, identify the weakest item in my minutes on {topic}: [paste minutes]. Explain how to improve it — do not rewrite it.",
+        abstract:"Example weak significance statement: 'This research is useful.'\nExample strong: 'These findings have direct implications for the design of AI-assisted writing tools in higher education, particularly in L2 contexts.'\nUsing these as a guide, identify the weakest sentence in my abstract on {topic}: [paste abstract]. Explain how to improve it — do not rewrite it.",
+        lit_review:"Example weak gap statement: 'More research is needed.'\nExample strong: 'Despite extensive research on AI and writing instruction, no study has examined how real-time AI feedback affects revision behaviour in EFL university students.'\nUsing these as a guide, evaluate my gap statement in this literature review on {topic}: [paste section]. Tell me how to improve it — do not rewrite it."
+      },
+      editing:{
+        email:"Error: 'I would like to ask you that can we meet' → Corrected: 'I would like to ask whether we could meet.'\nNow identify and correct errors in this email about {topic}: [paste text]. List each in this format: Error | Correction.",
+        essay:"Error: 'The researches shows that AI have many benefits' → Corrected: 'The research shows that AI has many benefits.'\nNow correct errors in this essay paragraph on {topic}: [paste paragraph]. List each in this format: Error | Correction.",
+        report:"Error: 'alot of data was collected' → Corrected: 'A substantial amount of data was collected.'\nNow correct errors in this report section on {topic}: [paste section]. List each in this format: Error | Correction.",
+        summary:"Error: 'The article say that there is a big problem' → Corrected: 'The article argues that there is a significant problem.'\nNow correct this summary of {topic}: [paste summary]. List each error and correction.",
+        presentation:"Error: 'AI effect our lifes in many way' → Corrected: 'AI affects our lives in many ways.'\nNow correct these speaker notes on {topic}: [paste notes]. List each error and correction.",
+        cover_letter:"Error: 'I am very passionate and hardworking person' → Corrected: 'I am a highly motivated professional with a track record of delivering results under pressure.'\nNow identify errors in this cover letter for a role related to {topic}: [paste text]. List each error and correction.",
+        discussion_post:"Error: 'Alot of researches shows that social media are bad' → Corrected: 'A growing body of research suggests that social media use is associated with negative mental health outcomes.'\nNow correct this discussion post on {topic}: [paste post]. List each error and correction.",
+        minutes:"Error: 'John will do the thing about the report' → Corrected: 'Action: J. Korhonen to submit the Q2 progress report to the steering group by 10 June.'\nNow identify and correct unclear or grammatically incorrect action points in these minutes on {topic}: [paste minutes]. List each issue and correction.",
+        abstract:"Error: 'This study look at how AI effect student writing' → Corrected: 'This study examines how AI-generated feedback affects revision behaviour in undergraduate writing.'\nNow correct this abstract on {topic}: [paste abstract]. List each error and correction.",
+        lit_review:"Error: 'Smith (2021) he says that AI is good for writing' → Corrected: 'Smith (2021) argues that AI feedback tools support the revision process.'\nNow correct this literature review section on {topic}: [paste section]. List each error and correction."
+      }
+    }
+  },
+  { name:"Socratic", icon:"❓", tip:"<strong>Socratic prompting</strong> asks AI to guide you through a task by asking questions rather than giving answers. It helps you think critically and develop your own ideas.",
+    templates:{
+      prewriting:{
+        email:"I need to write an email about {topic}. Instead of telling me what to write, ask me a series of questions that will help me clarify my purpose, audience, and key message before I start writing.",
+        essay:"I want to write an essay on {topic}. Instead of giving me an outline, ask me a series of questions that will help me develop my own argument and decide on my main points.",
+        report:"I am planning a report on {topic}. Ask me a series of questions to help me clarify the scope, purpose, and structure before I start. Do not suggest the answers.",
+        summary:"I need to summarise a text on {topic}. Ask me questions that will help me identify the main idea, key supporting points, and the author's conclusion myself.",
+        presentation:"I am planning a presentation on {topic}. Ask me a series of questions to help me define my audience, my key message, and my structure — without giving me the answers.",
+        cover_letter:"I am writing a cover letter for a role related to {topic}. Ask me a series of questions to help me identify my strongest evidence and most relevant experience before I start writing.",
+        discussion_post:"I need to write a discussion post on {topic}. Ask me questions that help me clarify my position and the evidence I want to use, without telling me what to say.",
+        minutes:"I need to write up minutes for a meeting on {topic}. Ask me questions to help me recall and organise the key decisions and action points before I start writing.",
+        abstract:"I am writing an abstract for a paper on {topic}. Ask me a series of questions — one for each part of the abstract — to help me identify what to write in each section myself.",
+        lit_review:"I am planning a literature review section on {topic}. Ask me questions that help me identify themes, organise sources, and formulate a gap statement — without giving me the answers."
+      },
+      drafting:{
+        email:"I have this plan for an email about {topic}: [paste plan]. Before I start drafting, ask me three questions that challenge me to think more carefully about my audience, tone, and key message.",
+        essay:"I have this outline for an essay on {topic}: [paste outline]. Before I start drafting, ask me questions that help me think more deeply about my argument and whether my evidence is strong enough.",
+        report:"I have this structure for a report on {topic}: [paste structure]. Before I start drafting, ask me three questions that help me check whether my purpose, scope, and evidence are clear enough.",
+        summary:"I am about to write a summary of {topic}. Before I start, ask me three questions that help me check I have understood the key ideas and can express them in my own words.",
+        presentation:"I have this outline for a presentation on {topic}: [paste outline]. Before I start writing speaker notes, ask me questions that help me think about how to engage my audience and structure my message.",
+        cover_letter:"I have this plan for a cover letter for a role related to {topic}: [paste plan]. Before I start writing, ask me questions that help me think about the strength of my evidence and the clarity of my argument.",
+        discussion_post:"I am about to draft a discussion post on {topic}. Before I start, ask me questions that help me test whether my position is clear and my evidence is convincing.",
+        minutes:"I am about to write up the minutes for a meeting on {topic}. Before I start, ask me questions to help me check I have captured all the key decisions and action points clearly.",
+        abstract:"I am about to draft an abstract for a paper on {topic}. Before I write, ask me one question for each of the five elements to check I know what to include in each.",
+        lit_review:"I am about to draft a literature review section on {topic}. Before I write, ask me questions that help me check whether my themes are clear, my sources are organised, and I have a gap statement."
+      },
+      revising:{
+        email:"Here is my draft email about {topic}: [paste draft]. Ask me a series of questions that help me identify its weaknesses and decide how to improve it. Do not tell me the answers.",
+        essay:"Here is my draft essay paragraph on {topic}: [paste paragraph]. Ask me questions that help me evaluate whether my argument is clear, my evidence is sufficient, and my academic style is appropriate. Do not rewrite it.",
+        report:"Here is my draft report section on {topic}: [paste section]. Ask me questions that help me assess whether it achieves its purpose and meets the standards of a formal report. Do not rewrite it.",
+        summary:"Here is my draft summary of {topic}: [paste summary]. Ask me questions that help me check whether I have captured the main idea accurately and concisely. Do not tell me the answers.",
+        presentation:"Here is my draft speaker note on {topic}: [paste note]. Ask me questions that help me evaluate whether it is clear, engaging, and appropriately timed. Do not rewrite it.",
+        cover_letter:"Here is my draft cover letter for a role related to {topic}: [paste draft]. Ask me questions that help me identify where my argument is weak and what evidence I could add. Do not rewrite it.",
+        discussion_post:"Here is my draft discussion post on {topic}: [paste post]. Ask me questions that help me evaluate whether my argument is persuasive and whether it invites engagement. Do not rewrite it.",
+        minutes:"Here is my draft minutes for a meeting on {topic}: [paste draft]. Ask me questions that help me check whether all decisions and action points are complete and clearly recorded.",
+        abstract:"Here is my draft abstract on {topic}: [paste draft]. Ask me one question for each of the five elements to help me evaluate whether each part is doing its job.",
+        lit_review:"Here is my draft literature review section on {topic}: [paste section]. Ask me questions that help me evaluate whether I am synthesising effectively and whether my gap statement is compelling."
+      },
+      editing:{
+        email:"Here is my email about {topic}: [paste text]. Ask me questions that help me notice potential errors in grammar, tone, or structure myself. Do not correct them for me.",
+        essay:"Here is my essay paragraph on {topic}: [paste paragraph]. Ask me questions that help me identify grammar, register, or coherence issues on my own. Do not correct them for me.",
+        report:"Here is my report section on {topic}: [paste section]. Ask me questions that guide me to notice any errors in grammar, formality, or structure. Do not correct them for me.",
+        summary:"Here is my summary of {topic}: [paste summary]. Ask me questions that help me notice any language errors or awkward phrasing myself.",
+        presentation:"Here is my speaker note on {topic}: [paste note]. Ask me questions that help me identify any errors or anything that would be awkward to say aloud. Do not correct them for me.",
+        cover_letter:"Here is my cover letter for a role related to {topic}: [paste text]. Ask me questions that help me notice any errors in grammar, tone, or professionalism myself.",
+        discussion_post:"Here is my discussion post on {topic}: [paste post]. Ask me questions that help me identify any grammar or clarity issues on my own.",
+        minutes:"Here is my meeting minutes on {topic}: [paste minutes]. Ask me questions that help me notice any unclear phrasing or missing information myself.",
+        abstract:"Here is my abstract on {topic}: [paste abstract]. Ask me questions that help me identify any errors or weaknesses in language or structure on my own.",
+        lit_review:"Here is my literature review section on {topic}: [paste section]. Ask me questions that help me notice grammar, citation, or clarity issues myself."
+      }
+    }
+  },
+  { name:"Constraint", icon:"🎯", tip:"<strong>Constraint-based prompting</strong> sets deliberate limitations — on length, vocabulary, or structure — to sharpen your writing and force clearer thinking.",
+    templates:{
+      prewriting:{
+        email:"I need to plan an email about {topic}. Give me a planning scaffold with a strict constraint: I must express my entire main message in one sentence of no more than 20 words. Help me test whether my planned message is clear enough.",
+        essay:"I want to plan an essay on {topic}. Apply this constraint: I must be able to state my entire argument in two sentences. Help me test and refine my argument until it meets this constraint.",
+        report:"I am planning a report on {topic}. Apply this constraint: I must justify each section in one sentence explaining exactly what the reader will know after reading it. Help me apply this to my planned structure.",
+        summary:"I need to plan a summary of {topic}. Apply this constraint: I must capture the entire text in three sentences — no more. Help me test whether my planned three sentences cover the key ideas accurately.",
+        presentation:"I am planning a presentation on {topic}. Apply this constraint: each slide must have a single key message of no more than 10 words. Help me develop and test my key messages.",
+        cover_letter:"I am planning a cover letter for a role related to {topic}. Apply this constraint: I must be able to state my three strongest pieces of evidence in one sentence each. Help me develop and test these sentences.",
+        discussion_post:"I need to plan a discussion post on {topic}. Apply this constraint: my position must be stated in one sentence of no more than 15 words. Help me draft and refine this sentence.",
+        minutes:"I need to plan the minutes for a meeting on {topic}. Apply this constraint: every action point must be expressible in one sentence containing: who, what, and by when. Help me test this for the main decisions.",
+        abstract:"I am planning an abstract for a paper on {topic}. Apply this constraint: the entire abstract must be no more than 150 words. Help me allocate a maximum word count to each of the five elements.",
+        lit_review:"I am planning a literature review section on {topic}. Apply this constraint: I must be able to summarise each source's contribution in one sentence. Help me practise this for the key sources in my area."
+      },
+      drafting:{
+        email:"I am drafting an email about {topic}. Apply this constraint: my email must be no longer than 100 words. I have drafted this opening: [paste your opening]. Tell me if it is concise enough and how many words I have left for the rest.",
+        essay:"I am drafting an essay introduction on {topic}. Apply this constraint: my thesis must be exactly one sentence and must contain a clear claim and a concession. Here is my attempt: [paste thesis]. Tell me whether it meets the constraint and how to improve it.",
+        report:"I am drafting the introduction to a report on {topic}. Apply this constraint: my opening paragraph must state the purpose, scope, and structure in no more than three sentences. Here is my attempt: [paste paragraph]. Tell me whether it meets the constraint.",
+        summary:"I am drafting a summary of {topic}. Apply this constraint: I may only use words from the original text if I put them in quotation marks — everything else must be entirely in my own words. Here is my attempt: [paste draft]. Check whether I have met this constraint.",
+        presentation:"I am drafting a speaker note on {topic}. Apply this constraint: the note must be speakable in exactly 60 seconds (approximately 120 words). Here is my draft: [paste draft]. Tell me whether it meets this constraint and what to cut or expand.",
+        cover_letter:"I am drafting my cover letter for a role related to {topic}. Apply this constraint: each paragraph must be no longer than four sentences. Here is my draft: [paste draft]. Tell me whether it meets this constraint and what to cut.",
+        discussion_post:"I am drafting a discussion post on {topic}. Apply this constraint: I must use at least one specific piece of evidence (a statistic, study, or example) and the post must be no longer than 150 words. Here is my draft: [paste draft]. Tell me whether it meets both constraints.",
+        minutes:"I am writing action points for a meeting on {topic}. Apply this constraint: each action point must be no longer than 20 words and must contain a name, a task, and a deadline. Here are my action points: [paste]. Tell me which ones fail the constraint and why.",
+        abstract:"I am drafting an abstract on {topic}. Apply this constraint: each of the five sentences must begin with a different type of clause (e.g. noun phrase, verb phrase, adverbial). Here is my draft: [paste]. Tell me whether it meets this constraint.",
+        lit_review:"I am drafting a literature review section on {topic}. Apply this constraint: I must not simply report what each source says — every sentence mentioning a source must also connect it to another source or to my argument. Here is my draft: [paste]. Tell me which sentences fail this constraint."
+      },
+      revising:{
+        email:"Here is my draft email about {topic}: [paste draft]. Apply this constraint: remove every word that is not essential to the meaning. Tell me which words or phrases I could cut — do not rewrite it for me.",
+        essay:"Here is my essay paragraph on {topic}: [paste paragraph]. Apply this constraint: every claim must be followed by evidence within the same paragraph. Tell me which claims are unsupported — do not rewrite it for me.",
+        report:"Here is my report section on {topic}: [paste section]. Apply this constraint: no sentence may exceed 25 words. Identify which sentences exceed this limit and suggest how I could split them — do not rewrite them for me.",
+        summary:"Here is my summary of {topic}: [paste summary]. Apply this constraint: I must not use any phrasing from the original text without quotation marks. Tell me which phrases may be too close to the source — do not rewrite them for me.",
+        presentation:"Here is my speaker note on {topic}: [paste note]. Apply this constraint: it must be deliverable in under 90 seconds. Tell me what to cut and why — do not rewrite it for me.",
+        cover_letter:"Here is my cover letter for a role related to {topic}: [paste draft]. Apply this constraint: every paragraph must make exactly one clear point supported by one piece of evidence. Tell me which paragraphs fail this — do not rewrite them.",
+        discussion_post:"Here is my discussion post on {topic}: [paste post]. Apply this constraint: every opinion must be backed by a specific source or example. Tell me which opinions are unsupported — do not rewrite the post.",
+        minutes:"Here is my minutes on {topic}: [paste minutes]. Apply this constraint: every action point must include a named person, a specific deliverable, and a deadline. Tell me which action points fail this — do not rewrite them.",
+        abstract:"Here is my abstract on {topic}: [paste abstract]. Apply this constraint: it must be no longer than 150 words. Tell me what to cut and why — do not rewrite it for me.",
+        lit_review:"Here is my literature review section on {topic}: [paste section]. Apply this constraint: no more than two consecutive sentences may be about the same source. Tell me where I violate this constraint — do not rewrite the section for me."
+      },
+      editing:{
+        email:"Here is my email about {topic}: [paste text]. Apply this constraint: flag every sentence over 25 words as too long. List each flagged sentence and suggest how I could split it.",
+        essay:"Here is my essay paragraph on {topic}: [paste paragraph]. Apply this constraint: flag any use of informal language or first person ('I think', 'I feel', 'kind of'). List each instance and suggest a more academic alternative.",
+        report:"Here is my report section on {topic}: [paste section]. Apply this constraint: flag any vague quantifiers ('many', 'some', 'a lot') that should be replaced with specific figures or phrasing. List each one.",
+        summary:"Here is my summary of {topic}: [paste summary]. Apply this constraint: flag any sentence that is longer than 20 words. List each one and suggest how to shorten it.",
+        presentation:"Here is my speaker note on {topic}: [paste note]. Apply this constraint: flag any phrase that would be difficult to say naturally aloud — jargon, long noun phrases, or complex syntax. List each one.",
+        cover_letter:"Here is my cover letter for a role related to {topic}: [paste text]. Apply this constraint: flag every cliché ('team player', 'passionate about', 'hard worker') and suggest a specific, evidence-based alternative.",
+        discussion_post:"Here is my discussion post on {topic}: [paste post]. Apply this constraint: flag any claim that is not supported by specific evidence. List each unsupported claim.",
+        minutes:"Here is my minutes on {topic}: [paste minutes]. Apply this constraint: flag any passive constructions that obscure who is responsible for an action (e.g. 'it was agreed' → who agreed?). List each one.",
+        abstract:"Here is my abstract on {topic}: [paste abstract]. Apply this constraint: flag any sentence that uses more than 30 words. List each one and suggest how to make it more concise.",
+        lit_review:"Here is my literature review section on {topic}: [paste section]. Apply this constraint: flag every sentence that starts with an author name (e.g. 'Smith argues…') — these may be over-summarising rather than synthesising. List each one and suggest an alternative structure."
+      }
+    }
+  },
+  { name:"Audience", icon:"👥", tip:"<strong>Audience awareness prompting</strong> asks AI to help you adapt your language, tone, and content for a specific reader. Essential for professional and academic writing.",
+    templates:{
+      prewriting:{
+        email:"I am planning an email about {topic}. My audience is: [describe your reader — e.g. a senior manager unfamiliar with the technical details]. What language level, tone, and key points should I prioritise for this reader?",
+        essay:"I am planning an essay on {topic} for an academic audience. What level of background knowledge can I assume, what terminology should I use, and what would this audience expect in terms of argument and evidence?",
+        report:"I am planning a report on {topic} for [describe your audience — e.g. a non-specialist board of directors]. What should I simplify, what can I assume they know, and what would this audience prioritise?",
+        summary:"I need to summarise a text on {topic} for [describe your reader — e.g. a classmate who hasn't read it]. What level of detail is appropriate, what terms need defining, and what should I leave out?",
+        presentation:"I am planning a presentation on {topic} for [describe your audience — e.g. first-year students with no background in the topic]. What do they need to know first, what should I avoid assuming, and what examples would resonate?",
+        cover_letter:"I am writing a cover letter for a role related to {topic} at [describe the organisation — e.g. a small tech startup vs a large public institution]. What tone, language, and priorities should I adapt for this specific employer?",
+        discussion_post:"I am planning a discussion post on {topic} for [describe the course or forum context]. What tone is appropriate, how much technical language can I use, and what would engage this specific audience?",
+        minutes:"I need to write up minutes for a meeting on {topic}. The audience includes [describe — e.g. both technical staff and senior management who were not present]. How should I adjust the level of detail and language for both groups?",
+        abstract:"I am writing an abstract for a paper on {topic}. My intended audience is [describe — e.g. specialists in the field / conference attendees from related disciplines]. What terminology, level of detail, and framing is appropriate?",
+        lit_review:"I am writing a literature review section on {topic} for a thesis aimed at [describe audience — e.g. an academic supervisor and external examiners in the field]. What should I assume they know, and how should I engage critically with the sources?"
+      },
+      drafting:{
+        email:"I am drafting an email about {topic} to [describe your reader]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the tone appropriate for this reader, is the language at the right level, and is anything likely to confuse or alienate them?",
+        essay:"I am drafting an essay on {topic} for an academic reader. Here is my introduction: [paste draft]. Without rewriting it, tell me: does the language level match an academic audience, is any terminology unexplained, and is the argument framed in a way this reader would find credible?",
+        report:"I am drafting a report on {topic} for [describe your audience]. Here is my introduction: [paste draft]. Without rewriting it, tell me: is the language accessible for this audience, is anything over-explained or under-explained, and is the purpose immediately clear?",
+        summary:"I am writing a summary of {topic} for [describe your reader]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the language appropriate for this reader, is the level of detail right, and is anything unclear or unnecessary for this audience?",
+        presentation:"I am drafting speaker notes for a slide on {topic} for [describe your audience]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the vocabulary accessible for this audience, are any assumptions likely to confuse them, and is the tone right?",
+        cover_letter:"I am drafting a cover letter for a role at [describe the organisation] related to {topic}. Here is my draft: [paste draft]. Without rewriting it, tell me: is the tone appropriate for this employer, does the language match their culture, and is any part likely to seem off?",
+        discussion_post:"I am drafting a discussion post on {topic} for [describe the course or context]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the register appropriate, is the argument accessible for this audience, and does it invite engagement from these readers?",
+        minutes:"I am writing minutes for a meeting on {topic} to be shared with [describe the audience]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the level of detail right for this audience, and is the language accessible?",
+        abstract:"I am drafting an abstract on {topic} for [describe your target publication or audience]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the terminology appropriate, is the framing right for this audience, and is anything likely to confuse or exclude a reader from this context?",
+        lit_review:"I am drafting a literature review section on {topic} for [describe audience — e.g. a thesis examiner]. Here is my draft: [paste draft]. Without rewriting it, tell me: is the critical engagement sufficient for this reader, is any terminology unexplained, and is the argument coherent?"
+      },
+      revising:{
+        email:"Here is my revised email about {topic}: [paste revised version]. My reader is [describe]. Without rewriting it, tell me: is the tone now appropriate for this reader, and is there anything that could still seem unclear or inappropriate?",
+        essay:"Here is my revised essay paragraph on {topic}: [paste revised version]. My reader is an academic in the field. Without rewriting it, tell me: does the language now meet the expectations of an academic reader, and is the argument appropriately evidenced?",
+        report:"Here is my revised report section on {topic}: [paste revised version]. My audience is [describe]. Without rewriting it, tell me: is the language now at the right level for this audience, and is anything still unclear?",
+        summary:"Here is my revised summary of {topic}: [paste revised version]. My reader is [describe]. Without rewriting it, tell me: is the level of detail now right for this reader, and is anything still unclear or unnecessary?",
+        presentation:"Here is my revised speaker note on {topic}: [paste revised version]. My audience is [describe]. Without rewriting it, tell me: is the language now accessible for this audience, and is the note engaging?",
+        cover_letter:"Here is my revised cover letter for a role at [describe organisation] related to {topic}: [paste revised version]. Without rewriting it, tell me: is the tone now a better fit for this employer, and is there anything still misaligned?",
+        discussion_post:"Here is my revised discussion post on {topic}: [paste revised version]. The forum is [describe context]. Without rewriting it, tell me: is the tone and register now appropriate, and does it invite engagement from this audience?",
+        minutes:"Here is my revised minutes for a meeting on {topic}: [paste revised version]. The audience is [describe]. Without rewriting them, tell me: is the level of detail now appropriate, and is the language clear for all intended readers?",
+        abstract:"Here is my revised abstract on {topic}: [paste revised version]. The target audience is [describe]. Without rewriting it, tell me: is the framing now appropriate for this audience, and is any term still likely to confuse them?",
+        lit_review:"Here is my revised literature review section on {topic}: [paste revised version]. My audience is [describe]. Without rewriting it, tell me: is the level of critical engagement now sufficient, and is the argument well-positioned for this reader?"
+      },
+      editing:{
+        email:"Here is my email about {topic}: [paste text]. My reader is [describe]. Flag any words, phrases, or sentences that are not appropriate for this reader — too formal, too informal, too technical, or likely to confuse. List each one with a suggested alternative.",
+        essay:"Here is my essay paragraph on {topic}: [paste paragraph]. My reader is an academic in the field. Flag any informal language, unexplained terms, or unsupported claims that would undermine my credibility with this reader.",
+        report:"Here is my report section on {topic}: [paste section]. My audience is [describe]. Flag any jargon that needs defining, any language that is too informal, and any sentences that are harder to read than necessary for this audience.",
+        summary:"Here is my summary of {topic}: [paste summary]. My reader is [describe]. Flag any language that is too complex or too simple for this reader, and any detail that is unnecessary for this audience.",
+        presentation:"Here is my speaker note on {topic}: [paste note]. My audience is [describe]. Flag any vocabulary that may be unfamiliar to this audience and any sentences that would be difficult to deliver naturally.",
+        cover_letter:"Here is my cover letter for a role at [describe organisation] related to {topic}: [paste text]. Flag any tone mismatches, clichés, or language choices that seem inappropriate for this employer's culture.",
+        discussion_post:"Here is my discussion post on {topic}: [paste post]. The forum is [describe]. Flag any language that is inappropriate for this context — too casual, too technical, or likely to alienate this audience.",
+        minutes:"Here is my minutes on {topic}: [paste minutes]. The audience includes [describe]. Flag any language that is too technical for non-specialist readers, or any phrasing that is unclear or unnecessarily formal.",
+        abstract:"Here is my abstract on {topic}: [paste abstract]. The target audience is [describe]. Flag any terms that may be unfamiliar to this audience and any sentences that are unnecessarily complex.",
+        lit_review:"Here is my literature review section on {topic}: [paste section]. My audience is [describe]. Flag any unexplained jargon, any assumptions about prior knowledge that may not be warranted, and any sentences that are harder to read than necessary."
+      }
+    }
+  }
+];
+
+const techniqueDescs = [
+  "Let AI play an expert role",
+  "Reason through stages",
+  "Set length or structure",
+  "Get feedback on your draft",
+  "Guide with examples",
+  "Think through questions",
+  "Write within limits",
+  "Adapt for your reader"
+];
+
+let selectedTechnique = null;
+let checklistStarted = false;
+
+// Build technique cards dynamically
+(function buildCards() {
+  const grid = document.getElementById('techniqueGrid');
+  techniques.forEach((t, i) => {
+    const card = document.createElement('div');
+    card.className = 'technique-card';
+    card.onclick = () => selectTechnique(i);
+    card.innerHTML = `<div class="technique-icon">${t.icon}</div><div class="technique-name">${t.name}</div><div class="technique-desc">${techniqueDescs[i]}</div>`;
+    grid.appendChild(card);
+  });
+})();
+
+function selectTechnique(idx) {
+  selectedTechnique = idx;
+  document.querySelectorAll('.technique-card').forEach((c,i) => c.classList.toggle('selected', i===idx));
+  const tip = document.getElementById('techniqueTip');
+  tip.className = 'tip-box show'; tip.innerHTML = techniques[idx].tip;
+  updatePreview();
+  updateSteps();
+}
+
+function updatePreview() {
+  if (selectedTechnique === null) return;
+  const stage = document.getElementById('stageSelect').value;
+  const type = document.getElementById('typeSelect').value;
+  const topic = document.getElementById('topicInput').value.trim();
+  const out = document.getElementById('promptOutput');
+  if (!stage || !type) { out.textContent = 'Choose a writing stage and text type to generate your prompt.'; return; }
+  const t = techniques[selectedTechnique];
+  let tmpl = (t.templates[stage] && t.templates[stage][type]) ? t.templates[stage][type] : 'No template for this combination yet.';
+  out.textContent = topic ? tmpl.replace(/{topic}/g, topic) : tmpl.replace(/{topic}/g, '[YOUR TOPIC]');
+  updateSteps();
+}
+
+function copyPrompt() {
+  navigator.clipboard.writeText(document.getElementById('promptOutput').textContent).then(() => {
+    const c = document.getElementById('copyConfirm');
+    c.style.display = 'inline';
+    setTimeout(() => c.style.display = 'none', 2000);
+  });
+}
+
+function runChecklist() {
+  const items = document.querySelectorAll('.check-anim');
+  items.forEach((item, i) => {
+    setTimeout(() => {
+      item.classList.add('ticking');
+      setTimeout(() => {
+        item.querySelector('.chk-box').textContent = '✔';
+        item.classList.remove('ticking');
+        item.classList.add('ticked');
+      }, 200);
+    }, i * 420);
+  });
+}
+
+function resetChecklist() {
+  document.querySelectorAll('.check-anim').forEach(item => {
+    item.classList.remove('ticked', 'ticking');
+    item.querySelector('.chk-box').textContent = '☐';
+  });
+  checklistStarted = false;
+}
+
+function updateSteps() {
+  const s1done = selectedTechnique !== null;
+  const s2done = s1done && document.getElementById('stageSelect').value && document.getElementById('typeSelect').value;
+  const s3done = s2done && document.getElementById('topicInput').value.trim();
+  const rows = ['step1','step2','step3','step4'].map(id => document.getElementById(id));
+  const done = [s1done, s2done, s3done, false];
+  const active = [!s1done, s1done && !s2done, s2done && !s3done, s3done];
+  rows.forEach((r, i) => {
+    if (!r) return;
+    r.classList.toggle('done', done[i]);
+    r.classList.toggle('active', active[i]);
+  });
+  if (s3done && !checklistStarted) {
+    checklistStarted = true;
+    const step4 = document.getElementById('step4');
+    if (step4) { step4.classList.remove('done'); step4.classList.add('active'); }
+    setTimeout(runChecklist, 400);
+    setTimeout(() => {
+      const s4 = document.getElementById('step4');
+      if (s4) { s4.classList.remove('active'); s4.classList.add('done'); }
+    }, 400 + 6 * 420 + 300);
+  }
+  if (!s3done && checklistStarted) { resetChecklist(); }
+}
+</script>
+</body>
+</html>
