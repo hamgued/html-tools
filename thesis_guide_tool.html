@@ -822,7 +822,12 @@ footer a:hover { text-decoration: underline; }
   <div class="sub-heading">Example References List</div>
   <div class="sub-desc">A sample references list showing different source types. Hover over any entry to see what type it is and why it is formatted that way.</div>
 
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 1.8rem;margin-top:1rem;">
+  <div style="margin-top:1rem;margin-bottom:0.7rem;font-size:0.75rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;">
+    <span style="background:var(--teal-lt);color:var(--teal-dk);border:1px solid var(--teal-mid);border-radius:4px;padding:0.1rem 0.45rem;font-size:0.68rem;font-weight:600;">Hover</span>
+    over any entry to see the source type and formatting rules.
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 1.8rem;">
     <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:1.1rem;">References</div>
 
     <div class="ref-example-entry" style="position:relative;padding:0.55rem 0.7rem;border-radius:var(--radius-sm);margin-bottom:0.3rem;cursor:pointer;transition:background 0.15s;" onmouseenter="this.querySelector('.ref-tooltip').style.display='block'" onmouseleave="this.querySelector('.ref-tooltip').style.display='none'">
@@ -906,10 +911,6 @@ footer a:hover { text-decoration: underline; }
       </div>
     </div>
 
-    <div style="margin-top:1.1rem;padding-top:0.9rem;border-top:1px dashed var(--border);font-size:0.75rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;">
-      <span style="background:var(--teal-lt);color:var(--teal-dk);border:1px solid var(--teal-mid);border-radius:4px;padding:0.1rem 0.45rem;font-size:0.68rem;font-weight:600;">Hover</span>
-      over any entry to see the source type and formatting rules.
-    </div>
   </div>
 
 </div>
