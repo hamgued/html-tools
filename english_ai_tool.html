@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English & AI – Interactive Learning Hub</title>
+<style>
+  :root {
+    --green: #2e7d32; --amber: #e65100; --red: #c62828; --blue: #1565c0; --blue-dark: #0d47a1;
+    --sidebar-bg: #1e2a3a; --sidebar-w: 210px;
+    --light-blue: #e3f2fd; --light-green: #e8f5e9; --light-amber: #fff3e0; --light-red: #ffebee;
+    --grey: #f5f5f5; --text: #212121; --muted: #757575;
+    --shadow: 0 2px 12px rgba(0,0,0,0.09); --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+  header { background: #ffffff; border-bottom: 1px solid #e0e6ed; color: var(--text); padding: 0 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; min-height: 58px; gap: 20px; }
+  .header-left h1 { font-size: 1.05rem; font-weight: 700; color: #1a237e; }
+  .header-left p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .header-left a { color: var(--blue); text-decoration: none; }
+  .header-left a:hover { text-decoration: underline; }
+
+  /* TRAFFIC LIGHTS in header */
+  .tl-header { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+  .tl-header-label { font-size: 0.69rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-right: 6px; white-space: nowrap; }
+  .tl-pill { position: relative; display: flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; cursor: default; border: 1.5px solid #e4e8ef; background: #f7f9fc; transition: border-color 0.15s; }
+  .tl-pill:hover { border-color: #bbc; }
+  .tl-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .tl-dot-green { background: #43a047; }
+  .tl-dot-amber { background: #fb8c00; }
+  .tl-dot-red { background: #e53935; }
+  .tl-pill-text { font-size: 0.71rem; font-weight: 600; color: #555; white-space: nowrap; }
+  .tl-tooltip { display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 7px 11px; border-radius: 7px; font-size: 0.72rem; width: 185px; z-index: 300; line-height: 1.4; box-shadow: 0 3px 10px rgba(0,0,0,0.22); pointer-events: none; white-space: normal; text-align: center; }
+  .tl-pill:hover .tl-tooltip { display: block; }
+  .tl-header .tl-pill:last-child .tl-tooltip { left: auto; right: 0; transform: none; }
+
+  .app-body { display: flex; flex: 1; min-height: 0; }
+
+  /* SIDEBAR */
+  .sidebar { width: var(--sidebar-w); background: #f8f9fb; border-right: 1px solid #e0e6ed; flex-shrink: 0; display: flex; flex-direction: column; padding: 20px 0; }
+  .sidebar-label { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #aab4c0; padding: 0 18px 10px; }
+  .nav-btn { display: flex; align-items: center; gap: 10px; padding: 10px 18px; background: transparent; border: none; border-left: 3px solid transparent; color: #4a5568; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: left; width: 100%; }
+  .nav-btn:hover { color: var(--blue); background: #eef2ff; }
+  .nav-btn.active { color: var(--blue); background: #e8f0fe; border-left-color: var(--blue); font-weight: 700; }
+  .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+  /* MAIN */
+  .main { flex: 1; overflow-y: auto; padding: 28px 32px; min-width: 0; }
+  .tab-panel { display: none; max-width: 680px; }
+  .tab-panel.active { display: block; }
+  .panel-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+  .panel-desc { font-size: 0.81rem; color: var(--muted); margin-bottom: 20px; }
+
+  /* FLASHCARDS */
+  .fc-controls { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .filter-btn { padding: 4px 11px; border-radius: 20px; border: 1.5px solid #ddd; background: white; font-size: 0.74rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .filter-btn.active { border-color: var(--blue); background: var(--light-blue); color: var(--blue); }
+  .fc-progress { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+  .progress-bar-outer { height: 5px; background: #e0e0e0; border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
+  .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--blue), #64b5f6); border-radius: 3px; transition: width 0.35s ease; }
+
+  .card-scene { width: 100%; height: 210px; perspective: 1000px; cursor: pointer; margin-bottom: 14px; }
+  .card-inner { width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1); transform-style: preserve-3d; position: relative; }
+  .card-scene.flipped .card-inner { transform: rotateY(180deg); }
+  .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-shadow: var(--shadow); text-align: center; }
+  .card-front { background: linear-gradient(145deg, #1565c0, #0d47a1); color: white; }
+  .card-front .term { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+  .card-front .category-tag { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card-front .tap-hint { font-size: 0.68rem; opacity: 0.55; margin-top: 14px; }
+  .card-back { background: white; transform: rotateY(180deg); text-align: left; justify-content: flex-start; padding: 20px 24px; }
+  .card-back .def-label { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); font-weight: 700; margin-bottom: 6px; }
+  .card-back .definition { font-size: 0.87rem; line-height: 1.55; margin-bottom: 12px; }
+  .card-back .example { font-size: 0.77rem; color: var(--muted); font-style: italic; border-left: 3px solid var(--light-blue); padding-left: 10px; line-height: 1.4; }
+
+  .fc-nav { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+  .knew-controls { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+  .btn { padding: 8px 18px; border-radius: 8px; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .btn-primary { background: var(--blue); color: white; } .btn-primary:hover { background: var(--blue-dark); }
+  .btn-secondary { background: white; color: var(--blue); border: 1.5px solid var(--blue); } .btn-secondary:hover { background: var(--light-blue); }
+  .btn-ghost { background: var(--grey); color: var(--text); } .btn-ghost:hover { background: #e0e0e0; }
+  .btn-knew { background: var(--light-green); color: var(--green); font-size: 0.78rem; padding: 6px 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; } .btn-knew:hover { background: #c8e6c9; }
+  .btn-unsure { background: var(--light-amber); color: var(--amber); font-size: 0.78rem; padding: 6px 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; } .btn-unsure:hover { background: #ffe0b2; }
+  .score-bar { background: white; border-radius: 10px; padding: 12px 16px; display: flex; gap: 16px; box-shadow: var(--shadow); }
+  .score-item { text-align: center; flex: 1; }
+  .score-num { font-size: 1.3rem; font-weight: 700; }
+  .score-lbl { font-size: 0.67rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .score-knew .score-num { color: var(--green); } .score-unsure .score-num { color: var(--amber); } .score-total .score-num { color: var(--blue); }
+
+  /* ETHICS */
+  .ethics-meta { display: flex; justify-content: space-between; font-size: 0.79rem; color: var(--muted); margin-bottom: 12px; }
+  .ethics-meta span { font-weight: 700; color: var(--text); }
+  .scenario-card { background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 14px; }
+  .scenario-num { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .scenario-text { font-size: 0.91rem; line-height: 1.6; margin-bottom: 18px; }
+  .verdict-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .verdict-btn { padding: 7px 15px; border-radius: 8px; border: 1.5px solid; font-size: 0.79rem; font-weight: 700; cursor: pointer; background: white; transition: all 0.15s; text-transform: uppercase; }
+  .verdict-ethical { border-color: var(--green); color: var(--green); } .verdict-ethical:hover,.verdict-ethical.selected { background: var(--light-green); }
+  .verdict-unethical { border-color: var(--red); color: var(--red); } .verdict-unethical:hover,.verdict-unethical.selected { background: var(--light-red); }
+  .verdict-grey { border-color: var(--amber); color: var(--amber); } .verdict-grey:hover,.verdict-grey.selected { background: var(--light-amber); }
+  .feedback-box { display: none; padding: 12px 14px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; }
+  .feedback-box.show { display: block; }
+  .feedback-correct { background: var(--light-green); border-left: 4px solid var(--green); }
+  .feedback-wrong { background: var(--light-red); border-left: 4px solid var(--red); }
+  .feedback-partial { background: var(--light-amber); border-left: 4px solid var(--amber); }
+
+  /* PROMPT BUILDER */
+  /* TIMELINE STEPS */
+  .steps-timeline { position: relative; }
+  .steps-timeline::before { content: ''; position: absolute; left: 15px; top: 24px; bottom: 24px; width: 2px; background: #dde3ef; border-radius: 2px; z-index: 0; }
+  .step-row { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 14px; position: relative; }
+  .step-row:last-child { margin-bottom: 0; }
+  .step-dot { width: 32px; height: 32px; border-radius: 50%; background: white; border: 2px solid #dde3ef; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; color: #aab4c0; flex-shrink: 0; position: relative; z-index: 1; transition: all 0.2s; }
+  .step-row.done .step-dot { background: var(--blue); border-color: var(--blue); color: white; }
+  .step-row.active .step-dot { background: var(--blue); border-color: var(--blue); color: white; box-shadow: 0 0 0 4px #d0e3ff; }
+  .step-content { flex: 1; min-width: 0; }
+  .card-section { background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+  .card-section h3 { font-size: 0.88rem; font-weight: 700; margin-bottom: 14px; }
+  .technique-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px,1fr)); gap: 8px; margin-bottom: 12px; }
+  .technique-card { border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 10px; cursor: pointer; transition: all 0.15s; text-align: center; background: var(--grey); }
+  .technique-card:hover,.technique-card.selected { border-color: var(--blue); background: var(--light-blue); }
+  .technique-icon { font-size: 1.2rem; margin-bottom: 4px; }
+  .technique-name { font-size: 0.74rem; font-weight: 700; }
+  .technique-desc { font-size: 0.67rem; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+  .tip-box { background: var(--light-blue); border-left: 3px solid var(--blue); border-radius: 0 8px 8px 0; padding: 10px 13px; font-size: 0.79rem; line-height: 1.5; display: none; }
+  .tip-box.show { display: block; }
+  .tip-box strong { color: var(--blue); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .form-label { font-size: 0.73rem; font-weight: 700; display: block; margin-bottom: 4px; }
+  select, input[type=text] { width: 100%; padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 7px; font-size: 0.81rem; font-family: inherit; transition: border-color 0.15s; }
+  select:focus, input[type=text]:focus { outline: none; border-color: var(--blue); }
+  .output-label { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; font-weight: 700; }
+  .prompt-output { background: #1a1a2e; border-radius: 8px; padding: 14px; font-family: 'Courier New', monospace; font-size: 0.79rem; color: #a8d8a8; line-height: 1.6; min-height: 56px; white-space: pre-wrap; word-break: break-word; margin-bottom: 10px; }
+
+  /* CHECKLIST animated */
+  .checklist-anim { display: flex; flex-direction: column; gap: 9px; }
+  .check-anim { display: flex; align-items: flex-start; gap: 10px; font-size: 0.83rem; line-height: 1.45; transition: color 0.3s; }
+  .chk-box { font-size: 1.05rem; flex-shrink: 0; line-height: 1.2; color: var(--blue); transition: all 0.2s; min-width: 16px; display: inline-block; }
+  .chk-text { transition: color 0.4s; }
+  .check-anim.ticked .chk-box { color: var(--green); }
+  .check-anim.ticked .chk-text { color: var(--muted); }
+  @keyframes tickPop { 0%{transform:scale(1)} 40%{transform:scale(1.4)} 70%{transform:scale(0.9)} 100%{transform:scale(1)} }
+  .check-anim.ticking .chk-box { animation: tickPop 0.35s ease forwards; }
+
+  @media (max-width: 580px) {
+    .sidebar { width: 52px; }
+    .nav-btn span:not(.nav-icon), .sidebar-label, .tl-sidebar, .sidebar-divider { display: none; }
+    .main { padding: 16px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>🤖 English &amp; AI – Interactive Learning Hub</h1>
+    <p>LAB/LUT Language Centre · <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></p>
+  </div>
+  <div class="tl-header">
+    <span class="tl-header-label">🚦 Arene AI</span>
+    <div class="tl-pill">
+      <div class="tl-dot tl-dot-green"></div>
+      <span class="tl-pill-text">Green – OK</span>
+      <div class="tl-tooltip">AI use is allowed and encouraged. No special restrictions apply.</div>
+    </div>
+    <div class="tl-pill">
+      <div class="tl-dot tl-dot-amber"></div>
+      <span class="tl-pill-text">Amber – Caution</span>
+      <div class="tl-tooltip">AI use is permitted but requires care. Check task instructions and disclose use.</div>
+    </div>
+    <div class="tl-pill">
+      <div class="tl-dot tl-dot-red"></div>
+      <span class="tl-pill-text">Red – Not allowed</span>
+      <div class="tl-tooltip">AI use is prohibited for this task. Using AI would be academic misconduct.</div>
+    </div>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <nav class="sidebar">
+    <div class="sidebar-label">Modules</div>
+    <button class="nav-btn active" onclick="switchTab('flashcards',this)">
+      <span class="nav-icon">📚</span><span>Key Terms</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('ethics',this)">
+      <span class="nav-icon">⚖️</span><span>Ethics Judge</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('prompts',this)">
+      <span class="nav-icon">✍️</span><span>Prompt Builder</span>
+    </button>
+  </nav>
+
+  <main class="main">
+
+    <!-- TAB 1: FLASHCARDS -->
+    <div id="tab-flashcards" class="tab-panel active">
+      <div class="panel-title">AI Vocabulary Flashcards</div>
+      <p class="panel-desc">Click a card to flip it. Mark terms as Known or Still Learning to track your progress.</p>
+      <div class="fc-controls">
+        <button class="filter-btn active" onclick="filterCards('all',this)">All</button>
+        <button class="filter-btn" onclick="filterCards('basics',this)">AI Basics</button>
+        <button class="filter-btn" onclick="filterCards('genai',this)">Generative AI</button>
+        <button class="filter-btn" onclick="filterCards('ethics',this)">Ethics</button>
+        <button class="filter-btn" onclick="filterCards('history',this)">History</button>
+        <span class="fc-progress" id="fcProgress">1 / 1</span>
+      </div>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="fcProgressBar" style="width:4%"></div></div>
+      <div class="card-scene" id="cardScene" onclick="flipCard()">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="category-tag" id="cardCat"></div>
+            <div class="term" id="cardTerm"></div>
+            <div class="tap-hint">👆 Click to reveal definition</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="def-label">Definition</div>
+            <div class="definition" id="cardDef"></div>
+            <div class="example" id="cardEx"></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-nav">
+        <button class="btn btn-ghost" onclick="prevCard()">← Prev</button>
+        <button class="btn btn-ghost" onclick="shuffleCards()">🔀 Shuffle</button>
+        <button class="btn btn-primary" onclick="nextCard()">Next →</button>
+      </div>
+      <div class="knew-controls" id="knewControls" style="display:none;">
+        <button class="btn-knew" onclick="markCard(true)">✅ I know this</button>
+        <button class="btn-unsure" onclick="markCard(false)">🔄 Still learning</button>
+      </div>
+      <div class="score-bar">
+        <div class="score-item score-knew"><div class="score-num" id="scoreKnew">0</div><div class="score-lbl">Known</div></div>
+        <div class="score-item score-unsure"><div class="score-num" id="scoreUnsure">0</div><div class="score-lbl">Learning</div></div>
+        <div class="score-item score-total"><div class="score-num" id="scoreTotal">0</div><div class="score-lbl">Total</div></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: ETHICS -->
+    <div id="tab-ethics" class="tab-panel">
+      <div class="panel-title">Ethics Scenario Judge</div>
+      <p class="panel-desc">Read each scenario. Is it ethical ✅, unethical ❌, or a grey area 🟡? Make your call, then see the explanation.</p>
+      <div class="ethics-meta">
+        <div>Scenario <span id="ethicsNum">1</span> of <span id="ethicsTotal">8</span></div>
+        <div>Score: <span id="ethicsScore">0</span> / <span id="ethicsAnswered">0</span></div>
+      </div>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="ethicsBar" style="width:12%"></div></div>
+      <br>
+      <div class="scenario-card">
+        <div class="scenario-num" id="scenarioNum">Scenario 1</div>
+        <div class="scenario-text" id="scenarioText"></div>
+        <div class="verdict-btns">
+          <button class="verdict-btn verdict-ethical" onclick="judgeScenario('ethical')">✅ Ethical</button>
+          <button class="verdict-btn verdict-unethical" onclick="judgeScenario('unethical')">❌ Unethical</button>
+          <button class="verdict-btn verdict-grey" onclick="judgeScenario('grey')">🟡 Grey Area</button>
+        </div>
+        <div class="feedback-box" id="feedbackBox"></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="btn btn-secondary" onclick="prevScenario()">← Back</button>
+        <button class="btn btn-primary" onclick="nextScenario()">Next →</button>
+      </div>
+    </div>
+
+    <!-- TAB 3: PROMPT BUILDER -->
+    <div id="tab-prompts" class="tab-panel">
+      <div class="panel-title">Prompt Builder Workshop</div>
+      <p class="panel-desc">Select a technique, define your context, then copy your prompt into any AI tool.</p>
+      <div class="steps-timeline" id="stepsTimeline">
+
+        <div class="step-row active" id="step1">
+          <div class="step-dot">1</div>
+          <div class="step-content">
+            <div class="card-section">
+              <h3>Choose a Prompting Technique</h3>
+              <div class="technique-grid">
+                <div class="technique-card" onclick="selectTechnique(0)"><div class="technique-icon">🎭</div><div class="technique-name">Role-based</div><div class="technique-desc">Assign AI a role</div></div>
+                <div class="technique-card" onclick="selectTechnique(1)"><div class="technique-icon">🪜</div><div class="technique-name">Step-by-step</div><div class="technique-desc">Reason through stages</div></div>
+                <div class="technique-card" onclick="selectTechnique(2)"><div class="technique-icon">📝</div><div class="technique-name">Format control</div><div class="technique-desc">Set length or structure</div></div>
+                <div class="technique-card" onclick="selectTechnique(3)"><div class="technique-icon">🔄</div><div class="technique-name">Iterative refine</div><div class="technique-desc">Improve a draft</div></div>
+                <div class="technique-card" onclick="selectTechnique(4)"><div class="technique-icon">🧩</div><div class="technique-name">Few-shot</div><div class="technique-desc">Give examples first</div></div>
+              </div>
+              <div class="tip-box" id="techniqueTip"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row" id="step2">
+          <div class="step-dot">2</div>
+          <div class="step-content">
+            <div class="card-section">
+              <h3>Define Your Writing Context</h3>
+              <div class="form-row">
+                <div>
+                  <label class="form-label">Writing Stage</label>
+                  <select id="stageSelect" onchange="updatePreview()">
+                    <option value="">Select stage…</option>
+                    <option value="prewriting">Prewriting (brainstorm / plan)</option>
+                    <option value="drafting">Drafting (write first draft)</option>
+                    <option value="revising">Revising (improve structure)</option>
+                    <option value="editing">Editing &amp; Proofreading</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">Text Type</label>
+                  <select id="typeSelect" onchange="updatePreview()">
+                    <option value="">Select type…</option>
+                    <option value="email">Professional email</option>
+                    <option value="essay">Academic essay</option>
+                    <option value="report">Report</option>
+                    <option value="summary">Summary</option>
+                    <option value="presentation">Presentation outline</option>
+                  </select>
+                </div>
+              </div>
+              <label class="form-label">Your Topic / Main Idea</label>
+              <input type="text" id="topicInput" oninput="updatePreview()" placeholder="e.g. sustainability in engineering, AI in healthcare…">
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row" id="step3">
+          <div class="step-dot">3</div>
+          <div class="step-content">
+            <div class="card-section">
+              <h3>Your Generated Prompt</h3>
+              <div class="output-label">Copy and paste into ChatGPT, Copilot, or any AI tool:</div>
+              <div class="prompt-output" id="promptOutput">← Select a technique and fill in the fields above.</div>
+              <button class="btn btn-primary" onclick="copyPrompt()">📋 Copy Prompt</button>
+              <span id="copyConfirm" style="font-size:0.75rem;color:var(--green);margin-left:10px;display:none;">✅ Copied!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-row" id="step4">
+          <div class="step-dot">4</div>
+          <div class="step-content">
+            <div class="card-section">
+              <h3>Responsible AI Writing Checklist</h3>
+              <p style="font-size:0.79rem;color:var(--muted);margin-bottom:14px;">Before submitting work that involved AI assistance:</p>
+              <div class="checklist-anim" id="checklistAnim">
+                <div class="check-anim" id="chk0"><span class="chk-box">☐</span><span class="chk-text">I have disclosed my AI use to my instructor (if required).</span></div>
+                <div class="check-anim" id="chk1"><span class="chk-box">☐</span><span class="chk-text">I have verified all AI-generated facts and claims myself.</span></div>
+                <div class="check-anim" id="chk2"><span class="chk-box">☐</span><span class="chk-text">The final text reflects my own ideas and understanding.</span></div>
+                <div class="check-anim" id="chk3"><span class="chk-box">☐</span><span class="chk-text">I have not submitted AI output directly without my own contribution.</span></div>
+                <div class="check-anim" id="chk4"><span class="chk-box">☐</span><span class="chk-text">I have reviewed the task's AI Traffic Light rating (🟢🟠🔴).</span></div>
+                <div class="check-anim" id="chk5"><span class="chk-box">☐</span><span class="chk-text">I have considered potential biases in the AI output.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const cards = [
+  { term:"Artificial Intelligence (AI)", cat:"basics", def:"The simulation of human intelligence processes by machines, especially computer systems, including learning, reasoning, and self-correction.", ex:"Speech recognition and image classification are examples of AI in everyday life." },
+  { term:"Machine Learning (ML)", cat:"basics", def:"A subset of AI where systems learn and improve from experience without being explicitly programmed, by analysing patterns in data.", ex:"Netflix recommends films to you using machine learning algorithms." },
+  { term:"Deep Learning", cat:"basics", def:"A type of machine learning using neural networks with many layers to learn representations of data at multiple levels of abstraction.", ex:"Deep learning enables AI to recognise faces and understand natural language." },
+  { term:"Neural Network", cat:"basics", def:"A system of algorithms modelled on the human brain, designed to recognise patterns. The basis of most modern AI.", ex:"A neural network can learn to classify emails as spam or not spam." },
+  { term:"Algorithm", cat:"basics", def:"A set of rules or instructions that a computer follows to solve a problem or complete a task.", ex:"Search engines use algorithms to rank web pages by relevance." },
+  { term:"Training Data", cat:"basics", def:"The large dataset used to teach a machine learning model to recognise patterns and make predictions.", ex:"A spam filter is trained on thousands of examples of spam and legitimate emails." },
+  { term:"Natural Language Processing (NLP)", cat:"basics", def:"A branch of AI focused on enabling computers to understand, interpret, and generate human language.", ex:"Autocorrect and translation apps use natural language processing." },
+  { term:"Automation", cat:"basics", def:"The use of technology to perform tasks with minimal human intervention, increasingly powered by AI.", ex:"Robotic process automation handles repetitive office tasks such as data entry." },
+  { term:"Large Language Model (LLM)", cat:"genai", def:"A type of AI trained on massive amounts of text data to generate, translate, and understand human language.", ex:"GPT-4 and Claude are large language models used in AI chatbots." },
+  { term:"Generative AI (GenAI)", cat:"genai", def:"AI systems that can create new content — text, images, audio, code — that is often indistinguishable from human-made output.", ex:"DALL·E generates images; ChatGPT generates text from a prompt." },
+  { term:"Hallucination", cat:"genai", def:"When an AI model generates plausible-sounding but factually incorrect or entirely fabricated information presented as true.", ex:"An AI chatbot might confidently name a book that does not exist — this is called hallucination." },
+  { term:"Prompt", cat:"genai", def:"The input or instruction given to an AI system to produce a desired output. The quality of the prompt strongly affects the quality of the response.", ex:"'Summarise this article in three bullet points' is a prompt." },
+  { term:"Prompt Engineering", cat:"genai", def:"The practice of designing and refining prompts to guide AI models toward more accurate, relevant, or useful outputs.", ex:"Adding 'Think step by step' to a maths prompt is a prompt engineering technique." },
+  { term:"ChatGPT", cat:"genai", def:"A conversational AI chatbot developed by OpenAI, based on a large language model, capable of generating human-like text responses.", ex:"Students use ChatGPT to brainstorm essay ideas or get explanations of complex topics." },
+  { term:"Bias (AI)", cat:"ethics", def:"Systematic errors in AI output caused by prejudiced or unrepresentative training data, leading to unfair or inaccurate results.", ex:"A hiring algorithm trained mostly on male CVs may unfairly rank female applicants lower." },
+  { term:"Copyright & AI", cat:"ethics", def:"The legal and ethical question of who owns content created with AI assistance, and whether AI training on copyrighted material is lawful.", ex:"A student who publishes AI-generated text as their own work may face copyright and academic integrity issues." },
+  { term:"Accountability (AI)", cat:"ethics", def:"The principle that individuals, organisations, or systems must be answerable for the outcomes of AI decisions, especially when those decisions cause harm.", ex:"If an AI system wrongly denies someone a loan, there must be a clear process to challenge that decision." },
+  { term:"Transparency (AI)", cat:"ethics", def:"The degree to which an AI system's processes, data, and decision-making can be understood and examined by humans.", ex:"A transparent AI hiring tool would explain why a candidate was rejected, rather than giving a score with no explanation." },
+  { term:"Deepfake", cat:"ethics", def:"AI-generated media — video, audio, or images — that realistically depicts a real person saying or doing something they never did.", ex:"A deepfake video of a politician making a false statement could spread as misinformation before viewers realise it is fake." },
+  { term:"Misinformation & AI", cat:"ethics", def:"False or misleading content generated or amplified by AI systems, often at a scale and speed that makes it difficult to counter.", ex:"AI-generated news articles or social media posts can spread inaccurate claims to millions of people within hours." },
+  { term:"Academic Integrity & AI", cat:"ethics", def:"The ethical standards governing honest use of AI in academic work, including requirements to disclose AI use and not submit AI-generated text as one's own.", ex:"Most universities now have AI use policies that specify when and how students may use tools like ChatGPT in assignments." },
+  { term:"Surveillance & AI", cat:"ethics", def:"The use of AI to monitor, track, or profile individuals, often without their knowledge or consent, raising serious privacy and civil liberties concerns.", ex:"Facial recognition systems used in public spaces can identify individuals without their consent." },
+  { term:"Alan Turing (1912–1954)", cat:"history", def:"British mathematician widely regarded as the father of computer science and AI. He proposed the Turing Test in 1950 and laid the theoretical foundations for modern computing.", ex:"Turing asked: 'Can machines think?' — a question that still drives AI research today." },
+  { term:"Turing Test (1950)", cat:"history", def:"A test proposed by Alan Turing in which a machine must convince a human evaluator, through text conversation, that it is human rather than a machine.", ex:"Modern chatbots like ChatGPT can pass informal versions of the Turing Test." },
+  { term:"John McCarthy (1927–2011)", cat:"history", def:"American computer scientist who coined the term 'Artificial Intelligence' in 1956 and organised the Dartmouth Conference — the founding event of AI as an academic field.", ex:"McCarthy also invented the Lisp programming language, widely used in early AI research." },
+  { term:"Dartmouth Conference (1956)", cat:"history", def:"A summer research workshop at Dartmouth College, USA, where McCarthy, Minsky, Shannon and others gathered. Considered the founding moment of AI as a discipline.", ex:"The conference set the agenda for AI research for the following decades." },
+  { term:"The AI Winters (1970s–80s)", cat:"history", def:"Periods when AI funding and public interest collapsed after early promises went unmet. Governments and investors cut support sharply, leading to widespread scepticism.", ex:"After failed machine translation projects, major governments cut AI funding in the early 1970s." },
+  { term:"Deep Blue (1997)", cat:"history", def:"An IBM chess-playing computer that defeated world champion Garry Kasparov in 1997 — the first time a computer beat a reigning world chess champion under standard tournament conditions.", ex:"Deep Blue's victory sparked global debate about whether machines could truly 'think'." },
+  { term:"ImageNet Breakthrough (2012)", cat:"history", def:"In 2012, Geoffrey Hinton's deep learning team won the ImageNet image recognition contest by a dramatic margin, launching the modern era of neural network AI research.", ex:"This moment triggered massive investment in GPUs and deep learning across industry and academia." },
+  { term:"Godfathers of Deep Learning", cat:"history", def:"Geoffrey Hinton, Yann LeCun, and Yoshua Bengio — three researchers awarded the 2018 Turing Award for foundational contributions to deep learning and neural networks.", ex:"Their decades of work on backpropagation and convolutional networks underpins virtually all modern AI." },
+  { term:"GPT-3 (2020)", cat:"history", def:"A large language model released by OpenAI with 175 billion parameters, demonstrating unprecedented ability to generate human-like text and sparking global debate about AI capabilities.", ex:"GPT-3 could write essays, answer questions, and generate code from simple instructions." },
+  { term:"ChatGPT Launch (November 2022)", cat:"history", def:"OpenAI released ChatGPT in November 2022. It reached one million users in five days and 100 million in two months — the fastest-growing consumer application in history at the time.", ex:"ChatGPT brought large language models to mainstream public awareness almost overnight." }
+];
+
+const scenarios = [
+  { text:"A student uses ChatGPT to brainstorm topic ideas for their essay, then writes the entire essay themselves. They disclose this use in a footnote.", answer:"ethical", explanation:"Brainstorming is a legitimate use of AI as a thinking tool. Full disclosure and independent writing make this acceptable under most academic integrity policies." },
+  { text:"A student copies three paragraphs directly from a ChatGPT response and submits them as part of their assignment without any disclosure.", answer:"unethical", explanation:"Submitting AI-generated text as your own work without disclosure is academic dishonesty. It misrepresents the source of the work and violates most university policies." },
+  { text:"A company uses an AI hiring tool to screen CVs. The tool was trained on historical hiring data from a workforce that was 90% male.", answer:"grey", explanation:"This is a grey area involving algorithmic bias. The tool may systematically disadvantage female applicants, raising serious fairness concerns — but the company may be unaware of the bias." },
+  { text:"A journalist uses AI to generate a realistic-sounding quote attributed to a politician and publishes it without checking whether the politician said it.", answer:"unethical", explanation:"Publishing fabricated quotes is misinformation. AI hallucinations can produce convincing but false statements. Journalists must verify all quotes before publication." },
+  { text:"A teacher uses AI to give students faster written feedback on draft essays, then reviews and edits the feedback before sending it.", answer:"ethical", explanation:"Using AI as a time-saving tool while maintaining human oversight and quality control is generally considered ethical and increasingly common in education." },
+  { text:"A hospital uses an AI diagnostic tool to prioritise patient cases. The tool was not tested on diverse ethnic populations and may be less accurate for some groups.", answer:"grey", explanation:"AI in healthcare can save lives, but lack of diversity in training data is a serious ethical concern. This is a grey area — beneficial intent, but real risk of unequal care." },
+  { text:"An AI company scrapes millions of copyrighted images from the internet without permission to train its image-generation model.", answer:"grey", explanation:"This is legally and ethically contested. Many argue it constitutes copyright infringement; others claim it falls under fair use. Court cases are ongoing globally." },
+  { text:"A student asks an AI chatbot to write their entire 2,000-word essay, makes minor edits, and submits it with no disclosure.", answer:"unethical", explanation:"This is clear academic misconduct. The work does not represent the student's own learning or effort, and the lack of disclosure compounds the dishonesty." },
+  { text:"A company uses AI-generated voice cloning to recreate a deceased musician's voice and releases a new 'song' without obtaining permission from the musician's estate.", answer:"unethical", explanation:"Using someone's voice or likeness without consent — especially after death — violates their rights. This raises serious copyright, consent, and dignity concerns." },
+  { text:"A researcher uses an AI tool to analyse 50,000 anonymised patient records to identify patterns in cancer diagnoses. The patients did not consent to AI analysis when their data was collected.", answer:"grey", explanation:"Medical AI research can save lives, but using data for purposes beyond original consent is ethically contested. Most ethics boards would require review before approving such use." },
+  { text:"A social media company uses AI to curate each user's feed to maximise time spent on the platform, knowing this may worsen anxiety and depression in younger users.", answer:"unethical", explanation:"Deliberately optimising for engagement at the cost of users' mental wellbeing — especially among young people — is widely considered unethical. It prioritises profit over harm." },
+  { text:"A university uses an AI proctoring tool to monitor students during online exams via webcam. The tool flags 'suspicious' behaviour based on eye movements and typing patterns.", answer:"grey", explanation:"AI proctoring can reduce cheating, but it is privacy-invasive, may be inaccurate for students with disabilities or in non-ideal home settings, and raises consent issues. Contested globally." },
+  { text:"An AI system used by a court to recommend prison sentences gives consistently harsher recommendations for defendants from lower-income backgrounds.", answer:"unethical", explanation:"Using a biased AI in high-stakes legal decisions is deeply unethical. It can entrench systemic inequality and violate principles of fair and impartial justice." },
+  { text:"A student discloses their use of AI in an assignment but their university has no clear AI policy. They are penalised anyway by their lecturer.", answer:"grey", explanation:"This is a grey area. The student acted transparently, but without a clear institutional policy, both the student and the lecturer are navigating uncertain ground." },
+  { text:"A marketing agency uses AI to generate hundreds of fake positive product reviews and posts them across different platforms under fictional usernames.", answer:"unethical", explanation:"Generating fake reviews is consumer fraud. It deceives the public, distorts market trust, and violates the terms of service of review platforms. Clearly unethical and illegal in many countries." }
+];
+
+const techniques = [
+  { name:"Role-based", tip:"<strong>Role-based prompting</strong> tells the AI to adopt a specific persona or expertise. This shapes the tone, depth, and focus of the response.",
+    templates:{ prewriting:{ email:"You are a professional business communication coach. Help me brainstorm key points for an email about {topic}. List 5 clear ideas.", essay:"You are an academic writing tutor. Help me brainstorm a thesis statement and three supporting arguments for an essay on {topic}.", report:"You are a professional report writer. Suggest a structure and key sections for a report on {topic}.", summary:"You are an expert summariser. List the 5 most important ideas I should cover in a summary of {topic}.", presentation:"You are a presentation coach. Suggest an engaging opening, three main points, and a strong closing for a presentation on {topic}." }, drafting:{ email:"You are a professional communication specialist. Draft a formal email about {topic}. Keep it concise and professional.", essay:"You are an academic writing tutor. Write an introduction paragraph for an essay on {topic}, including a clear thesis statement.", report:"You are a professional report writer. Draft an executive summary for a report on {topic} in 150 words.", summary:"You are an expert summariser. Write a concise summary of {topic} in two paragraphs.", presentation:"You are a presentation coach. Write speaker notes for the first slide of a presentation on {topic}." }, revising:{ email:"You are a professional editor. Review this draft email about {topic} and suggest improvements to clarity, tone, and structure.", essay:"You are an academic writing tutor. Review this draft essay on {topic}. Suggest improvements to the argument, structure, and academic style.", report:"You are a professional editor. Review this report section on {topic} and suggest how to make it clearer and more persuasive.", summary:"You are an expert editor. Review this summary of {topic} and suggest what to add, remove, or restructure.", presentation:"You are a presentation coach. Review these speaker notes on {topic} and suggest ways to make them more engaging." }, editing:{ email:"You are a professional proofreader. Check this email about {topic} for grammar, punctuation, and style errors. List all corrections.", essay:"You are an academic proofreader. Check this essay on {topic} for grammar, coherence, citation style, and academic register.", report:"You are a professional editor. Proofread this report section on {topic} and correct any errors in grammar, style, or formatting.", summary:"You are an expert editor. Proofread this summary of {topic} and correct any language errors.", presentation:"You are a presentation coach. Proofread these slides on {topic} and correct any errors in grammar or clarity." } }
+  },
+  { name:"Step-by-step", tip:"<strong>Step-by-step prompting</strong> asks the AI to reason through a task in stages. This improves accuracy and transparency.",
+    templates:{ prewriting:{ email:"Help me plan an email about {topic}. Think step by step: 1) identify the audience, 2) define the purpose, 3) list three key points to include.", essay:"Help me plan an essay on {topic}. Think step by step: 1) identify the main argument, 2) list supporting points, 3) suggest relevant examples.", report:"Help me plan a report on {topic}. Think step by step: 1) define the scope, 2) suggest sections, 3) identify key data sources.", summary:"Help me plan a summary of {topic}. Think step by step: 1) identify the main idea, 2) list supporting details, 3) suggest a conclusion.", presentation:"Help me plan a presentation on {topic}. Think step by step: 1) define the audience, 2) outline 3 key messages, 3) suggest visual ideas." }, drafting:{ email:"Draft an email about {topic}. Think step by step: 1) write a clear subject line, 2) write an opening sentence, 3) state the main message, 4) add a call to action, 5) write a professional closing.", essay:"Draft an essay introduction on {topic}. Think step by step: 1) write a hook sentence, 2) provide background context, 3) state the thesis clearly.", report:"Draft a report introduction on {topic}. Think step by step: 1) state the purpose, 2) explain the scope, 3) outline the structure.", summary:"Write a summary of {topic}. Think step by step: 1) state the main idea, 2) add supporting detail, 3) write a concluding sentence.", presentation:"Draft an opening slide on {topic}. Think step by step: 1) write a title, 2) write a hook question, 3) list three things the audience will learn." }, revising:{ email:"Revise this email about {topic} step by step: 1) check the subject line, 2) check the opening, 3) check clarity of main message, 4) check the closing.", essay:"Revise this essay on {topic} step by step: 1) check the thesis, 2) check paragraph structure, 3) check use of evidence, 4) check the conclusion.", report:"Revise this report section on {topic} step by step: 1) check the topic sentence, 2) check the evidence, 3) check the language register.", summary:"Revise this summary of {topic} step by step: 1) check it covers the main idea, 2) check it is concise, 3) check the language.", presentation:"Revise these speaker notes on {topic} step by step: 1) check clarity, 2) check timing, 3) check engagement." }, editing:{ email:"Proofread this email about {topic} step by step: 1) check grammar, 2) check punctuation, 3) check spelling, 4) check tone.", essay:"Proofread this essay on {topic} step by step: 1) check grammar and syntax, 2) check academic register, 3) check citations, 4) check coherence.", report:"Proofread this report section on {topic} step by step: 1) check grammar, 2) check formatting, 3) check factual accuracy.", summary:"Proofread this summary of {topic} step by step: 1) check grammar, 2) check conciseness, 3) check accuracy.", presentation:"Proofread these slides on {topic} step by step: 1) fix typos, 2) check sentence length, 3) check visual consistency." } }
+  },
+  { name:"Format control", tip:"<strong>Format control prompting</strong> specifies the structure, length, or tone of the output. Especially useful for professional and academic writing.",
+    templates:{ prewriting:{ email:"Give me a bullet-point plan for an email about {topic}. Use no more than 5 points. Keep each point under 10 words.", essay:"Create a structured outline for an essay on {topic}. Use headings and sub-points. Keep it under 200 words.", report:"Create a formal report outline on {topic} with numbered sections. Use professional language.", summary:"List the 4 main points I should cover in a summary of {topic}. Use one sentence per point.", presentation:"Give me a slide-by-slide outline for a 5-minute presentation on {topic}. Include slide titles and one key point per slide." }, drafting:{ email:"Write a formal email about {topic}. Format: Subject line, greeting, 2-sentence introduction, 3 bullet points, 1-sentence call to action, professional sign-off. Total: under 150 words.", essay:"Write a 150-word essay introduction on {topic}. Format: hook sentence, 2 sentences of background, 1 thesis sentence.", report:"Write an executive summary on {topic} in exactly 100 words. Use formal language and no bullet points.", summary:"Write a summary of {topic} in 3 paragraphs: paragraph 1 = main idea, paragraph 2 = key details, paragraph 3 = conclusion.", presentation:"Write speaker notes for a 2-minute slide on {topic}. Format: 1 opening sentence, 3 key points (1 sentence each), 1 closing sentence." }, revising:{ email:"Rewrite this email about {topic} so it is more concise. Target: under 100 words. Keep the professional tone.", essay:"Rewrite this paragraph from my essay on {topic}. Improve clarity. Use shorter sentences. Keep academic register.", report:"Rewrite this section of my report on {topic} in a more formal tone. Remove any informal language.", summary:"Rewrite this summary of {topic} to be more concise. Reduce to 3 sentences only.", presentation:"Rewrite these speaker notes on {topic} so they are easier to say aloud. Use short, clear sentences." }, editing:{ email:"Proofread this email about {topic}. List errors in a table with three columns: Error | Type | Correction.", essay:"Proofread this essay paragraph on {topic}. Highlight errors and provide corrections in brackets after each error.", report:"Proofread this report section on {topic}. List all corrections in numbered format.", summary:"Proofread this summary of {topic}. Mark each error with [ERROR] and suggest the correction immediately after.", presentation:"Proofread these slides on {topic}. List each error and correction as: Slide number | Error | Suggested fix." } }
+  },
+  { name:"Iterative refine", tip:"<strong>Iterative refinement</strong> means giving AI a draft and asking it to improve it. Powerful for revising and editing stages.",
+    templates:{ prewriting:{ email:"Here is my initial idea for an email about {topic}: [paste your idea]. Expand this into a more detailed plan with a clear structure.", essay:"Here is my rough essay idea about {topic}: [paste your idea]. Help me develop this into a clearer argument with a thesis and three main points.", report:"Here is my initial plan for a report on {topic}: [paste your plan]. Improve it by adding more specific sections and sub-points.", summary:"Here is my rough idea for a summary of {topic}: [paste your idea]. Refine it into a clearer, more structured plan.", presentation:"Here is my initial outline for a presentation on {topic}: [paste outline]. Refine it so it flows better and is more engaging." }, drafting:{ email:"Here is my draft email about {topic}: [paste draft]. Improve it so it is clearer, more professional, and more persuasive. Keep it under 150 words.", essay:"Here is my draft introduction for an essay on {topic}: [paste draft]. Improve the hook, strengthen the thesis, and improve academic style.", report:"Here is my draft executive summary on {topic}: [paste draft]. Improve clarity, precision, and professional register.", summary:"Here is my draft summary of {topic}: [paste draft]. Make it more concise and ensure the main idea is clear from the first sentence.", presentation:"Here is my draft speaker notes on {topic}: [paste draft]. Improve so they are natural to speak aloud and more engaging." }, revising:{ email:"I have revised my email about {topic}: [paste revised version]. What further improvements can you suggest? Focus on tone and structure.", essay:"I have revised my essay paragraph on {topic}: [paste revised version]. Is the argument now clear? What else can be improved?", report:"I have revised this section of my report on {topic}: [paste revised version]. Is it now sufficiently formal and clear?", summary:"I have revised my summary of {topic}: [paste revised version]. Is it concise and accurate? What would you change?", presentation:"I have revised my speaker notes on {topic}: [paste revised version]. Are they now clear and engaging? Suggest any final improvements." }, editing:{ email:"I have proofread my email about {topic}: [paste version]. Are there any remaining errors in grammar, punctuation, or style?", essay:"I have corrected my essay on {topic}: [paste version]. Please do a final check for any remaining language errors or inconsistencies.", report:"I have corrected my report section on {topic}: [paste version]. Please confirm it is now error-free and professionally written.", summary:"I have edited my summary of {topic}: [paste version]. Please do a final language check.", presentation:"I have edited my slides on {topic}: [paste version]. Please do a final check for any errors or awkward phrasing." } }
+  },
+  { name:"Few-shot", tip:"<strong>Few-shot prompting</strong> gives the AI one or more examples before your actual request. This dramatically improves the quality and format of the output.",
+    templates:{ prewriting:{ email:"Example brainstorm for 'Meeting postponement': 1) Apologise for inconvenience, 2) State new date/time, 3) Offer to answer questions.\nNow brainstorm an email about {topic} in the same format.", essay:"Example thesis for 'Social media and mental health': 'While social media provides connection, its addictive design poses significant risks to adolescent mental health.'\nNow write a thesis for an essay on {topic}.", report:"Example section heading: '1.1 Background and Context'\nNow suggest five section headings for a report on {topic} in the same formal style.", summary:"Example plan — Main idea: Climate change is accelerating | Detail 1: Rising temperatures | Detail 2: Policy responses | Conclusion: Urgent action needed.\nNow create a summary plan for {topic}.", presentation:"Example — Slide 1: Title: 'What is AI?' Hook: 'Machines that think?' | Slide 2: How AI works.\nNow create a 3-slide outline for a presentation on {topic}." }, drafting:{ email:"Example opening: 'Dear Ms. Korhonen, I am writing to inform you of a change to our scheduled meeting on 14 May.'\nNow write an opening sentence for an email about {topic}.", essay:"Example hook: 'Every day, millions of people hand personal decisions to algorithms they cannot see and do not understand.'\nNow write a hook sentence for an essay on {topic}.", report:"Example opening: 'This report examines the impact of remote working on employee productivity in Finnish SMEs between 2020 and 2024.'\nNow write an opening sentence for an executive summary on {topic}.", summary:"Example: 'This article argues that AI is transforming healthcare. The authors present evidence from three hospital case studies showing reduced diagnostic errors.'\nNow write a summary paragraph for {topic} in the same style.", presentation:"Example note: 'Good morning everyone. Today I want to show you why renewable energy is not just an environmental issue — it is an economic one.'\nNow write an opening speaker note for a presentation on {topic}." }, revising:{ email:"Before: 'I am writing because I want to ask about the job.'\nAfter: 'I am writing to enquire about the project manager position advertised on your website.'\nNow revise this sentence from my email about {topic}: [paste sentence]", essay:"Before: 'AI is used in many things and it affects society.'\nAfter: 'Artificial intelligence is reshaping healthcare, education, and employment at an unprecedented pace.'\nNow revise a weak sentence from my essay on {topic}: [paste sentence]", report:"Before: 'The results were good.'\nAfter: 'The results demonstrated a 23% improvement in efficiency across all test sites.'\nNow revise a vague sentence from my report on {topic}: [paste sentence]", summary:"Before: 'The article talks about climate change.'\nAfter: 'The article analyses three policy-level responses to accelerating climate change in northern Europe.'\nNow revise this sentence from my summary of {topic}: [paste sentence]", presentation:"Before: 'AI is important.'\nAfter: 'AI is already making decisions that affect your career, your health, and your daily life.'\nNow revise this weak slide point from my presentation on {topic}: [paste point]" }, editing:{ email:"Error: 'I would like to ask you that can we meet' → Corrected: 'I would like to ask whether we could meet'\nNow identify and correct errors in this sentence from my email about {topic}: [paste sentence]", essay:"Error: 'The researches shows that AI have many benefits' → Corrected: 'The research shows that AI has many benefits'\nNow correct errors in this sentence from my essay on {topic}: [paste sentence]", report:"Error: 'alot of data was collected' → Corrected: 'A substantial amount of data was collected'\nNow correct errors in this sentence from my report on {topic}: [paste sentence]", summary:"Error: 'The article say that there is a big problem' → Corrected: 'The article argues that there is a significant problem'\nNow correct this sentence from my summary of {topic}: [paste sentence]", presentation:"Error: 'AI effect our lifes in many way' → Corrected: 'AI affects our lives in many ways'\nNow correct errors in this slide point from my presentation on {topic}: [paste point]" } }
+  }
+];
+
+let filteredCards = [...cards], currentCard = 0, isFlipped = false;
+let knownSet = new Set(), learningSet = new Set();
+let currentScenario = 0, ethicsScore = 0, ethicsAnswered = 0, selectedTechnique = null;
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filteredCards = cat === 'all' ? [...cards] : cards.filter(c => c.cat === cat);
+  currentCard = 0; updateCard();
+}
+
+function updateCard() {
+  if (!filteredCards.length) return;
+  const c = filteredCards[currentCard];
+  const labels = { basics:'AI Basics', genai:'Generative AI', ethics:'Ethics', history:'History' };
+  document.getElementById('cardTerm').textContent = c.term;
+  document.getElementById('cardCat').textContent = labels[c.cat] || c.cat;
+  document.getElementById('cardDef').textContent = c.def;
+  document.getElementById('cardEx').textContent = 'Example: "' + c.ex + '"';
+  document.getElementById('fcProgress').textContent = (currentCard+1) + ' / ' + filteredCards.length;
+  document.getElementById('fcProgressBar').style.width = ((currentCard+1)/filteredCards.length*100).toFixed(1)+'%';
+  document.getElementById('scoreTotal').textContent = filteredCards.length;
+  isFlipped = false;
+  document.getElementById('cardScene').classList.remove('flipped');
+  document.getElementById('knewControls').style.display = 'none';
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('cardScene').classList.toggle('flipped', isFlipped);
+  if (isFlipped) document.getElementById('knewControls').style.display = 'flex';
+}
+
+function nextCard() { if (currentCard < filteredCards.length-1) { currentCard++; updateCard(); } }
+function prevCard() { if (currentCard > 0) { currentCard--; updateCard(); } }
+
+function shuffleCards() {
+  for (let i = filteredCards.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [filteredCards[i],filteredCards[j]] = [filteredCards[j],filteredCards[i]];
+  }
+  currentCard = 0; updateCard();
+}
+
+function markCard(knew) {
+  const term = filteredCards[currentCard].term;
+  if (knew) { knownSet.add(term); learningSet.delete(term); }
+  else { learningSet.add(term); knownSet.delete(term); }
+  document.getElementById('scoreKnew').textContent = knownSet.size;
+  document.getElementById('scoreUnsure').textContent = learningSet.size;
+  if (currentCard < filteredCards.length-1) { currentCard++; updateCard(); }
+}
+
+function loadScenario(idx) {
+  const s = scenarios[idx];
+  document.getElementById('scenarioNum').textContent = 'Scenario ' + (idx+1);
+  document.getElementById('scenarioText').textContent = s.text;
+  document.getElementById('ethicsNum').textContent = idx+1;
+  document.getElementById('ethicsTotal').textContent = scenarios.length;
+  document.getElementById('ethicsScore').textContent = ethicsScore;
+  document.getElementById('ethicsAnswered').textContent = ethicsAnswered;
+  document.getElementById('ethicsBar').style.width = ((idx+1)/scenarios.length*100).toFixed(0)+'%';
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback-box'; fb.innerHTML = '';
+  document.querySelectorAll('.verdict-btn').forEach(b => b.classList.remove('selected'));
+}
+
+function judgeScenario(choice) {
+  const s = scenarios[currentScenario];
+  ethicsAnswered++;
+  if (choice === s.answer) ethicsScore++;
+  document.getElementById('ethicsScore').textContent = ethicsScore;
+  document.getElementById('ethicsAnswered').textContent = ethicsAnswered;
+  document.querySelectorAll('.verdict-btn').forEach(b => {
+    b.classList.remove('selected');
+    if (b.classList.contains('verdict-'+choice)) b.classList.add('selected');
+  });
+  const correct = choice === s.answer;
+  let icon, cls, label;
+  if (correct) { icon='✅'; cls='feedback-correct'; label='Correct!'; }
+  else if (s.answer==='grey') { icon='🟡'; cls='feedback-partial'; label="Close — it's a grey area"; }
+  else { icon='❌'; cls='feedback-wrong'; label='Not quite — the answer is: '+s.answer; }
+  const fb = document.getElementById('feedbackBox');
+  fb.className = 'feedback-box show '+cls;
+  fb.innerHTML = '<span style="margin-right:6px">'+icon+'</span><strong>'+label+'</strong><br>'+s.explanation;
+}
+
+function nextScenario() { if (currentScenario < scenarios.length-1) { currentScenario++; loadScenario(currentScenario); } }
+function prevScenario() { if (currentScenario > 0) { currentScenario--; loadScenario(currentScenario); } }
+
+let checklistStarted = false;
+
+function runChecklist() {
+  const items = document.querySelectorAll('.check-anim');
+  const labels = ['✔', '✔', '✔', '✔', '✔', '✔'];
+  items.forEach((item, i) => {
+    setTimeout(() => {
+      item.classList.add('ticking');
+      setTimeout(() => {
+        item.querySelector('.chk-box').textContent = '✔';
+        item.classList.remove('ticking');
+        item.classList.add('ticked');
+      }, 200);
+    }, i * 420);
+  });
+}
+
+function resetChecklist() {
+  document.querySelectorAll('.check-anim').forEach(item => {
+    item.classList.remove('ticked', 'ticking');
+    item.querySelector('.chk-box').textContent = '☐';
+  });
+  checklistStarted = false;
+}
+
+function updateSteps() {
+  const s1done = selectedTechnique !== null;
+  const s2done = s1done && document.getElementById('stageSelect').value && document.getElementById('typeSelect').value;
+  const s3done = s2done && document.getElementById('topicInput').value.trim();
+  const rows = [document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3'), document.getElementById('step4')];
+  const done = [s1done, s2done, s3done, false];
+  const active = [!s1done, s1done && !s2done, s2done && !s3done, s3done];
+  rows.forEach((r, i) => {
+    if (!r) return;
+    r.classList.toggle('done', done[i]);
+    r.classList.toggle('active', active[i]);
+  });
+  if (s3done && !checklistStarted) {
+    checklistStarted = true;
+    const step4 = document.getElementById('step4');
+    if (step4) { step4.classList.remove('done'); step4.classList.add('active'); }
+    setTimeout(runChecklist, 400);
+    setTimeout(() => {
+      const step4 = document.getElementById('step4');
+      if (step4) { step4.classList.remove('active'); step4.classList.add('done'); }
+    }, 400 + 6 * 420 + 300);
+  }
+  if (!s3done && checklistStarted) { resetChecklist(); }
+}
+
+function selectTechnique(idx) {
+  selectedTechnique = idx;
+  document.querySelectorAll('.technique-card').forEach((c,i) => c.classList.toggle('selected', i===idx));
+  const tip = document.getElementById('techniqueTip');
+  tip.className = 'tip-box show'; tip.innerHTML = techniques[idx].tip;
+  updatePreview();
+  updateSteps();
+}
+
+function updatePreview() {
+  if (selectedTechnique === null) return;
+  const stage = document.getElementById('stageSelect').value;
+  const type = document.getElementById('typeSelect').value;
+  const topic = document.getElementById('topicInput').value.trim();
+  const out = document.getElementById('promptOutput');
+  if (!stage || !type) { out.textContent = 'Choose a writing stage and text type to generate your prompt.'; return; }
+  const t = techniques[selectedTechnique];
+  let tmpl = (t.templates[stage] && t.templates[stage][type]) ? t.templates[stage][type] : 'No template for this combination yet.';
+  out.textContent = topic ? tmpl.replace(/{topic}/g, topic) : tmpl.replace(/{topic}/g, '[YOUR TOPIC]');
+  updateSteps();
+}
+
+function copyPrompt() {
+  navigator.clipboard.writeText(document.getElementById('promptOutput').textContent).then(() => {
+    const c = document.getElementById('copyConfirm');
+    c.style.display = 'inline';
+    setTimeout(() => c.style.display = 'none', 2000);
+  });
+}
+
+updateCard();
+loadScenario(0);
+</script>
+</body>
+</html>
