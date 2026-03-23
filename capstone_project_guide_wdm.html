@@ -281,7 +281,8 @@ a.ilink { color: var(--info); text-decoration: underline; }
   <button class="tab-btn" onclick="openTab(1)">🗺️ Paths</button>
   <button class="tab-btn" onclick="openTab(2)">⏱️ Workload</button>
   <button class="tab-btn" onclick="openTab(3)">🗂️ Steps 1–7</button>
-  <button class="tab-btn" onclick="openTab(4)">❓ Quiz</button>
+  <button class="tab-btn" onclick="openTab(4)">🏅 Grading</button>
+  <button class="tab-btn" onclick="openTab(5)">❓ Quiz</button>
 </nav>
 
 <!-- ═══════ TAB 0 – OVERVIEW ═══════ -->
@@ -882,15 +883,299 @@ a.ilink { color: var(--info); text-decoration: underline; }
     </div>
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="showStep(6)">← Back</button>
-      <button class="btn btn-primary" onclick="openTab(4)">Try the Quiz ❓</button>
+      <button class="btn btn-primary" onclick="openTab(5)">Try the Quiz ❓</button>
     </div>
   </div>
 
   <div class="back-to-top"><button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button></div>
 </div>
 
-<!-- ═══════ TAB 4 – QUIZ ═══════ -->
+<!-- ═══════ TAB 4 – GRADING ═══════ -->
 <div class="tab-panel" id="tab4">
+
+  <div class="sec-label">Grading Rubric</div>
+  <p style="font-size:15px;color:var(--muted);margin-bottom:14px">Select your path to see the relevant rubric. Both paths share the same core criteria; Path 2 adds an AI documentation criterion.</p>
+
+  <div class="option-cards" style="margin-bottom:16px">
+    <div class="option-card" id="rub1card" onclick="showRubric(1)">
+      <h4>🚫 Path 1 — Without AI</h4>
+      <p>5 criteria · all content self-generated</p>
+    </div>
+    <div class="option-card selected" id="rub2card" onclick="showRubric(2)">
+      <h4>🤖 Path 2 — With AI</h4>
+      <p>6 criteria · includes AI documentation</p>
+    </div>
+  </div>
+
+  <!-- Grade scale reference -->
+  <div class="accord open">
+    <div class="accord-head" onclick="handleAccord(this)">
+      <div class="accord-title">📊 Grade scale reference (0–5)</div>
+      <span class="accord-chev">▾</span>
+    </div>
+    <div class="accord-body">
+      <table class="gen-table">
+        <thead><tr><th>Grade</th><th>Label</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td><strong>5</strong></td><td>Excellent</td><td>Exceeds all expectations. Work is accurate, well-structured, and shows strong independent thinking and language use.</td></tr>
+          <tr><td><strong>4</strong></td><td>Good</td><td>Meets all expectations well. Minor gaps or weaknesses, but the overall quality is clearly satisfactory.</td></tr>
+          <tr><td><strong>3</strong></td><td>Satisfactory</td><td>Meets the basic requirements. Some noticeable weaknesses in content, language, or execution, but the core task is done.</td></tr>
+          <tr><td><strong>2</strong></td><td>Weak</td><td>Partially meets requirements. Significant gaps in content or language. The task is incomplete or unclear in important areas.</td></tr>
+          <tr><td><strong>1</strong></td><td>Poor</td><td>Does not meet most requirements. Major gaps throughout. Little evidence of understanding the task.</td></tr>
+          <tr><td><strong>0</strong></td><td>Not submitted / Fail</td><td>Section is missing, empty, or completely off-task.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RUBRIC: PATH 1 -->
+  <div id="rubric1" style="display:none;margin-top:8px">
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">1 — Content as instructed</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Does the submission include all required deliverables: 3 personas, 4 website pages (~400 words each), 4 promotional messages, peer feedback on 3+ sites, and a compiled PDF?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>All deliverables present and complete. All four pages meet the word count. Timeline has 6–8 dates. Survey has 15+ responses. Video is 3–4 min with edited captions. All 4 promotional messages posted. Peer feedback given on 3+ sites.</td></tr>
+            <tr><td><strong>4</strong></td><td>All deliverables present. One minor gap (e.g. slightly short word count on one page, 13–14 survey responses, or captions not fully edited).</td></tr>
+            <tr><td><strong>3</strong></td><td>Most deliverables present. Noticeable gaps — e.g. one page significantly underdeveloped, timeline missing, or fewer than 3 peer feedback responses.</td></tr>
+            <tr><td><strong>2</strong></td><td>Several deliverables missing or very incomplete. Two or more pages substantially below the word count. Survey or video absent.</td></tr>
+            <tr><td><strong>1</strong></td><td>Only a few deliverables attempted. Most pages or tasks missing.</td></tr>
+            <tr><td><strong>0</strong></td><td>Nothing submitted or submission is off-task.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">2 — Writing styles</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Does the writing demonstrate all four required styles: expository (How-to, Survey), persuasive (Products, How-to), narrative (About Us), and descriptive (Products)?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>All four styles used effectively and in the right pages. Narrative About Us has a clear story arc with tension. Products page is genuinely persuasive with a supported claim. How-to is logically structured. Survey page is analytical and expository.</td></tr>
+            <tr><td><strong>4</strong></td><td>All four styles present. One style is slightly underdeveloped or applied to the wrong page.</td></tr>
+            <tr><td><strong>3</strong></td><td>Two or three styles clearly present. One style largely missing or consistently misapplied.</td></tr>
+            <tr><td><strong>2</strong></td><td>Only one or two styles identifiable. Writing feels generic across most pages with little stylistic variation.</td></tr>
+            <tr><td><strong>1</strong></td><td>No clear evidence of intentional writing styles.</td></tr>
+            <tr><td><strong>0</strong></td><td>No assessable writing submitted.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">3 — Writing for the web and social media</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Is the website content structured for online reading? Are promotional messages suitable for social media?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>Website uses clear headings, short paragraphs, bullet/numbered lists, bold keywords, and white space consistently. All 4 promotional messages are concise, engaging, and include a clear call to action. Page summaries are present and well-written.</td></tr>
+            <tr><td><strong>4</strong></td><td>Most web-writing conventions applied well. Promotional messages are effective. Minor inconsistencies in formatting or one summary is weak.</td></tr>
+            <tr><td><strong>3</strong></td><td>Some web-writing conventions present but inconsistent. Promotional messages are functional but generic or too long. Summaries present but underdeveloped.</td></tr>
+            <tr><td><strong>2</strong></td><td>Little evidence of writing for the web — content reads like an essay. Promotional messages are weak or missing. Summaries absent.</td></tr>
+            <tr><td><strong>1</strong></td><td>No evidence of web-writing awareness.</td></tr>
+            <tr><td><strong>0</strong></td><td>No assessable content.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">4 — Language: accuracy and readability</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Is the English accurate, clear, and proofread? Grammar, punctuation, spelling, and plain English throughout.</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>Virtually error-free. Language is clear, natural, and appropriately formal. Plain English throughout — no unnecessary jargon. Easy to read and scan.</td></tr>
+            <tr><td><strong>4</strong></td><td>A few minor errors (spelling, punctuation) that do not affect understanding. Language is generally clear and appropriate.</td></tr>
+            <tr><td><strong>3</strong></td><td>Noticeable errors in grammar or punctuation that occasionally impede reading. Some sentences are awkward or overly complex.</td></tr>
+            <tr><td><strong>2</strong></td><td>Frequent errors that make parts of the text difficult to follow. Unclear or unidiomatic language throughout.</td></tr>
+            <tr><td><strong>1</strong></td><td>Pervasive language errors. Very difficult to understand.</td></tr>
+            <tr><td><strong>0</strong></td><td>No assessable language content.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">5 — Visual appeal</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Does the website look clean and professional? Images, timeline, and graphs included and appropriate?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>Website is visually engaging and well-organised. All required visuals present: timeline (About Us), images (Products + How-to), video embedded (How-to), graphs (Survey). Layout is consistent and professional within Google Sites' limitations.</td></tr>
+            <tr><td><strong>4</strong></td><td>Mostly visually appealing. All required visuals present. Minor inconsistencies in layout or one visual is weak.</td></tr>
+            <tr><td><strong>3</strong></td><td>Basic visual presentation. Some required visuals missing (e.g. no timeline or graphs). Layout is functional but not polished.</td></tr>
+            <tr><td><strong>2</strong></td><td>Little visual effort. Most required visuals absent. Site looks sparse or unfinished.</td></tr>
+            <tr><td><strong>1</strong></td><td>No meaningful visual presentation.</td></tr>
+            <tr><td><strong>0</strong></td><td>No website submitted.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top:12px">⚠️ Submitted files may be checked with AI detection tools. If AI use is detected, the grade may be significantly reduced.</div>
+
+  </div><!-- /rubric1 -->
+
+  <!-- RUBRIC: PATH 2 -->
+  <div id="rubric2" style="margin-top:8px">
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">1 — Content as instructed</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Does the submission include all required deliverables: 3 personas, 4 website pages, 4 promotional messages, peer feedback on 3+ sites, AI documentation, and a compiled PDF?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>All deliverables present and complete. All four pages meet the word count. Timeline has 6–8 dates. Survey has 15+ responses. Video is 3–4 min with edited captions. All 4 promotional messages posted. Peer feedback on 3+ sites. All AI documentation submitted.</td></tr>
+            <tr><td><strong>4</strong></td><td>All deliverables present. One minor gap (e.g. slightly short word count on one page, 13–14 survey responses, or captions not fully edited).</td></tr>
+            <tr><td><strong>3</strong></td><td>Most deliverables present. Noticeable gaps — e.g. one page significantly underdeveloped, timeline missing, or fewer than 3 peer feedback responses.</td></tr>
+            <tr><td><strong>2</strong></td><td>Several deliverables missing or very incomplete. Survey or video absent. AI documentation largely missing.</td></tr>
+            <tr><td><strong>1</strong></td><td>Only a few deliverables attempted. Most pages or tasks missing.</td></tr>
+            <tr><td><strong>0</strong></td><td>Nothing submitted or submission is off-task.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">2 — Writing styles</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Does the writing (whether AI-assisted or not) demonstrate all four required styles across the correct pages?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>All four styles used effectively and in the right pages. Narrative About Us has a clear story arc with tension. Products page is genuinely persuasive with a supported claim. How-to is logically structured. Survey page is analytical and expository.</td></tr>
+            <tr><td><strong>4</strong></td><td>All four styles present. One style slightly underdeveloped or applied to the wrong page.</td></tr>
+            <tr><td><strong>3</strong></td><td>Two or three styles clearly present. One style largely missing or consistently misapplied.</td></tr>
+            <tr><td><strong>2</strong></td><td>Only one or two styles identifiable. Writing feels generic across most pages.</td></tr>
+            <tr><td><strong>1</strong></td><td>No clear evidence of intentional writing styles.</td></tr>
+            <tr><td><strong>0</strong></td><td>No assessable writing submitted.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">3 — Writing for the web and social media</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Is the website content structured for online reading? Are promotional messages suitable for social media?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>Website uses clear headings, short paragraphs, bullet/numbered lists, bold keywords, and white space consistently. All 4 promotional messages are concise, engaging, and include a clear call to action. Page summaries are present and well-written.</td></tr>
+            <tr><td><strong>4</strong></td><td>Most web-writing conventions applied well. Promotional messages are effective. Minor inconsistencies in formatting or one summary is weak.</td></tr>
+            <tr><td><strong>3</strong></td><td>Some conventions present but inconsistent. Promotional messages functional but generic. Summaries present but underdeveloped.</td></tr>
+            <tr><td><strong>2</strong></td><td>Little evidence of writing for the web. Promotional messages weak or missing. Summaries absent.</td></tr>
+            <tr><td><strong>1</strong></td><td>No evidence of web-writing awareness.</td></tr>
+            <tr><td><strong>0</strong></td><td>No assessable content.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">4 — Language: accuracy and readability</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Is the final text accurate, clear, and well-proofread — regardless of whether AI was used to generate it?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>Virtually error-free. Language is clear and appropriately formal. Plain English throughout. Obvious that AI output was carefully reviewed, edited, and refined.</td></tr>
+            <tr><td><strong>4</strong></td><td>A few minor errors that do not affect understanding. Language is generally clear. AI output appears to have been reviewed.</td></tr>
+            <tr><td><strong>3</strong></td><td>Noticeable errors or awkward phrasing. Some signs of unedited AI output (generic tone, repetition, odd word choices).</td></tr>
+            <tr><td><strong>2</strong></td><td>Frequent errors or clearly unedited AI output submitted with little review or personalisation.</td></tr>
+            <tr><td><strong>1</strong></td><td>Pervasive language issues. Very difficult to understand. No evidence of editing.</td></tr>
+            <tr><td><strong>0</strong></td><td>No assessable language content.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">5 — Visual appeal</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Does the website look clean and professional? All required visuals included?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>Website is visually engaging and well-organised. All required visuals present: timeline, images, embedded video, graphs. AI-generated visuals (if used) are appropriate and well-integrated. Layout is consistent and professional.</td></tr>
+            <tr><td><strong>4</strong></td><td>Mostly visually appealing. All required visuals present. Minor inconsistencies or one visual is weak.</td></tr>
+            <tr><td><strong>3</strong></td><td>Basic visual presentation. Some required visuals missing. Layout functional but not polished.</td></tr>
+            <tr><td><strong>2</strong></td><td>Little visual effort. Most required visuals absent. Site looks sparse or unfinished.</td></tr>
+            <tr><td><strong>1</strong></td><td>No meaningful visual presentation.</td></tr>
+            <tr><td><strong>0</strong></td><td>No website submitted.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accord">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">6 — AI use: documentation and reflection</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-bottom:8px">Is the use of AI tools thoroughly explained, documented with screenshots, and reflected on across all three required texts (~900 words total)?</p>
+        <table class="gen-table">
+          <thead><tr><th>Grade</th><th>Descriptor</th></tr></thead>
+          <tbody>
+            <tr><td><strong>5</strong></td><td>All three reflective texts present and meet word counts (~300–350w tools explanation, ~300w prompting reflection, ~300w process reflection). Screenshots of prompts included. AI use_student document submitted. Reflections are thoughtful, specific, and honest about what worked and what didn't.</td></tr>
+            <tr><td><strong>4</strong></td><td>All three texts present, mostly meeting word counts. Screenshots included. Minor gaps in depth or specificity of reflection.</td></tr>
+            <tr><td><strong>3</strong></td><td>All three texts present but one or more is significantly underdeveloped. Screenshots missing or sparse. Reflection is general rather than specific.</td></tr>
+            <tr><td><strong>2</strong></td><td>Only one or two reflection texts submitted. AI use_student document missing. Little evidence of critical engagement with AI use.</td></tr>
+            <tr><td><strong>1</strong></td><td>AI documentation largely absent. Only superficial mention of AI use.</td></tr>
+            <tr><td><strong>0</strong></td><td>No AI documentation submitted despite choosing Path 2.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /rubric2 -->
+
+  <div class="back-to-top"><button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button></div>
+</div>
+
+<!-- ═══════ TAB 5 – QUIZ ═══════ -->
+<div class="tab-panel" id="tab5">
 
   <div class="sec-label">Quick Knowledge Check</div>
   <p style="font-size:15px;color:var(--muted);margin-bottom:14px">Test your understanding of the assignment. You can retry as many times as you like.</p>
@@ -925,6 +1210,14 @@ function selectOption(n) {
   document.getElementById('opt2card').classList.toggle('selected', n===2);
   document.getElementById('opt1detail').style.display = n===1 ? 'block' : 'none';
   document.getElementById('opt2detail').style.display = n===2 ? 'block' : 'none';
+}
+
+// ── RUBRIC SELECTOR ───────────────────────────────────
+function showRubric(n) {
+  document.getElementById('rub1card').classList.toggle('selected', n===1);
+  document.getElementById('rub2card').classList.toggle('selected', n===2);
+  document.getElementById('rubric1').style.display = n===1 ? 'block' : 'none';
+  document.getElementById('rubric2').style.display = n===2 ? 'block' : 'none';
 }
 
 // ── STEPS ─────────────────────────────────────────────
