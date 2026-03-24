@@ -58,7 +58,29 @@ body {
   font-size: 15px; font-weight: 500; padding: 4px 12px;
   border-radius: 20px; background: rgba(45,189,182,0.15);
   color: #1a8a85; border: 1px solid rgba(45,189,182,0.4);
+  position: relative; cursor: default;
 }
+.pill:hover .pill-tip {
+  opacity: 1; pointer-events: none;
+}
+.pill-tip {
+  opacity: 0; transition: opacity .18s;
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: #1a2e2d; color: #fff; font-size: 12.5px; font-weight: 400;
+  padding: 6px 10px; border-radius: 7px; white-space: nowrap;
+  pointer-events: none; z-index: 999;
+  box-shadow: 0 3px 10px rgba(0,0,0,.18);
+}
+.pill-tip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: #1a2e2d;
+}
+/* First pill: anchor left so tooltip doesn't overflow left edge */
+.pill:first-child .pill-tip { left: 0; transform: none; }
+.pill:first-child .pill-tip::after { left: 20px; transform: none; }
+/* Last pill: anchor right so tooltip doesn't overflow right edge */
+.pill:last-child .pill-tip { left: auto; right: 0; transform: none; }
+.pill:last-child .pill-tip::after { left: auto; right: 15px; transform: none; }
 .hero-credit { font-size: 13px; opacity: .65; margin-top: 1rem; line-height: 1.5; color: #333; }
 .hero-credit a { color: #1a8a85; }
 
@@ -305,11 +327,11 @@ a.ilink { color: var(--info); text-decoration: underline; }
   <h1>Capstone Project<br>Interactive Guide</h1>
   <p class="hero-sub">Understand the assignment, track your progress, and complete every step with confidence.</p>
   <div class="hero-pills">
-    <span class="pill">~30–35 hours</span>
-    <span class="pill">Graded 0–5</span>
-    <span class="pill">4-page website</span>
-    <span class="pill">Your Work</span>
-    <span class="pill">PAIRR framework</span>
+    <span class="pill">~30–35 hours<span class="pill-tip">Estimated total workload across all phases</span></span>
+    <span class="pill">Graded 0–5<span class="pill-tip">Five criteria, each scored 0–5</span></span>
+    <span class="pill">4-page website<span class="pill-tip">About Us · Products · How to Use · Survey Results</span></span>
+    <span class="pill">Your Work<span class="pill-tip">Use AI or not — transparency is what matters</span></span>
+    <span class="pill">PAIRR framework<span class="pill-tip">Peer review + AI feedback + compare + revise</span></span>
   </div>
   <div class="hero-credit">
     The feedback and reflection process in this assignment is inspired by PAIRR:
