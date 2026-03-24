@@ -443,17 +443,24 @@ a.ilink { color: var(--info); text-decoration: underline; }
 
   <div class="sec-label">Your Work</div>
 
-  <p style="font-size:15px;color:var(--muted);margin-bottom:16px">You are free to use AI tools or work without them — what matters is the <strong>quality of your final website</strong> and that you are <strong>transparent about your process</strong>.</p>
-
-  <div class="alert alert-green" style="margin-bottom:10px">
-    <strong>AI use is acceptable.</strong> Use any tools that help you think, write, or create — ChatGPT, Copilot, Gemini, Ideogram, and others. If you use AI, note it briefly in your PDF submission (see the AI &amp; Your Work section below).
-  </div>
-  <div class="alert alert-info" style="margin-bottom:16px">
-    <strong>GDPR note:</strong> Use your @lab or @lut email to access AI tools where possible (e.g. Microsoft Copilot in protected mode). Do not share sensitive personal information with AI tools.
+  <div class="accord">
+    <div class="accord-head" onclick="handleAccord(this)">
+      <div class="accord-title">ℹ️ AI use and your work — read first</div>
+      <span class="accord-chev">▾</span>
+    </div>
+    <div class="accord-body">
+      <p style="font-size:15px;color:var(--muted);margin-bottom:16px">You are free to use AI tools or work without them — what matters is the <strong>quality of your final website</strong> and that you are <strong>transparent about your process</strong>.</p>
+      <div class="alert alert-green" style="margin-bottom:10px">
+        <strong>AI use is acceptable.</strong> Use any tools that help you think, write, or create — ChatGPT, Copilot, Gemini, Ideogram, and others. If you use AI, note it briefly in your PDF submission (see the AI &amp; Your Work section below).
+      </div>
+      <div class="alert alert-info" style="margin-bottom:0">
+        <strong>GDPR note:</strong> Use your @lab or @lut email to access AI tools where possible (e.g. Microsoft Copilot in protected mode). Do not share sensitive personal information with AI tools.
+      </div>
+    </div>
   </div>
 
   <!-- Writing Spectrum -->
-  <div class="accord open">
+  <div class="accord">
     <div class="accord-head" onclick="handleAccord(this)">
       <div class="accord-title">📊 The Writing Spectrum — where does your work sit?</div>
       <span class="accord-chev">▾</span>
@@ -554,50 +561,56 @@ a.ilink { color: var(--info); text-decoration: underline; }
 
   <div class="sec-label">Workload Breakdown</div>
 
-  <p style="font-size:16px;color:var(--muted);margin-bottom:16px">The total workload is estimated at <strong>~30–35 hours</strong>.</p>
-
-  <table class="gen-table" style="margin-bottom:16px">
-    <thead>
-      <tr>
-        <th style="width:45%">Project Phase</th>
-        <th>What is involved</th>
-        <th style="width:15%">Approx. time</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Research &amp; Ideation</strong><br><span style="font-size:13px;color:var(--muted)">Personas, business idea, Redish readings</span></td>
-        <td style="color:var(--muted);font-size:14px">Reading course materials, brainstorming your organisation, developing personas</td>
-        <td style="color:var(--accent-text);font-weight:600">4 hrs</td>
-      </tr>
-      <tr>
-        <td><strong>Content Production</strong><br><span style="font-size:13px;color:var(--muted)">~1,600 words across four pages</span></td>
-        <td style="color:var(--muted);font-size:14px">Writing, prompting, editing, and personalising — however you work</td>
-        <td style="color:var(--accent-text);font-weight:600">8–14 hrs</td>
-      </tr>
-      <tr>
-        <td><strong>Media &amp; Technical</strong><br><span style="font-size:13px;color:var(--muted)">Google Sites, timeline, survey, video</span></td>
-        <td style="color:var(--muted);font-size:14px">Building the site, recording and uploading the video, running the survey</td>
-        <td style="color:var(--accent-text);font-weight:600">8 hrs</td>
-      </tr>
-      <tr>
-        <td><strong>Review &amp; Finalising</strong><br><span style="font-size:13px;color:var(--muted)">Peer feedback, revisions, PDF submission</span></td>
-        <td style="color:var(--muted);font-size:14px">Proofreading, peer feedback, revising, writing AI transparency statement, compiling PDF</td>
-        <td style="color:var(--accent-text);font-weight:600">5–7 hrs</td>
-      </tr>
-      <tr style="background:var(--accent-light)">
-        <td><strong>Total</strong></td>
-        <td style="color:var(--accent-text);font-weight:600">—</td>
-        <td style="color:var(--accent-text);font-weight:700">~31–35 hrs</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="alert alert-info">
-    <strong>Note:</strong> AI can speed up content production, but reviewing, editing, and personalising AI output still takes meaningful time.
+  <div class="accord">
+    <div class="accord-head" onclick="handleAccord(this)">
+      <div class="accord-title">⏱️ Estimated workload — ~30–35 hours</div>
+      <span class="accord-chev">▾</span>
+    </div>
+    <div class="accord-body">
+      <p style="font-size:15px;color:var(--muted);margin-bottom:16px">The total workload is estimated at <strong>~30–35 hours</strong>.</p>
+      <table class="gen-table" style="margin-bottom:16px">
+        <thead>
+          <tr>
+            <th style="width:45%">Project Phase</th>
+            <th>What is involved</th>
+            <th style="width:15%">Approx. time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Research &amp; Ideation</strong><br><span style="font-size:13px;color:var(--muted)">Personas, business idea, Redish readings</span></td>
+            <td style="color:var(--muted);font-size:14px">Reading course materials, brainstorming your organisation, developing personas</td>
+            <td style="color:var(--accent-text);font-weight:600">4 hrs</td>
+          </tr>
+          <tr>
+            <td><strong>Content Production</strong><br><span style="font-size:13px;color:var(--muted)">~1,600 words across four pages</span></td>
+            <td style="color:var(--muted);font-size:14px">Writing, prompting, editing, and personalising — however you work</td>
+            <td style="color:var(--accent-text);font-weight:600">8–14 hrs</td>
+          </tr>
+          <tr>
+            <td><strong>Media &amp; Technical</strong><br><span style="font-size:13px;color:var(--muted)">Google Sites, timeline, survey, video</span></td>
+            <td style="color:var(--muted);font-size:14px">Building the site, recording and uploading the video, running the survey</td>
+            <td style="color:var(--accent-text);font-weight:600">8 hrs</td>
+          </tr>
+          <tr>
+            <td><strong>Review &amp; Finalising</strong><br><span style="font-size:13px;color:var(--muted)">Peer feedback, revisions, PDF submission</span></td>
+            <td style="color:var(--muted);font-size:14px">Proofreading, peer feedback, revising, writing AI transparency statement, compiling PDF</td>
+            <td style="color:var(--accent-text);font-weight:600">5–7 hrs</td>
+          </tr>
+          <tr style="background:var(--accent-light)">
+            <td><strong>Total</strong></td>
+            <td style="color:var(--accent-text);font-weight:600">—</td>
+            <td style="color:var(--accent-text);font-weight:700">~31–35 hrs</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-info">
+        <strong>Note:</strong> AI can speed up content production, but reviewing, editing, and personalising AI output still takes meaningful time.
+      </div>
+    </div>
   </div>
 
-  <div class="accord" style="margin-top:14px">
+  <div class="accord" style="margin-top:8px">
     <div class="accord-head" onclick="handleAccord(this)">
       <div class="accord-title">📝 What counts toward each phase?</div>
       <span class="accord-chev">▾</span>
@@ -683,7 +696,6 @@ a.ilink { color: var(--info); text-decoration: underline; }
             <li>Pain points and challenges</li>
             <li>How your product/service helps them</li>
           </ul>
-          <p style="margin-top:8px">See resources: <em>Personas</em>, <em>Personas vs. Archetypes</em>, <em>Buyer Personas</em> (linked in Moodle).</p>
         </div>
       </div>
     </div>
@@ -762,6 +774,9 @@ a.ilink { color: var(--info); text-decoration: underline; }
         </div>
       </div>
     </div>
+      <div class="alert alert-warn" style="margin-top:10px">
+        📌 <strong>Before moving on:</strong> Publish the page, add a <strong>brief summary</strong>, and include the notice: <em>"This website is a learning project created in the Writing for Digital Media course at LAB University of Applied Sciences/LUT University"</em>
+      </div>
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="showStep(1)">← Back</button>
       <button class="btn btn-primary" onclick="showStep(3)">Next: Promotional Post →</button>
@@ -827,6 +842,9 @@ a.ilink { color: var(--info); text-decoration: underline; }
       </div>
       <div class="alert alert-info" style="margin-top:8px">After publishing this page, post <strong>Message 2</strong> in your discussion thread — announcing the update and promoting the product/service.</div>
     </div>
+      <div class="alert alert-warn" style="margin-top:10px">
+        📌 <strong>Before moving on:</strong> Publish the page, add a <strong>brief summary</strong>, and include the notice: <em>"This website is a learning project created in the Writing for Digital Media course at LAB University of Applied Sciences/LUT University"</em>
+      </div>
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="showStep(3)">← Back</button>
       <button class="btn btn-primary" onclick="showStep(5)">Next: How-to Page →</button>
@@ -874,6 +892,9 @@ a.ilink { color: var(--info); text-decoration: underline; }
       </div>
       <div class="alert alert-info" style="margin-top:8px">After publishing, post <strong>Message 3</strong> in your discussion thread.</div>
     </div>
+      <div class="alert alert-warn" style="margin-top:10px">
+        📌 <strong>Before moving on:</strong> Publish the page, add a <strong>brief summary</strong>, and include the notice: <em>"This website is a learning project created in the Writing for Digital Media course at LAB University of Applied Sciences/LUT University"</em>
+      </div>
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="showStep(4)">← Back</button>
       <button class="btn btn-primary" onclick="showStep(6)">Next: Survey & Data →</button>
@@ -914,12 +935,14 @@ a.ilink { color: var(--info); text-decoration: underline; }
           <ul>
             <li>~400 words — describe what the data shows and what it means</li>
             <li>Include graphs based on your collected data</li>
-            <li>See resources: <em>Write a Data Commentary</em>, <em>Language Focus: Data Commentary</em></li>
           </ul>
         </div>
       </div>
       <div class="alert alert-info" style="margin-top:8px">After publishing, post <strong>Message 4</strong> in your discussion thread.</div>
     </div>
+      <div class="alert alert-warn" style="margin-top:10px">
+        📌 <strong>Before moving on:</strong> Publish the page, add a <strong>brief summary</strong>, and include the notice: <em>"This website is a learning project created in the Writing for Digital Media course at LAB University of Applied Sciences/LUT University"</em>
+      </div>
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="showStep(5)">← Back</button>
       <button class="btn btn-primary" onclick="showStep(7)">Next: Finalise →</button>
@@ -1138,7 +1161,7 @@ a.ilink { color: var(--info); text-decoration: underline; }
   
 
   <!-- Grade scale reference -->
-  <div class="accord open">
+  <div class="accord">
     <div class="accord-head" onclick="handleAccord(this)">
       <div class="accord-title">📊 Grade scale reference (0–5)</div>
       <span class="accord-chev">▾</span>
