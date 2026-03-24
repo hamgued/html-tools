@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Writing – Readings Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --border: #d8d8d8;
+  --text: #1a1a1a;
+  --muted: #555555;
+  --accent: #2DBDB6;
+  --accent-light: #e0f7f6;
+  --accent-text: #1a8a85;
+  --warn: #92400e;
+  --warn-bg: #fef3c7;
+  --warn-border: #fcd34d;
+  --danger: #991b1b;
+  --danger-bg: #fef2f2;
+  --danger-border: #fca5a5;
+  --info: #1a8a85;
+  --info-bg: #e0f7f6;
+  --info-border: #7dd8d4;
+  --green-bg: #e8f5ee;
+  --green-text: #1a4731;
+  --green-border: #2d6a4f;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+.wrapper { max-width: 880px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+
+/* HERO */
+.hero {
+  background: #ffffff;
+  color: #1a1a1a;
+  border-radius: 14px;
+  padding: 1.75rem 2rem 1.5rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  border: 2.5px solid #2DBDB6;
+}
+.hero-tag { font-size: 14px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; opacity: .7; margin-bottom: 7px; color: #1a8a85; }
+.hero h1 { font-family: 'Lora', serif; font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 600; line-height: 1.2; margin-bottom: 8px; }
+.hero-sub { font-size: 17px; opacity: .75; max-width: 572px; line-height: 1.6; color: #333333; }
+.hero-pills { display: flex; gap: 8px; margin-top: 1.1rem; flex-wrap: wrap; }
+.pill {
+  font-size: 15px; font-weight: 500; padding: 4px 12px;
+  border-radius: 20px; background: rgba(45,189,182,0.15);
+  color: #1a8a85; border: 1px solid rgba(45,189,182,0.4);
+  position: relative; cursor: default;
+}
+.pill:hover .pill-tip { opacity: 1; }
+.pill-tip {
+  opacity: 0; transition: opacity .18s;
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: #1a2e2d; color: #fff; font-size: 12.5px; font-weight: 400;
+  padding: 6px 10px; border-radius: 7px; white-space: nowrap;
+  pointer-events: none; z-index: 999;
+  box-shadow: 0 3px 10px rgba(0,0,0,.18);
+}
+.pill-tip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: #1a2e2d;
+}
+.pill:first-child .pill-tip { left: 0; transform: none; }
+.pill:first-child .pill-tip::after { left: 20px; transform: none; }
+.pill:last-child .pill-tip { left: auto; right: 0; transform: none; }
+.pill:last-child .pill-tip::after { left: auto; right: 15px; transform: none; }
+.hero-credit { font-size: 13px; opacity: .65; margin-top: 1rem; line-height: 1.5; color: #333; }
+.hero-credit a { color: #1a8a85; }
+
+/* TABS */
+.tabs-nav {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 5px; margin-bottom: 1.25rem;
+}
+.tab-btn {
+  flex: 1; min-width: 90px; padding: 8px 10px;
+  border: none; background: transparent; border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+  color: var(--muted); cursor: pointer; transition: all .15s; white-space: nowrap; text-align: center;
+}
+.tab-btn:hover { background: var(--bg); color: var(--text); }
+.tab-btn.active { background: var(--accent); color: #fff; }
+.tab-panel { display: none; animation: fadeIn .2s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+
+/* SEC LABEL */
+.sec-label {
+  font-family: 'Lora', serif; font-size: 21px; font-weight: 600;
+  color: var(--text); margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ALERTS */
+.alert {
+  border-radius: var(--radius-sm); padding: 11px 14px;
+  font-size: 16px; line-height: 1.6; margin-bottom: 10px; border-left: 3px solid;
+}
+.alert-info  { background: var(--info-bg); color: var(--info); border-color: var(--info-border); }
+.alert-green { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); }
+.alert-warn  { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
+
+/* ACCORDION */
+.accord {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 8px; overflow: hidden;
+}
+.accord-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; cursor: pointer; user-select: none; transition: background .15s;
+  background: #e0f7f6;
+}
+.accord-head:hover { background: #c8f2f0; }
+.accord-title { font-size: 17px; font-weight: 500; flex: 1; }
+.accord-chev { color: var(--muted); font-size: 20px; transition: transform .2s; flex-shrink: 0; }
+.accord.open .accord-chev { transform: rotate(180deg); }
+.accord-body { display: none; padding: 4px 16px 16px; font-size: 16px; color: var(--muted); border-top: 1px solid var(--bg); }
+.accord.open .accord-body { display: block; }
+.accord-body p { margin-top: 8px; }
+.accord-body ul { padding-left: 18px; margin-top: 6px; }
+.accord-body li { margin-bottom: 5px; }
+
+/* BUTTONS */
+.btn {
+  display: inline-block; padding: 9px 20px; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+  cursor: pointer; border: none; transition: all .15s; text-decoration: none;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-text); }
+.btn-ghost { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent-text); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* READING CARDS */
+.reading-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 10px; overflow: hidden;
+}
+.reading-head {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px; cursor: pointer; transition: background .15s;
+}
+.reading-head:hover { background: #fafafa; }
+.reading-num {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  background: var(--accent-light); color: var(--accent-text);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; margin-top: 2px;
+}
+.reading-meta { flex: 1; }
+.reading-title { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 3px; }
+.reading-byline { font-size: 14px; color: var(--muted); }
+.reading-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.badge {
+  font-size: 12px; font-weight: 500; padding: 2px 9px; border-radius: 20px;
+  background: var(--accent-light); color: var(--accent-text); border: 1px solid var(--accent);
+}
+.badge-warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
+.badge-neutral { background: var(--bg); color: var(--muted); border-color: var(--border); }
+.reading-chev { color: var(--muted); font-size: 20px; transition: transform .2s; flex-shrink: 0; margin-top: 4px; }
+.reading-card.open .reading-chev { transform: rotate(180deg); }
+.reading-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--bg); }
+.reading-card.open .reading-body { display: block; }
+.reading-body p { font-size: 16px; color: var(--muted); line-height: 1.65; margin-top: 10px; }
+.reading-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 12px; padding: 8px 16px; background: var(--accent); color: #fff;
+  border-radius: 8px; font-size: 15px; font-weight: 500; text-decoration: none;
+  transition: background .15s;
+}
+.reading-link:hover { background: var(--accent-text); }
+.reading-when { margin-top: 10px; font-size: 14px; color: var(--muted); font-style: italic; }
+
+/* QUIZ */
+.quiz-q { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
+.quiz-source { font-size: 13px; color: var(--muted); font-weight: 400; display: block; margin-top: 4px; }
+.quiz-opts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.quiz-opt {
+  padding: 11px 14px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--surface); cursor: pointer; font-size: 16px; line-height: 1.5;
+  transition: all .15s; text-align: left;
+}
+.quiz-opt:hover { border-color: var(--accent); background: var(--accent-light); }
+.quiz-opt.correct { border-color: var(--green-border); background: var(--green-bg); color: var(--green-text); cursor: default; }
+.quiz-opt.wrong   { border-color: var(--danger-border); background: var(--danger-bg); color: var(--danger); cursor: default; }
+.quiz-opt.disabled { cursor: default; }
+.quiz-fb { font-size: 15px; padding: 10px 14px; border-radius: 8px; margin-top: 8px; display: none; }
+.quiz-fb.show { display: block; }
+.quiz-fb.ok  { background: var(--green-bg); color: var(--green-text); border: 1px solid var(--green-border); }
+.quiz-fb.err { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.quiz-score { font-size: 14px; color: var(--muted); font-weight: 500; }
+.quiz-progress { height: 5px; background: var(--border); border-radius: 3px; margin-bottom: 18px; }
+.quiz-progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .3s; }
+.quiz-complete { text-align: center; padding: 2rem 0; }
+.quiz-complete .score-big { font-family: 'Lora', serif; font-size: 3rem; font-weight: 600; color: var(--accent-text); }
+.quiz-complete .score-label { font-size: 17px; color: var(--muted); margin-top: 6px; }
+.quiz-section-label {
+  font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); margin: 18px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border);
+}
+
+/* TERMS */
+
+.term-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px;
+  display: flex; gap: 12px; align-items: flex-start; transition: border-color .15s;
+}
+.term-card:hover { border-color: var(--accent); }
+.term-card.hidden { display: none; }
+.term-dot {
+  width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+  flex-shrink: 0; margin-top: 8px;
+}
+.term-word { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.term-def { font-size: 16px; color: var(--muted); line-height: 1.6; }
+.term-source { font-size: 13px; color: var(--accent-text); margin-top: 4px; }
+
+/* BACK TO TOP */
+.back-to-top { text-align: right; margin-top: 24px; }
+.back-to-top button {
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 14px; font-family: 'DM Sans', sans-serif; padding: 4px 0;
+}
+.back-to-top button:hover { color: var(--accent-text); }
+
+/* ILINK */
+a.ilink { color: var(--accent-text); text-decoration: underline; }
+
+/* TABLE */
+.gen-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 15px; }
+.gen-table th { background: var(--accent-light); color: var(--accent-text); padding: 9px 12px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--accent); }
+.gen-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+.gen-table tr:last-child td { border-bottom: none; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Writing for Digital Media</div>
+  <h1>Web Writing Readings Guide</h1>
+  <p class="hero-sub">15 articles from Nielsen Norman Group — the world's leading web usability researchers. Read them, test yourself, and learn the key terms.</p>
+  <div class="hero-pills">
+    <span class="pill">18 articles<span class="pill-tip">All freely available on nngroup.com</span></span>
+    <span class="pill">~8–12 min each<span class="pill-tip">Estimated reading time at B2 level</span></span>
+    <span class="pill">3 quizzes<span class="pill-tip">One per reading group</span></span>
+    <span class="pill">40 key terms<span class="pill-tip">Searchable glossary with simple definitions</span></span>
+  </div>
+  <p class="hero-credit">Course by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> · LAB University of Applied Sciences / LUT University</p>
+</div>
+
+<!-- TABS -->
+<div class="tabs-nav">
+  <button class="tab-btn active" onclick="openTab(0)">📖 Readings</button>
+  <button class="tab-btn" onclick="openTab(1)">✅ Quizzes</button>
+  <button class="tab-btn" onclick="openTab(2)">🔤 Key Terms</button>
+</div>
+
+<!-- ═══════ TAB 0 – READINGS ═══════ -->
+<div class="tab-panel active" id="tab0">
+
+  <div class="sec-label">The 15 Readings</div>
+
+  <div class="alert alert-info" style="margin-bottom:14px">
+    All articles are free to read at <strong>nngroup.com</strong>. Click any reading below to see a summary and the link. The readings are organised into four groups that follow the course structure.
+  </div>
+
+  <!-- GROUP 1 -->
+  <p style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px">Group 1 — Before you write anything</p>
+
+  <div class="reading-card" id="r1">
+    <div class="reading-head" onclick="toggleReading('r1')">
+      <div class="reading-num">1</div>
+      <div class="reading-meta">
+        <div class="reading-title">How Users Read on the Web</div>
+        <div class="reading-byline">Jakob Nielsen · 1997 · ~3 min</div>
+        <div class="reading-badges"><span class="badge">Foundational</span><span class="badge-neutral badge">Scanning</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>This is the most important article in the list. Nielsen studied how people actually read websites — and discovered that <strong>79% of users scan</strong> rather than read word by word. Only 16% read everything. This completely changes how you should write. If you write long paragraphs with no structure, most readers will miss your message.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/how-users-read-on-the-web/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r2">
+    <div class="reading-head" onclick="toggleReading('r2')">
+      <div class="reading-num">2</div>
+      <div class="reading-meta">
+        <div class="reading-title">Be Succinct! Writing for the Web</div>
+        <div class="reading-byline">Jakob Nielsen · 1997 · ~4 min</div>
+        <div class="reading-badges"><span class="badge">Foundational</span><span class="badge-neutral badge">Word count</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>People read 25% more slowly on screen than on paper. They also dislike scrolling. Nielsen's advice: write <strong>50% fewer words</strong> than you would in a printed document. This does not mean cutting information — it means being direct and starting with the most important point first.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/be-succinct-writing-for-the-web/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r3">
+    <div class="reading-head" onclick="toggleReading('r3')">
+      <div class="reading-num">3</div>
+      <div class="reading-meta">
+        <div class="reading-title">Writing for the Web vs. Writing for Print</div>
+        <div class="reading-byline">Jakob Nielsen · 2008 · ~5 min</div>
+        <div class="reading-badges"><span class="badge">Foundational</span><span class="badge-neutral badge">Web vs print</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>Print is linear — the author leads the reader from beginning to end. The web is different: readers arrive at any page, skip around, and pursue their own goals. They are <strong>not following your story</strong> — they are hunting for specific information. This article explains why web writing is a genuinely different skill, not just "shorter essays".</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/writing-style-tips-multiple-content-levels/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <!-- GROUP 2 -->
+  <p style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px">Group 2 — Core principles</p>
+
+  <div class="reading-card" id="r4">
+    <div class="reading-head" onclick="toggleReading('r4')">
+      <div class="reading-num">4</div>
+      <div class="reading-meta">
+        <div class="reading-title">Concise, SCANNABLE, and Objective: How to Write for the Web</div>
+        <div class="reading-byline">Morkes & Nielsen · 1997 · ~12 min</div>
+        <div class="reading-badges"><span class="badge">Core research</span><span class="badge-warn badge">Longer read</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>The research study behind the three key principles of web writing. Nielsen and Morkes tested five different versions of the same website and measured how well users could find information. The version that combined concise, scannable, and non-promotional writing scored <strong>124% higher</strong> in usability. This is the evidence base for almost everything in this course.</p>
+      <p>⚠️ This article is longer and more academic than the others. It is worth reading carefully — the before/after text examples are especially useful.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/concise-scannable-and-objective-how-to-write-for-the-web/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r5">
+    <div class="reading-head" onclick="toggleReading('r5')">
+      <div class="reading-num">5</div>
+      <div class="reading-meta">
+        <div class="reading-title">Inverted Pyramids in Cyberspace</div>
+        <div class="reading-byline">Jakob Nielsen · 1996 · ~2 min</div>
+        <div class="reading-badges"><span class="badge">Core principle</span><span class="badge-neutral badge">Structure</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>A very short article with one important idea: <strong>start with the conclusion</strong>. In traditional essay writing, you build up to the main point. On the web, you do the opposite — give readers the most important information first, then add details below. This structure is called the inverted pyramid. If readers leave early, they still got the key message.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/inverted-pyramids-in-cyberspace/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r6">
+    <div class="reading-head" onclick="toggleReading('r6')">
+      <div class="reading-num">6</div>
+      <div class="reading-meta">
+        <div class="reading-title">Inverted Pyramid: Writing for Comprehension</div>
+        <div class="reading-byline">Hoa Loranger · 2017 · ~6 min</div>
+        <div class="reading-badges"><span class="badge">Core principle</span><span class="badge-neutral badge">Structure</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>A deeper look at the inverted pyramid structure with practical examples. This article shows how to apply the "conclusion first" principle to web pages of different types — not just news articles. Read this alongside article #5 for a more complete understanding of how to structure your web pages.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/inverted-pyramid/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <!-- GROUP 3 -->
+  <p style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px">Group 3 — How readers move through pages</p>
+
+  <div class="reading-card" id="r7">
+    <div class="reading-head" onclick="toggleReading('r7')">
+      <div class="reading-num">7</div>
+      <div class="reading-meta">
+        <div class="reading-title">F-Shaped Pattern of Reading on the Web</div>
+        <div class="reading-byline">Jakob Nielsen · 2006, updated 2017 · ~8 min</div>
+        <div class="reading-badges"><span class="badge">Eyetracking research</span><span class="badge-neutral badge">Layout</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>Using eyetracking cameras, researchers recorded exactly where people look on a web page. The result: a shape like the letter <strong>F</strong>. People read across the top, then a shorter line lower down, then scan the left side vertically. Important content placed on the right side or at the bottom is often missed completely. The article also explains that <em>good writing changes the pattern</em> — structured pages with subheadings produce better results.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r8">
+    <div class="reading-head" onclick="toggleReading('r8')">
+      <div class="reading-num">8</div>
+      <div class="reading-meta">
+        <div class="reading-title">Text Scanning Patterns: Eyetracking Evidence</div>
+        <div class="reading-byline">Kara Pernice · 2019 · ~8 min</div>
+        <div class="reading-badges"><span class="badge">Eyetracking research</span><span class="badge-neutral badge">Scanning patterns</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>An update to the F-pattern research. Pernice identifies four scanning patterns: the F-pattern (for unformatted text), the spotted pattern (jumping to words that stand out), the layer-cake pattern (scanning only headings), and the commitment pattern (actually reading everything). The layer-cake pattern is the best outcome for a well-structured page. It shows why <strong>descriptive subheadings</strong> are the most important tool a web writer has.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/text-scanning-patterns-eyetracking/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <!-- GROUP 4 -->
+  <p style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px">Group 4 — Writing at the right length</p>
+
+  <div class="reading-card" id="r9">
+    <div class="reading-head" onclick="toggleReading('r9')">
+      <div class="reading-num">9</div>
+      <div class="reading-meta">
+        <div class="reading-title">How Much Do Users Read?</div>
+        <div class="reading-byline">Jakob Nielsen · 2008 · ~3 min</div>
+        <div class="reading-badges"><span class="badge">Reading behaviour</span><span class="badge-neutral badge">Word count</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>Short and sobering. On an average web page visit, users read at most <strong>28% of the words</strong> — and more likely only 20%. This does not mean you should write almost nothing. It means you should structure your writing so that the 20% users do read contains the most important information. A good test: does your page still make sense if someone only reads the headings and the first sentence of each paragraph?</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/how-little-do-users-read/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r10">
+    <div class="reading-head" onclick="toggleReading('r10')">
+      <div class="reading-num">10</div>
+      <div class="reading-meta">
+        <div class="reading-title">UX Copy Sizes: Long-Form, Short-Form, and Microcopy</div>
+        <div class="reading-byline">Nielsen Norman Group · 2025 · ~7 min</div>
+        <div class="reading-badges"><span class="badge">Content design</span><span class="badge-neutral badge">Copy types</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>A useful framework: not all web writing is the same length or purpose. <strong>Long-form</strong> copy (a full page) tells a complete story. <strong>Short-form</strong> copy (2–3 paragraphs) communicates one idea quickly. <strong>Microcopy</strong> (under 3 sentences — button labels, captions, short instructions) guides users in the moment. Understanding which type you need helps you decide how much to write. For your capstone website, most pages will use a combination of all three.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/ux-copy-sizes/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r11">
+    <div class="reading-head" onclick="toggleReading('r11')">
+      <div class="reading-num">11</div>
+      <div class="reading-meta">
+        <div class="reading-title">Long-Form Articles: Techniques that Improve Comprehension</div>
+        <div class="reading-byline">Nielsen Norman Group · 2023 · ~8 min</div>
+        <div class="reading-badges"><span class="badge">Content design</span><span class="badge-neutral badge">Longer content</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>When a page exceeds 1,000 words, readers need extra help to navigate it. This article covers practical techniques: summaries at the top, callout boxes for key points, strategic use of bold text, and helpful visuals. Directly useful for your Survey Results page, where you need to present data and analysis — the longest and most complex writing task in the capstone.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/long-form-content-comprehension/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <!-- GROUP 5 -->
+  <p style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px">Group 5 — Before drafting: language, tone, structure</p>
+
+  <div class="reading-card" id="r12">
+    <div class="reading-head" onclick="toggleReading('r12')">
+      <div class="reading-num">12</div>
+      <div class="reading-meta">
+        <div class="reading-title">Plain Language Is for Everyone, Even Experts</div>
+        <div class="reading-byline">Pernice & Whitenton · 2017 · ~7 min</div>
+        <div class="reading-badges"><span class="badge">Language</span><span class="badge-neutral badge">Plain language</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>Many students think that using complex vocabulary makes writing sound more professional or intelligent. This research shows the opposite: even highly educated professionals — doctors, IT managers — <strong>prefer plain, direct language</strong> when reading online. Plain language is not about writing for beginners. It is about respecting your reader's time. The article includes real examples and quotes from experts who were tested in usability studies.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/plain-language-experts/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r13">
+    <div class="reading-head" onclick="toggleReading('r13')">
+      <div class="reading-num">13</div>
+      <div class="reading-meta">
+        <div class="reading-title">The Four Dimensions of Tone of Voice</div>
+        <div class="reading-byline">Kate Moran · 2016 · ~6 min</div>
+        <div class="reading-badges"><span class="badge">Tone & voice</span><span class="badge-neutral badge">Style</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>Tone of voice is not just about "formal vs. informal". This article presents a four-part model: <strong>humour, formality, respectfulness, and enthusiasm</strong>. Every piece of web writing sits somewhere on each of these scales. Understanding this helps you make deliberate choices — especially on your About Us page, where tone defines your brand's personality. A company selling children's toys and a law firm use very different tones, and both can be done well.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/tone-of-voice-dimensions/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r14">
+    <div class="reading-head" onclick="toggleReading('r14')">
+      <div class="reading-num">14</div>
+      <div class="reading-meta">
+        <div class="reading-title">Headings Are Pick-Up Lines: 5 Tips for Writing Headlines</div>
+        <div class="reading-byline">Jakob Nielsen · 2015 · ~6 min</div>
+        <div class="reading-badges"><span class="badge">Headings</span><span class="badge-neutral badge">Scannability</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>Your headings are the first — and sometimes only — thing readers look at. This article explains why headings are so powerful and gives five practical rules: be descriptive, front-load the key word, avoid "clever" or vague headings, keep them short, and use parallel structure when you have multiple headings on the same page. You can check all your capstone page headings against this list before you submit.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/headings-pickup-lines/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <!-- GROUP 6 -->
+  <p style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px">Group 6 — Writing for a specific page type</p>
+
+  <div class="reading-card" id="r15">
+    <div class="reading-head" onclick="toggleReading('r15')">
+      <div class="reading-num">15</div>
+      <div class="reading-meta">
+        <div class="reading-title">"About Us" Information on Websites</div>
+        <div class="reading-byline">Jakob Nielsen · 2019 · ~13 min</div>
+        <div class="reading-badges"><span class="badge">About Us pages</span><span class="badge-warn badge">Longer read</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>Research on what users actually want from an About Us page — and how companies typically fail to provide it. Users want to know: who are you, what do you do, are you trustworthy, and why should I choose you? They compare the About Us page with external reviews and look for signs of authenticity. This article is directly relevant to Step 3 of the capstone (your About Us page) and gives you a practical checklist of what to include.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/about-us-information-on-websites/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r16">
+    <div class="reading-head" onclick="toggleReading('r16')">
+      <div class="reading-num">16</div>
+      <div class="reading-meta">
+        <div class="reading-title">Tips for Better Product Descriptions on Websites</div>
+        <div class="reading-byline">Nielsen Norman Group · ~8 min</div>
+        <div class="reading-badges"><span class="badge">Products pages</span><span class="badge-neutral badge">E-commerce</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>Research on what makes product descriptions work — and why so many fail. Nielsen found that 20% of all failed online purchases were caused by incomplete or unclear product descriptions. Users cannot touch, try, or ask questions about a product online, so the text has to do that work. The article gives three core requirements: answer the user's questions, be direct, and help with comparison. Directly relevant to your Products/Services page in the capstone.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/product-descriptions/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r17">
+    <div class="reading-head" onclick="toggleReading('r17')">
+      <div class="reading-num">17</div>
+      <div class="reading-meta">
+        <div class="reading-title">Writing to Attract Readers: User-centric vs. Maker-centric Language</div>
+        <div class="reading-byline">Nielsen Norman Group · ~7 min</div>
+        <div class="reading-badges"><span class="badge">Products pages</span><span class="badge-neutral badge">Language</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>A practical article about the difference between writing from the <em>organisation's</em> point of view versus the <em>reader's</em> point of view. Maker-centric language lists features using internal jargon ("Ortholite® insole", "Aegis® antimicrobial treatment"). User-centric language explains the benefit clearly ("comfortable foam insole you can wash", "keeps your shoes fresh longer"). The article shows before-and-after examples of real product descriptions. Directly applicable to both your About Us and Products pages.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/user-centric-language/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="reading-card" id="r18">
+    <div class="reading-head" onclick="toggleReading('r18')">
+      <div class="reading-num">18</div>
+      <div class="reading-meta">
+        <div class="reading-title">Homepage Design: 5 Fundamental Principles</div>
+        <div class="reading-byline">Nielsen Norman Group · 2024 · ~9 min</div>
+        <div class="reading-badges"><span class="badge">Homepage</span><span class="badge-neutral badge">Site structure</span></div>
+      </div>
+      <span class="reading-chev">▾</span>
+    </div>
+    <div class="reading-body">
+      <p>A homepage has one job: tell visitors who you are, what you offer, and why it matters — fast. This article covers the five principles behind effective homepage design, with a focus on content decisions rather than visual design. Key points include placing important content above the fold, providing specific examples rather than vague category labels, and writing calls to action that describe what actually happens when you click. Useful for thinking about how your Google Sites website presents itself as a whole.</p>
+      <a class="reading-link" href="https://www.nngroup.com/articles/homepage-design-principles/" target="_blank">↗ Read on nngroup.com</a>
+    </div>
+  </div>
+
+  <div class="back-to-top"><button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button></div>
+</div>
+
+<!-- ═══════ TAB 1 – QUIZZES ═══════ -->
+<div class="tab-panel" id="tab1">
+  <div class="sec-label">Knowledge Checks</div>
+  <p style="font-size:16px;color:var(--muted);margin-bottom:16px">Three short quizzes — one per reading group. Try each after you have read those articles. You can retake any quiz as many times as you like.</p>
+
+  <div class="accord" id="qz1accord">
+    <div class="accord-head" onclick="handleAccord(this)">
+      <div class="accord-title">📚 Quiz A — How people read online (Readings 1–3)</div>
+      <span class="accord-chev">▾</span>
+    </div>
+    <div class="accord-body">
+      <div id="quizA"></div>
+    </div>
+  </div>
+
+  <div class="accord" id="qz2accord">
+    <div class="accord-head" onclick="handleAccord(this)">
+      <div class="accord-title">🔬 Quiz B — Core writing principles (Readings 4–8)</div>
+      <span class="accord-chev">▾</span>
+    </div>
+    <div class="accord-body">
+      <div id="quizB"></div>
+    </div>
+  </div>
+
+  <div class="accord" id="qz3accord">
+    <div class="accord-head" onclick="handleAccord(this)">
+      <div class="accord-title">✍️ Quiz C — Length, tone, and headings (Readings 9–15)</div>
+      <span class="accord-chev">▾</span>
+    </div>
+    <div class="accord-body">
+      <div id="quizC"></div>
+    </div>
+  </div>
+
+  <div class="back-to-top"><button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button></div>
+</div>
+
+<!-- ═══════ TAB 2 – KEY TERMS ═══════ -->
+<div class="tab-panel" id="tab2">
+  <div class="sec-label">Key Terms</div>
+  <p style="font-size:16px;color:var(--muted);margin-bottom:12px">40 terms from the readings, in alphabetical order. Click any term to see its definition.</p>
+
+
+
+  <div id="termsContainer"></div>
+
+  <div class="back-to-top"><button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button></div>
+</div>
+
+</div><!-- /wrapper -->
+
+<script>
+// ── TABS ──────────────────────────────────────────────
+function openTab(n) {
+  document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i===n));
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===n));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── ACCORDIONS ────────────────────────────────────────
+function handleAccord(el) {
+  el.closest('.accord').classList.toggle('open');
+}
+
+// ── READING CARDS ─────────────────────────────────────
+function toggleReading(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// ── TERMS DATA ────────────────────────────────────────
+const terms = [
+  { word: "Above the fold", def: "The part of a web page that is visible without scrolling. Content placed here gets the most attention. The most important information on a page should appear above the fold." },
+  { word: "Audience", def: "The people who will read your web page. Before writing anything, you should clearly define who your audience is, what they need, and why they are visiting the page." },
+  { word: "Brand voice", def: "The consistent personality and style that an organisation uses in all its communication. Brand voice stays the same across every page; tone can change depending on context." },
+  { word: "Bullet points", def: "Short items in a list, each starting with a dot or symbol. Bullet points help readers scan a page quickly and make complex information easier to process." },
+  { word: "Callout", def: "A visually highlighted box within a long article that draws attention to a key point or summary. Callouts help readers who scan pick up important information without reading everything." },
+  { word: "Chunking", def: "Dividing text into small, clearly separated sections — each with its own heading or visual break. Chunking makes pages easier to scan and understand." },
+  { word: "Cognitive load", def: "The amount of mental effort required to read and understand something. Dense, poorly structured text creates high cognitive load. Short, clear, scannable text reduces it." },
+  { word: "Commitment pattern", def: "A scanning pattern where a user actually reads almost every word on a page. This is rare on the web and usually only happens when the reader is highly motivated or the topic is very relevant." },
+  { word: "Content hierarchy", def: "The organisation of information from most important to least important. A clear content hierarchy helps readers understand what to read first and what they can skip." },
+  { word: "Credibility", def: "How trustworthy a website appears to readers. Good writing, accurate information, an authentic About Us page, and links to other sources all increase credibility." },
+  { word: "Eyetracking", def: "A research method that records exactly where a person's eyes move when they look at a screen. It produces heatmaps showing which parts of a page people look at most and which parts they ignore." },
+  { word: "F-pattern", def: "An eye movement pattern observed in eyetracking research. Without good formatting, users typically read across the top of the page, a shorter line lower down, then scan down the left side — forming an F shape." },
+  { word: "Formality", def: "One of the four dimensions of tone. Formal writing uses complete sentences and professional vocabulary. Informal writing feels more like natural conversation." },
+  { word: "Front-loading", def: "Placing the most important word at the very beginning of a heading, sentence, or paragraph. This ensures readers who only scan the first few words still get the main message." },
+  { word: "Information scent", def: "The signals in a heading or link that tell readers what they will find if they continue reading or click. Strong information scent means readers can predict what is coming next. Weak scent causes confusion." },
+  { word: "Inverted pyramid", def: "A writing structure where you put the most important information first, then add supporting details below. On the web, readers may leave at any moment — so give them the key message immediately." },
+  { word: "Jargon", def: "Words or phrases that are specific to a particular industry or group, and are not easily understood by people outside that group. Plain language guidelines generally recommend avoiding jargon unless your entire audience will understand it." },
+  { word: "Layer-cake pattern", def: "A scanning pattern where users jump from heading to heading without reading the text in between, until they find the section they need. It is a sign that a page has clear, useful subheadings." },
+  { word: "Long-form copy", def: "A complete, multi-paragraph web page that covers a topic in full. Long-form copy usually needs extra help — summaries, callouts, and clear subheadings — so readers do not get lost." },
+  { word: "Marketese", def: "Over-promotional, exaggerated language on websites — phrases like 'world-class' or 'the best ever'. Research shows users distrust this kind of writing and it reduces usability." },
+  { word: "Microcopy", def: "Very short web text — typically under three sentences — that appears in buttons, labels, error messages, and captions. Microcopy guides users through an interaction in the moment." },
+  { word: "Plain language", def: "Writing that uses simple, common words and short sentences so that readers can understand the message quickly on the first read. Plain language is appropriate for all audiences, including experts." },
+  { word: "Product description", def: "Text on a product page that explains what a product is, what it does, and why a reader should want it. Good product descriptions are complete, direct, and written in terms of benefits to the user — not just a list of features." },
+  { word: "Scannability", def: "How easy it is to read a page quickly and still understand the main message. Headings, short paragraphs, bullet points, and bold words all improve scannability." },
+  { word: "Scanning", def: "Reading quickly by jumping between headings, bold words, and the beginnings of paragraphs — rather than reading every word. This is how most web users read." },
+  { word: "Short-form copy", def: "Web text of two to three paragraphs that communicates one main idea. It is shorter than a full-page article but longer than microcopy." },
+  { word: "Spotted pattern", def: "A scanning pattern where users jump directly to visually distinctive elements — bold words, links, numbers — and skip everything else." },
+  { word: "Subheading", def: "A smaller heading within a page section that helps readers understand what each part covers. Descriptive subheadings are one of the most effective tools for improving scannability." },
+  { word: "Tone of voice", def: "The personality of a piece of writing — how formal, enthusiastic, respectful, or humorous it is. Different organisations use different tones, and the tone should match the audience and purpose." },
+  { word: "Usability", def: "How easy and efficient it is for a user to complete a task on a website. Good usability means users can find information quickly and without confusion." },
+  { word: "User-centric language", def: "Writing that focuses on what the product or service does for the reader — rather than on the organisation's own features or internal terminology. User-centric language is direct, benefit-focused, and avoids jargon." },
+  { word: "UX writing", def: "The practice of writing text that is part of a user interface — buttons, navigation labels, error messages, instructions, and other text that guides users through a website or app." },
+  { word: "Value proposition", def: "A short, clear statement that explains what an organisation offers, who it is for, and why it is better or different than alternatives. A strong value proposition is usually the first thing users should see on a website." },
+  { word: "White space", def: "Empty space on a page that has no text or images. White space is not wasted — it helps readers process information by giving their eyes a rest and separating different sections." },
+  { word: "Word count", def: "The number of words on a web page. Research shows web pages should use roughly 50% fewer words than a printed document on the same topic, because reading on screen is slower and users scan rather than read." },
+  { word: "Word-by-word reading", def: "Reading every single word in order from beginning to end. Nielsen found that only 16% of web users do this on any given page. Most users scan instead." },
+  { word: "Above-the-fold content", def: "Information that is immediately visible when a page loads, before the user scrolls. This is the most valuable real estate on a web page — important messages should appear here." },
+  { word: "Call to action (CTA)", def: "A word, phrase, or button that tells the reader what to do next — for example 'Buy now', 'Learn more', or 'Contact us'. A good CTA is specific and clearly describes what will happen when the user clicks." },
+  { word: "Link text", def: "The clickable words in a hyperlink. Good link text describes clearly where the link goes or what it does. Vague link text like 'click here' or 'read more' gives users no information about what they will find." },
+  { word: "Page title", def: "The main heading at the top of a web page. A good page title tells users exactly what the page is about in as few words as possible. Page titles also appear in search engine results, so they affect findability." },
+];
+
+function renderTerms(list) {
+  const c = document.getElementById('termsContainer');
+  const sorted = [...list].sort((a,b) => a.word.localeCompare(b.word));
+  c.innerHTML = sorted.map(t => `
+    <div class="accord term-accord" data-word="${t.word.toLowerCase()} ${t.def.toLowerCase()}">
+      <div class="accord-head" onclick="handleAccord(this)">
+        <div class="accord-title">${t.word}</div>
+        <span class="accord-chev">▾</span>
+      </div>
+      <div class="accord-body">
+        <p style="margin-top:0;color:var(--text)">${t.def}</p>
+      </div>
+    </div>`).join('');
+}
+renderTerms(terms);
+
+
+
+// ── QUIZ ENGINE ───────────────────────────────────────
+const quizData = {
+  A: [
+    {
+      q: "According to Nielsen's research, what percentage of web users scan pages rather than read word by word?",
+      source: "Reading 1 — How Users Read on the Web",
+      opts: ["About 40%", "About 55%", "About 79%", "About 95%"],
+      correct: 2,
+      fb: "Correct! Nielsen found that 79% of users scan — only 16% read word by word. This is one of the most important findings in web usability research."
+    },
+    {
+      q: "Nielsen recommends writing approximately how many words compared to a printed document on the same topic?",
+      source: "Reading 2 — Be Succinct!",
+      opts: ["The same amount", "About 75%", "About 50%", "About 25%"],
+      correct: 2,
+      fb: "Correct! Nielsen recommends 50% fewer words. Reading on screen is 25% slower, and users also dislike scrolling — so shorter text improves the experience significantly."
+    },
+    {
+      q: "What is the key difference between web writing and print writing according to Reading 3?",
+      source: "Reading 3 — Writing for the Web vs. Writing for Print",
+      opts: [
+        "Web writing should use more images and less text",
+        "Print is linear and author-driven; web readers pursue their own goals and can arrive at any page",
+        "Web writing needs to be more formal than print",
+        "Print documents should be shorter than web pages"
+      ],
+      correct: 1,
+      fb: "Correct! Print follows a linear, author-led story. Web readers are goal-driven — they arrive at any page, skip around, and hunt for specific information. This is why web writing needs a completely different approach."
+    },
+    {
+      q: "Why do users dislike 'marketese' (promotional language) on websites?",
+      source: "Readings 1 & 2",
+      opts: [
+        "It makes pages load more slowly",
+        "It is too informal for professional contexts",
+        "It is too long and wastes reading time",
+        "It reduces credibility and distracts users from finding information"
+      ],
+      correct: 3,
+      fb: "Correct! Users distrust exaggerated, promotional language. It makes them question whether the information is accurate, and it distracts them from finding what they actually need."
+    },
+  ],
+  B: [
+    {
+      q: "In Nielsen and Morkes's study, how much did usability improve when concise, scannable, and objective writing were combined?",
+      source: "Reading 4 — Concise, SCANNABLE, and Objective",
+      opts: ["27%", "58%", "100%", "124%"],
+      correct: 3,
+      fb: "Correct! The combined version scored 124% higher in usability. Each improvement alone was significant (scannable: +47%, concise: +58%, objective: +27%), but the combination was most powerful."
+    },
+    {
+      q: "What does the inverted pyramid structure mean in web writing?",
+      source: "Readings 5 & 6 — Inverted Pyramid",
+      opts: [
+        "Use more images than text",
+        "Start with background information and build up to the main point",
+        "Put the most important information first, then add details",
+        "Write longer pages for more important topics"
+      ],
+      correct: 2,
+      fb: "Correct! The inverted pyramid means starting with the conclusion or the most important information. Background details and supporting information come after. If readers leave early, they have still received the key message."
+    },
+    {
+      q: "What does the F-pattern in eyetracking research describe?",
+      source: "Reading 7 — F-Shaped Pattern",
+      opts: [
+        "Users read the page from bottom to top",
+        "Users focus mainly on images and skip text",
+        "Users read across the top, a shorter line lower, then scan down the left side",
+        "Users only read the first and last paragraph"
+      ],
+      correct: 2,
+      fb: "Correct! Without good formatting, users typically make two horizontal movements across the top of the page, then scan vertically down the left side — forming an F shape. Content on the right or at the bottom is often missed."
+    },
+    {
+      q: "Which scanning pattern indicates that a page is well structured with clear headings?",
+      source: "Reading 8 — Text Scanning Patterns",
+      opts: ["F-pattern", "Spotted pattern", "Layer-cake pattern", "Commitment pattern"],
+      correct: 2,
+      fb: "Correct! The layer-cake pattern — where users jump between headings — indicates that the page has clear, descriptive subheadings that allow efficient navigation. It is a sign of good web writing."
+    },
+    {
+      q: "What is 'information scent'?",
+      source: "Readings 7 & 8",
+      opts: [
+        "The visual design of a website",
+        "The signals in a heading or link that tell readers what they will find if they continue reading or click",
+        "The number of words on a page",
+        "The reading speed of a typical web user"
+      ],
+      correct: 1,
+      fb: "Correct! Information scent refers to the signals — usually in headings, subheadings, and link text — that help readers predict what comes next. Strong information scent keeps readers on track; weak scent causes confusion."
+    },
+  ],
+  C: [
+    {
+      q: "On an average web page visit, approximately what percentage of words do users read?",
+      source: "Reading 9 — How Much Do Users Read?",
+      opts: ["About 70%", "About 50%", "About 28%", "About 10%"],
+      correct: 2,
+      fb: "Correct! Nielsen found that users read at most 28% of the words — and more likely only 20%. This means your page structure needs to work even for readers who only skim the headings and opening sentences."
+    },
+    {
+      q: "What is microcopy?",
+      source: "Reading 10 — UX Copy Sizes",
+      opts: [
+        "Very small font text used for legal disclaimers",
+        "Text under three sentences that guides users in the moment — such as button labels, captions, and short instructions",
+        "Text written for mobile screens only",
+        "The brief summary at the top of a long article"
+      ],
+      correct: 1,
+      fb: "Correct! Microcopy is the shortest category of web text — typically under three sentences. It includes button labels, error messages, form instructions, image captions, and any other small text that guides users through an interaction."
+    },
+    {
+      q: "Which of the following is the best example of plain language?",
+      source: "Reading 12 — Plain Language Is for Everyone",
+      opts: [
+        "'Utilising our comprehensive suite of innovative solutions, we facilitate synergistic outcomes.'",
+        "'We help small businesses grow by giving them simple, practical tools.'",
+        "'Our avant-garde methodology leverages disruptive paradigm shifts.'",
+        "'The optimisation of your operational efficiency is our paramount objective.'"
+      ],
+      correct: 1,
+      fb: "Correct! Plain language uses common words, short sentences, and a direct structure. Even highly educated readers prefer it online — it saves time and reduces misunderstanding."
+    },
+    {
+      q: "According to the four dimensions of tone of voice, which of these is NOT one of the four dimensions?",
+      source: "Reading 13 — Four Dimensions of Tone of Voice",
+      opts: ["Humour", "Formality", "Clarity", "Respectfulness"],
+      correct: 2,
+      fb: "Correct! The four dimensions are humour, formality, respectfulness, and enthusiasm. Clarity is important in web writing, but it is not one of the four tone dimensions — it is more of a general writing principle."
+    },
+    {
+      q: "What does 'front-loading' mean in web writing?",
+      source: "Reading 14 — Headings Are Pick-Up Lines",
+      opts: [
+        "Adding an introduction paragraph before every heading",
+        "Placing the most important word or idea at the very beginning of a heading or sentence",
+        "Putting images at the top of every page",
+        "Writing the conclusion of a page before the introduction"
+      ],
+      correct: 1,
+      fb: "Correct! Front-loading means putting the key word first. For example, 'Delivery options: next day and standard' front-loads 'Delivery options'. This ensures readers who scan just the first few words still get the main message."
+    },
+    {
+      q: "According to the research on About Us pages, what do users primarily look for?",
+      source: "Reading 15 — About Us Information on Websites",
+      opts: [
+        "The company's financial information and annual reports",
+        "A list of all employees and their job titles",
+        "Who the organisation is, what they do, and whether they are trustworthy and authentic",
+        "The technical specifications of the company's products"
+      ],
+      correct: 2,
+      fb: "Correct! Users visit About Us pages to establish trust and understand the organisation. They want to know: who are you, what do you actually do, are you reliable, and why should I choose you? Authenticity is especially important — users compare the About Us page with external reviews."
+    },
+  ]
+};
+
+const quizState = { A: {i:0,score:0}, B: {i:0,score:0}, C: {i:0,score:0} };
+
+function initQuiz(id) {
+  quizState[id] = {i:0, score:0};
+  renderQ(id);
+}
+
+function renderQ(id) {
+  const s = quizState[id];
+  const qs = quizData[id];
+  const el = document.getElementById('quiz'+id);
+  if (s.i >= qs.length) {
+    const pct = Math.round(s.score/qs.length*100);
+    const msg = pct >= 80 ? '🎉 Great work!' : pct >= 60 ? '👍 Good effort — try again to improve.' : '📖 Review the readings and try again.';
+    el.innerHTML = `<div class="quiz-complete">
+      <div class="score-big">${s.score}/${qs.length}</div>
+      <div class="score-label">${msg}</div>
+      <button class="btn btn-primary" style="margin-top:20px" onclick="initQuiz('${id}')">↺ Try again</button>
+    </div>`;
+    return;
+  }
+  const q = qs[s.i];
+  const prog = ((s.i)/qs.length*100);
+  el.innerHTML = `
+    <div class="quiz-progress"><div class="quiz-progress-fill" style="width:${prog}%"></div></div>
+    <div class="quiz-q">${q.q}<span class="quiz-source">${q.source}</span></div>
+    <div class="quiz-opts" id="opts_${id}">
+      ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQ('${id}',${i})">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-fb" id="fb_${id}"></div>
+    <div class="quiz-nav">
+      <span class="quiz-score">Question ${s.i+1} of ${qs.length} · Score: ${s.score}</span>
+      <button class="btn btn-primary" id="next_${id}" style="display:none" onclick="nextQ('${id}')">
+        ${s.i+1 < qs.length ? 'Next →' : 'See results'}
+      </button>
+    </div>`;
+}
+
+function answerQ(id, chosen) {
+  const q = quizData[id][quizState[id].i];
+  const opts = document.querySelectorAll(`#opts_${id} .quiz-opt`);
+  opts.forEach((o,i) => {
+    o.classList.add('disabled');
+    o.onclick = null;
+    if (i === q.correct) o.classList.add('correct');
+    else if (i === chosen && chosen !== q.correct) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('fb_'+id);
+  if (chosen === q.correct) {
+    quizState[id].score++;
+    fb.className = 'quiz-fb show ok';
+    fb.textContent = '✓ ' + q.fb;
+  } else {
+    fb.className = 'quiz-fb show err';
+    fb.textContent = '✗ Not quite. ' + q.fb;
+  }
+  document.getElementById('next_'+id).style.display = 'inline-block';
+}
+
+function nextQ(id) {
+  quizState[id].i++;
+  renderQ(id);
+}
+
+initQuiz('A'); initQuiz('B'); initQuiz('C');
+</script>
+</body>
+</html>
