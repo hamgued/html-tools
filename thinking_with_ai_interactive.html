@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thinking With AI — Interactive Reader</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #f5f0e8;
+    --cream: #ede8d8;
+    --accent: #8b2e2e;
+    --gold: #c9a84c;
+    --muted: #6b6258;
+    --chapter-bg: #1c1814;
+    --rule: #c9a84c44;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--chapter-bg);
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SHELL ── */
+  #shell {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: var(--chapter-bg);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #3a2e20;
+    overflow-y: auto;
+    transition: transform .35s ease;
+    z-index: 50;
+  }
+
+  .sidebar-header {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid #3a2e20;
+  }
+
+  .sidebar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--gold);
+    line-height: 1.3;
+    letter-spacing: .02em;
+  }
+
+  .sidebar-sub {
+    font-size: .72rem;
+    color: #7a6e60;
+    margin-top: 4px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .sidebar-author {
+    font-size: .78rem;
+    color: #9a8e7e;
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  .toc-section {
+    padding: 16px 0 8px;
+  }
+
+  .toc-section-label {
+    padding: 0 24px 6px;
+    font-size: .65rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #5a5048;
+  }
+
+  .toc-item {
+    display: block;
+    padding: 9px 24px;
+    font-size: .8rem;
+    color: #9a8e7e;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all .2s;
+    text-decoration: none;
+  }
+
+  .toc-item:hover {
+    color: var(--gold);
+    background: #ffffff08;
+    border-left-color: #3a2e20;
+  }
+
+  .toc-item.active {
+    color: var(--gold);
+    border-left-color: var(--gold);
+    background: #c9a84c10;
+  }
+
+  .toc-item .toc-num {
+    font-size: .65rem;
+    color: #5a5048;
+    display: block;
+    margin-bottom: 1px;
+    letter-spacing: .05em;
+  }
+
+  /* ── MAIN ── */
+  #main {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--paper);
+    position: relative;
+  }
+
+  /* ── SECTIONS ── */
+  .book-section {
+    display: none;
+    min-height: 100vh;
+  }
+
+  .book-section.visible {
+    display: block;
+    animation: fadein .4s ease;
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── CHAPTER HERO ── */
+  .chapter-hero {
+    background: var(--chapter-bg);
+    padding: 64px 60px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 40%, #c9a84c18 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .chapter-label {
+    font-size: .68rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    opacity: .8;
+  }
+
+  .chapter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: #f0e8d4;
+    line-height: 1.2;
+    max-width: 600px;
+  }
+
+  .chapter-subtitle {
+    margin-top: 14px;
+    font-size: .95rem;
+    color: #9a8e7e;
+    font-style: italic;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  .chapter-ornament {
+    margin-top: 28px;
+    width: 48px;
+    height: 1px;
+    background: var(--gold);
+    opacity: .5;
+  }
+
+  /* ── CONTENT ── */
+  .chapter-body {
+    padding: 48px 60px 80px;
+    max-width: 780px;
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    color: var(--ink);
+    margin: 44px 0 14px;
+    position: relative;
+    padding-left: 18px;
+  }
+
+  .section-heading::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 4px; bottom: 4px;
+    width: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .sub-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--accent);
+    margin: 28px 0 10px;
+  }
+
+  .prose {
+    font-size: .97rem;
+    line-height: 1.82;
+    color: #2a2420;
+    margin-bottom: 14px;
+  }
+
+  .prose strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ── CALLOUT / FRAMING BOX ── */
+  .callout {
+    margin: 28px 0;
+    padding: 22px 26px;
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+  }
+
+  .callout p {
+    font-size: .93rem;
+    line-height: 1.75;
+    color: #3a3028;
+    font-style: italic;
+  }
+
+  /* ── TRY THIS BOX ── */
+  .try-this {
+    margin: 32px 0;
+    border: 1px solid #d4c8b0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .try-this-header {
+    background: var(--accent);
+    color: #f8f0e0;
+    padding: 10px 20px;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-family: 'Source Serif 4', serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .try-this-header::before {
+    content: '◈';
+    font-size: .85rem;
+    opacity: .7;
+  }
+
+  .try-this-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    padding: 14px 20px 6px;
+    font-style: italic;
+  }
+
+  .try-this-body {
+    padding: 0 20px 18px;
+    font-size: .9rem;
+    line-height: 1.72;
+    color: #2a2420;
+  }
+
+  .try-this-body p { margin-bottom: 8px; }
+
+  .try-list {
+    margin: 8px 0 8px 18px;
+    font-size: .9rem;
+    line-height: 1.7;
+    color: #2a2420;
+  }
+
+  .try-list li { margin-bottom: 4px; }
+
+  /* ── ROLE CARDS ── */
+  .roles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 24px 0;
+  }
+
+  .role-card {
+    background: var(--cream);
+    border: 1px solid #d4c8b0;
+    border-radius: 4px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .role-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .role-card.c1::before { background: #8b2e2e; }
+  .role-card.c2::before { background: #b07d2a; }
+  .role-card.c3::before { background: #3d7a4a; }
+  .role-card.c4::before { background: #2a5a7a; }
+  .role-card.c5::before { background: #6a3d7a; }
+
+  .role-number {
+    font-size: .65rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #8a7e6e;
+    margin-bottom: 4px;
+  }
+
+  .role-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+  }
+
+  .role-stance {
+    font-size: .78rem;
+    font-style: italic;
+    color: var(--muted);
+    margin: 4px 0 8px;
+  }
+
+  .role-desc {
+    font-size: .82rem;
+    line-height: 1.65;
+    color: #3a3028;
+  }
+
+  /* ── WARNING SIGNS ── */
+  .warning-grid {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .warning-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 16px;
+    background: #fff9f0;
+    border: 1px solid #e0d4bc;
+    border-radius: 3px;
+  }
+
+  .warning-icon {
+    color: var(--accent);
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .warning-title {
+    font-family: 'Playfair Display', serif;
+    font-size: .88rem;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  .warning-desc {
+    font-size: .8rem;
+    color: var(--muted);
+    margin-top: 2px;
+    line-height: 1.55;
+  }
+
+  /* ── DIVIDER ── */
+  .ornamental-divider {
+    text-align: center;
+    color: var(--gold);
+    opacity: .5;
+    font-size: 1rem;
+    margin: 36px 0;
+    letter-spacing: .5em;
+  }
+
+  /* ── NAV BOTTOM ── */
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 60px;
+    border-top: 1px solid #d4c8b0;
+    background: var(--cream);
+  }
+
+  .nav-btn {
+    background: none;
+    border: 1px solid #c4b89e;
+    color: var(--muted);
+    padding: 10px 22px;
+    font-family: 'Source Serif 4', serif;
+    font-size: .82rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .2s;
+    letter-spacing: .02em;
+  }
+
+  .nav-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #f8f0e0;
+  }
+
+  .nav-btn:disabled {
+    opacity: .3;
+    cursor: default;
+  }
+
+  .nav-btn:disabled:hover {
+    background: none;
+    border-color: #c4b89e;
+    color: var(--muted);
+  }
+
+  .nav-progress {
+    font-size: .72rem;
+    color: #9a8e7e;
+    letter-spacing: .05em;
+  }
+
+  /* ── MOBILE HAMBURGER ── */
+  #menu-toggle {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    z-index: 200;
+    background: var(--chapter-bg);
+    border: 1px solid #3a2e20;
+    color: var(--gold);
+    width: 38px; height: 38px;
+    border-radius: 3px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── FOOTER CREDIT ── */
+  .footer-credit {
+    font-size: .72rem;
+    color: #9a8e7e;
+    text-align: center;
+    padding: 10px 0 24px;
+    background: var(--cream);
+    border-top: 1px solid #d4c8b0;
+  }
+
+  .footer-credit a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .footer-credit a:hover { text-decoration: underline; }
+
+
+  @media (max-width: 720px) {
+    #progress-bar { left: 0; }
+    #sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      transform: translateX(-100%);
+    }
+    #sidebar.open { transform: translateX(0); }
+    #menu-toggle { display: flex; }
+    .chapter-hero { padding: 56px 24px 40px; }
+    .chapter-body { padding: 32px 24px 60px; }
+    .roles-grid { grid-template-columns: 1fr; }
+    .chapter-nav { padding: 20px 24px; }
+  }
+
+  /* ── READING PROGRESS BAR ── */
+  #progress-bar {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    right: 0;
+    height: 3px;
+    background: var(--gold);
+    width: 0%;
+    transition: width .1s linear;
+    z-index: 999;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ── READING TIME BADGE ── */
+  .reading-time-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 18px;
+    padding: 5px 12px;
+    background: #ffffff12;
+    border: 1px solid #ffffff18;
+    border-radius: 20px;
+    font-size: .7rem;
+    color: #9a8e7e;
+    letter-spacing: .05em;
+  }
+  .reading-time-badge::before {
+    content: '◷';
+    font-size: .85rem;
+    color: var(--gold);
+    opacity: .7;
+  }
+
+  /* ── COLLAPSIBLE TRY-THIS ── */
+  .try-this-header { cursor: pointer; user-select: none; }
+  .try-this-header::after {
+    content: '▾';
+    float: right;
+    font-size: .9rem;
+    transition: transform .25s ease;
+    opacity: .7;
+  }
+  .try-this.collapsed .try-this-header::after { transform: rotate(-90deg); }
+  .try-this-collapsible {
+    overflow: hidden;
+    transition: max-height .35s ease, opacity .3s ease;
+    max-height: 1000px;
+    opacity: 1;
+  }
+  .try-this.collapsed .try-this-collapsible { max-height: 0; opacity: 0; }
+
+  /* ── DARK MODE TOGGLE ── */
+  #dark-toggle {
+    margin: 0 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px 0;
+    border-top: 1px solid #3a2e20;
+  }
+  .toggle-track {
+    width: 32px; height: 17px;
+    background: #3a2e20;
+    border-radius: 9px;
+    position: relative;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .toggle-thumb {
+    width: 13px; height: 13px;
+    background: #6a5e50;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px; left: 2px;
+    transition: left .2s, background .2s;
+  }
+  body.light-mode .toggle-track { background: var(--gold); }
+  body.light-mode .toggle-thumb { left: 17px; background: white; }
+  .toggle-label { font-size: .7rem; color: #6a5e50; letter-spacing: .04em; }
+
+  /* ── LIGHT MODE OVERRIDES ── */
+  body.light-mode { background: #e8e0d0; }
+  body.light-mode #sidebar { background: #2a2016; }
+  body.light-mode #main { background: #faf6ee; }
+  body.light-mode .chapter-hero { background: #2a2016; }
+  body.light-mode .callout { background: #f0ead8; }
+  body.light-mode .warning-item { background: #fff4e8; }
+  body.light-mode .chapter-nav,
+  body.light-mode .footer-credit { background: #f0ead8; }
+
+  /* ── ROLE SPECTRUM ── */
+  .role-spectrum {
+    margin: 32px 0;
+    padding: 24px;
+    background: var(--cream);
+    border-radius: 4px;
+    border: 1px solid #d4c8b0;
+  }
+  .spectrum-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: .68rem;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .spectrum-track {
+    position: relative;
+    height: 6px;
+    background: linear-gradient(to right, #8b2e2e, #b07d2a, #3d7a4a, #2a5a7a, #6a3d7a);
+    border-radius: 3px;
+    margin-bottom: 18px;
+    overflow: visible;
+  }
+  .spectrum-cursor {
+    position: absolute;
+    top: -5px;
+    width: 16px; height: 16px;
+    background: white;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    transition: left .3s ease;
+    pointer-events: none;
+  }
+  .spectrum-roles { display: flex; justify-content: space-between; gap: 4px; }
+  .spectrum-role {
+    flex: 1;
+    text-align: center;
+    font-size: .7rem;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 2px;
+    border-radius: 3px;
+    transition: background .2s, color .2s;
+  }
+  .spectrum-role:hover, .spectrum-role.active { background: #d4c8b0; color: var(--ink); }
+  .spectrum-role .sr-name { font-family: 'Playfair Display', serif; font-size: .8rem; display: block; }
+  .spectrum-info {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: white;
+    border-radius: 3px;
+    border-left: 3px solid var(--gold);
+    min-height: 56px;
+    transition: opacity .2s;
+  }
+  .spectrum-info-title { font-family: 'Playfair Display', serif; font-size: .92rem; color: var(--ink); margin-bottom: 4px; }
+  .spectrum-info-desc { font-size: .8rem; color: var(--muted); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<button id="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<div id="shell">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Thinking With AI</div>
+      <div class="sidebar-sub">A Student's Guide</div>
+      <div class="sidebar-author">Based on work by Nick Potkalitsky, Ph.D.</div>
+      <div class="sidebar-author" style="margin-top:6px;"><a href="https://nickpotkalitsky.substack.com/" target="_blank" style="color:var(--gold);text-decoration:none;font-style:normal;font-size:.72rem;letter-spacing:.03em;">Educating AI on Substack ↗</a></div>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-section-label">Introduction</div>
+      <a class="toc-item active" onclick="show(0)" href="#">
+        <span class="toc-num">Preface</span>
+        About This Book
+      </a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-section-label">Part I — Foundations</div>
+      <a class="toc-item" onclick="show(1)" href="#">
+        <span class="toc-num">Chapter 1</span>
+        What AI Is (And Isn't)
+      </a>
+      <a class="toc-item" onclick="show(2)" href="#">
+        <span class="toc-num">Chapter 2</span>
+        Choosing Tools &amp; Shaping Interactions
+      </a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-section-label">Part II — Core Practices</div>
+      <a class="toc-item" onclick="show(3)" href="#">
+        <span class="toc-num">Chapter 3</span>
+        Critical Thinking
+      </a>
+      <a class="toc-item" onclick="show(4)" href="#">
+        <span class="toc-num">Chapter 4</span>
+        Problem Solving
+      </a>
+      <a class="toc-item" onclick="show(5)" href="#">
+        <span class="toc-num">Chapter 5</span>
+        Reading
+      </a>
+    </div>
+
+    <div class="toc-section">
+      <div class="toc-section-label">Part III — Advanced Practice</div>
+      <a class="toc-item" onclick="show(6)" href="#">
+        <span class="toc-num">Chapter 6</span>
+        Writing
+      </a>
+      <a class="toc-item" onclick="show(7)" href="#">
+        <span class="toc-num">Chapter 7</span>
+        How Expertise Develops
+      </a>
+    </div>
+
+    <div style="flex:1;"></div>
+    <div id="dark-toggle" onclick="toggleDark()" title="Toggle light/dark">
+      <div class="toggle-track"><div class="toggle-thumb"></div></div>
+      <span class="toggle-label">☀ Light mode</span>
+    </div>
+  </nav>
+
+  <div id="progress-bar"></div>
+  <!-- MAIN -->
+  <main id="main">
+
+    <!-- ══════════════ SECTION 0: INTRO ══════════════ -->
+    <div class="book-section visible" id="sec-0">
+      <div class="chapter-hero">
+        <div class="chapter-label">Introduction</div>
+        <h1 class="chapter-title">Thinking With AI</h1>
+        <p class="chapter-subtitle">A Student's Guide to Literacy in an AI-Rich World</p>
+        <div class="chapter-ornament"></div>
+        <div class="reading-time-badge">5 min read</div>
+      </div>
+
+      <div class="chapter-body">
+        <div class="callout">
+          <p>AI can accelerate learning when engagement is intentional, and it can undermine learning when engagement is passive. Understanding the difference matters enormously.</p>
+        </div>
+
+        <h2 class="section-heading">A Personal Note</h2>
+        <p class="prose">The author came to AI literacy through the classroom, not the computer lab — after fifteen years teaching English, Latin, and humanities. His first instinct as an educator was skepticism: here was technology that could generate fluent text without understanding, produce confident-sounding explanations without knowledge, organize information without judgment.</p>
+        <p class="prose">But watching students changed everything.</p>
+
+        <h2 class="section-heading">The Two Trajectories</h2>
+        <p class="prose">Some students used AI exactly as feared: delegating thinking, accepting outputs without evaluation. Their writing became more polished but less theirs. Their capacity stopped developing.</p>
+        <p class="prose">Other students used AI differently. They analyzed outputs critically, verified claims, used dialogue to develop ideas they were actively working on. These students' capacity accelerated noticeably beyond peers without AI access.</p>
+        <p class="prose"><strong>Same technology. Opposite trajectories.</strong> The difference wasn't the tool — it was how students engaged with it.</p>
+
+        <h2 class="section-heading">The Five-Role Framework</h2>
+        <p class="prose">This guide develops a framework for engaging with AI across five roles — from critical distance to collaborative integration — and four core academic practices: critical thinking, problem-solving, reading, and writing.</p>
+
+        <div class="roles-grid">
+          <div class="role-card c1">
+            <div class="role-number">Role 1</div>
+            <div class="role-name">Critic</div>
+            <div class="role-stance">AI as object of analysis</div>
+            <div class="role-desc">Analyze outputs skeptically against disciplinary standards.</div>
+          </div>
+          <div class="role-card c2">
+            <div class="role-number">Role 2</div>
+            <div class="role-name">Verifier</div>
+            <div class="role-stance">Requires checking</div>
+            <div class="role-desc">Check claims, test reasoning systematically against sources.</div>
+          </div>
+          <div class="role-card c3">
+            <div class="role-number">Role 3</div>
+            <div class="role-name">Interlocutor</div>
+            <div class="role-stance">Dialogue partner</div>
+            <div class="role-desc">Develop thinking through dialogue while maintaining ownership.</div>
+          </div>
+          <div class="role-card c4">
+            <div class="role-number">Role 4</div>
+            <div class="role-name">Editor</div>
+            <div class="role-stance">Provides critique</div>
+            <div class="role-desc">Evaluate suggestions, judge what serves your meaning.</div>
+          </div>
+          <div class="role-card c5" style="grid-column: span 2;">
+            <div class="role-number">Role 5</div>
+            <div class="role-name">Architect</div>
+            <div class="role-stance">Executes design</div>
+            <div class="role-desc">Orchestrate AI production to your disciplinary specifications. Requires deep expertise.</div>
+          </div>
+        </div>
+
+        <h2 class="section-heading">Explore the Five Roles</h2>
+        <p class="prose">Click any role to see what it means and when to use it.</p>
+        <div class="role-spectrum">
+          <div class="spectrum-label">
+            <span>← More critical distance</span>
+            <span>More collaboration →</span>
+          </div>
+          <div class="spectrum-track">
+            <div class="spectrum-cursor" id="spec-cursor" style="left:10%"></div>
+          </div>
+          <div class="spectrum-roles">
+            <div class="spectrum-role active" onclick="selectRole(0)"><span class="sr-name">Critic</span>①</div>
+            <div class="spectrum-role" onclick="selectRole(1)"><span class="sr-name">Verifier</span>②</div>
+            <div class="spectrum-role" onclick="selectRole(2)"><span class="sr-name">Interlocutor</span>③</div>
+            <div class="spectrum-role" onclick="selectRole(3)"><span class="sr-name">Editor</span>④</div>
+            <div class="spectrum-role" onclick="selectRole(4)"><span class="sr-name">Architect</span>⑤</div>
+          </div>
+          <div class="spectrum-info" id="spec-info">
+            <div class="spectrum-info-title">The Critic</div>
+            <div class="spectrum-info-desc">Analyse AI outputs against disciplinary standards. Treat AI as an object to examine, not a collaborator. Best for: learning what quality looks like in your field.</div>
+          </div>
+        </div>
+
+        <h2 class="section-heading">Core Principle</h2>
+        <p class="prose">Every use of AI should strengthen your capacity to think, read, write, and solve problems — not replace that capacity. If you can explain your thinking without AI, if you're learning more than you would without AI, if you're building skills you'll use with or without these tools, then you're using AI productively.</p>
+      </div>
+
+      <div class="chapter-nav">
+        <button class="nav-btn" disabled>← Previous</button>
+        <span class="nav-progress">1 of 8</span>
+        <button class="nav-btn" onclick="show(1)">Next →</button>
+      </div>
+      <div class="footer-credit">Based on work by Nick Potkalitsky. Adapted for interactive reading with Claude Sonnet 4.6, <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    </div>
+
+    <!-- ══════════════ SECTION 1: CHAPTER 1 ══════════════ -->
+    <div class="book-section" id="sec-1">
+      <div class="chapter-hero">
+        <div class="chapter-label">Chapter 1 · Foundations</div>
+        <h1 class="chapter-title">What AI Is (And Isn't)</h1>
+        <p class="chapter-subtitle">To think effectively with AI, you first need to understand what it actually does — and what it cannot do.</p>
+        <div class="chapter-ornament"></div>
+        <div class="reading-time-badge">9 min read</div>
+      </div>
+
+      <div class="chapter-body">
+
+        <div class="callout">
+          <p>AI language models work by predicting which words are likely to come next based on patterns in massive amounts of text. This creates a powerful illusion: surely something that writes this fluently must understand what it's saying. It doesn't.</p>
+        </div>
+
+        <h2 class="section-heading">1.1 Pattern Prediction vs. Meaning-Making</h2>
+        <p class="prose">When you prompt an AI with "Explain photosynthesis," it generates text by predicting what words typically appear in photosynthesis explanations across its training data. The result sounds like explanation because it matches patterns of how humans explain. But no understanding occurred.</p>
+        <p class="prose">Think of it this way: imagine writing an essay in a language you don't speak by copying patterns from thousands of essays in that language. You might produce something that looks legitimate — but you still don't know what you wrote.</p>
+
+        <h3 class="sub-heading">Why This Distinction Matters</h3>
+        <p class="prose">AI cannot tell you if its output is correct — only whether it matches learned patterns. It cannot adapt to novel situations the way understanding allows. It cannot recognize when it's wrong. It cannot prioritize what matters.</p>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">The Listening Test</div>
+          <div class="try-this-body">
+            <p>Ask AI to explain a concept from your current coursework that you find somewhat confusing. Read the explanation carefully — notice how clear it seems. Then close the AI response and write out the concept in your own words as if explaining to a classmate.</p>
+            <ul class="try-list">
+              <li>Could you explain it without referring back to AI's words?</li>
+              <li>Did you use your own examples or just remember AI's examples?</li>
+              <li>Can you connect the concept to other things you know?</li>
+              <li>If someone asked a follow-up question, could you answer it?</li>
+            </ul>
+            <p><strong>If yes to most:</strong> the AI explanation supported your understanding. <strong>If no to most:</strong> you experienced fluency without comprehension.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">1.2 Why AI Sounds Confident Even When Wrong</h2>
+        <p class="prose">AI presents all outputs with equal confidence. A completely accurate historical fact gets the same authoritative tone as a fabricated citation. The confidence is stylistic, not epistemological — it reflects patterns in training data, not actual certainty.</p>
+        <p class="prose">AI cannot flag its own uncertainty because it doesn't understand the content. It only knows whether the text matches training patterns.</p>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Forcing Uncertainty Into the Conversation</div>
+          <div class="try-this-body">
+            <p>After AI gives you a confident explanation, ask: <em>"What are you most uncertain about in this explanation? What might be wrong or oversimplified?"</em></p>
+            <p>Notice what happens. Often AI will generate caveats it didn't include initially — not because it became uncertain, but because your prompt changed the pattern it's matching. This reveals that the original confidence was purely stylistic.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">1.3 AI Cannot Decide What Matters</h2>
+        <p class="prose">When AI organizes information or responds to questions, it uses patterns from training data — what topics appear together, what gets discussed frequently. But frequency in training data is not the same as importance. AI organizes by correlation and frequency. You must decide what actually matters.</p>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">What Got Left Out</div>
+          <div class="try-this-body">
+            <p>Ask AI to summarize a reading from one of your classes — something you've already read carefully. Then examine what the summary includes and excludes compared to what your teacher emphasized or what you found most significant.</p>
+            <p>Most students find that AI summaries miss what matters most: the argument's through-line, the evidence that makes claims compelling, the qualifications that show sophisticated thinking.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">1.4 AI, Data, and Bias</h2>
+        <p class="prose">AI inherits whatever biases, gaps, emphases, and perspectives existed in its training data. This shows up in three main ways:</p>
+
+        <div class="warning-grid">
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Silence</div>
+              <div class="warning-desc">Some perspectives are largely absent because they were largely absent from training data — not because the knowledge doesn't exist.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Imbalance</div>
+              <div class="warning-desc">Some viewpoints appear far more often, creating the impression they're more widely held or more valid than they actually are.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Missing Context</div>
+              <div class="warning-desc">Information appears without the context that would reveal limitations, debates, or complexity.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">1.5 Asking Questions Is a Thinking Skill</h2>
+        <p class="prose">The quality of questions you ask reflects the quality of your thinking about a topic. Generic prompts get generic responses. Specific prompts — with constraints and context — get more useful responses. But here's what's often missed: <strong>the work of developing good questions IS the work of developing your understanding.</strong></p>
+        <p class="prose">Many students try to use AI to skip this work: "Just explain X to me." But the question-development process is actually where understanding develops.</p>
+
+        <div class="callout">
+          <p><strong>Key insight:</strong> AI doesn't reduce the thinking required for intellectual work — it relocates it, often making thinking more necessary because you must now evaluate AI's outputs while maintaining your own development.</p>
+        </div>
+
+      </div>
+
+      <div class="chapter-nav">
+        <button class="nav-btn" onclick="show(0)">← Previous</button>
+        <span class="nav-progress">2 of 8</span>
+        <button class="nav-btn" onclick="show(2)">Next →</button>
+      </div>
+      <div class="footer-credit">Based on work by Nick Potkalitsky. Adapted for interactive reading with Claude Sonnet 4.6, <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    </div>
+
+    <!-- ══════════════ SECTION 2: CHAPTER 2 ══════════════ -->
+    <div class="book-section" id="sec-2">
+      <div class="chapter-hero">
+        <div class="chapter-label">Chapter 2 · Foundations</div>
+        <h1 class="chapter-title">Choosing Tools &amp; Shaping Interactions</h1>
+        <p class="chapter-subtitle">Not all AI tools work the same way — and how you interact with them matters enormously.</p>
+        <div class="chapter-ornament"></div>
+        <div class="reading-time-badge">8 min read</div>
+      </div>
+
+      <div class="chapter-body">
+
+        <h2 class="section-heading">2.1 Why Where Information Comes From Matters</h2>
+        <p class="prose">When a language model tells you something, it's not citing a specific source it just read. It's generating text based on patterns from millions of sources encountered during training. The information might be accurate, but you can't trace it back to verify it — this is like talking to someone with excellent memory for facts they've heard, but who can't remember where they heard any of them.</p>
+
+        <h3 class="sub-heading">Grounding vs. Guaranteeing</h3>
+        <p class="prose">Many AI tools now offer web search or retrieval features. This is a meaningful improvement — you can check what sources AI is drawing from. But grounding AI in sources doesn't solve the fundamental problem completely. AI still interprets sources through pattern-matching, not understanding. Citations can be wrong or fabricated. Source selection reflects search algorithms, not expertise.</p>
+
+        <h3 class="sub-heading">When to Use Which Tool</h3>
+        <div class="warning-grid">
+          <div class="warning-item">
+            <span class="warning-icon">✓</span>
+            <div>
+              <div class="warning-title">Pure language models are appropriate for…</div>
+              <div class="warning-desc">Brainstorming ideas, explaining concepts (that you'll verify), practicing dialogue, getting feedback on drafts, exploring approaches.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">✓</span>
+            <div>
+              <div class="warning-title">Source-grounded tools are more appropriate for…</div>
+              <div class="warning-desc">Researching factual questions, gathering information for academic work, understanding current events, finding sources to read yourself.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">✗</span>
+            <div>
+              <div class="warning-title">Skip AI entirely for…</div>
+              <div class="warning-desc">Primary source analysis, building foundational understanding, developing original interpretation, assignments designed to build skills through doing the work yourself.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Same Question, Different Grounding</div>
+          <div class="try-this-body">
+            <p>Choose a factual question from your coursework. Ask it to: (1) a pure language model without web search, (2) the same model with retrieval enabled, and (3) a traditional search engine. Compare how the responses differ, which provided verifiable sources, and which would be most appropriate for academic work.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">2.2 Prompting as a Process</h2>
+        <p class="prose">Many students approach AI interaction as a single exchange: ask a question, get an answer, done. This treats prompting as a transaction rather than a process. Effective use is almost always iterative — you ask, evaluate, ask a follow-up that reflects your thinking, evaluate again, refine.</p>
+
+        <h3 class="sub-heading">Adding Constraints Clarifies Thinking</h3>
+        <p class="prose">The work of adding constraints to prompts IS the work of clarifying your own thinking. Compare:</p>
+        <div class="callout"><p><strong>Generic:</strong> "Explain the French Revolution."<br><br><strong>Specific:</strong> "Explain the French Revolution's economic causes, focusing on how the tax system created pressure for reform. I understand the political tensions but want to understand the financial crisis specifically." — This required you to identify a specific aspect, narrow to a particular mechanism, acknowledge what you already know, and specify what you're trying to learn.</p></div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Prompting for Thinking, Not Answers</div>
+          <div class="try-this-body">
+            <p>Take a problem from your coursework. Instead of asking AI to solve it, ask:</p>
+            <ul class="try-list">
+              <li>"What approach should I use to think about this?"</li>
+              <li>"What information do I need to identify first?"</li>
+              <li>"What are common mistakes people make with this type of problem?"</li>
+              <li>"How would an expert approach this differently than a novice?"</li>
+            </ul>
+            <p>Then solve it yourself, using the strategic guidance. Compare this to asking AI for the answer directly.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">2.3 The Five-Role Framework</h2>
+        <p class="prose">These roles represent different relationships between you and AI — a spectrum from critical distance to collaborative integration. They're not steps to follow in order; they're choices you make based on context, purpose, and your developing expertise.</p>
+
+        <div class="roles-grid">
+          <div class="role-card c1">
+            <div class="role-number">Role 1</div>
+            <div class="role-name">The Critic</div>
+            <div class="role-stance">AI as object of thinking</div>
+            <div class="role-desc">Analyze AI outputs skeptically against disciplinary standards. Build evaluative capacity by practicing critical analysis.</div>
+          </div>
+          <div class="role-card c2">
+            <div class="role-number">Role 2</div>
+            <div class="role-name">The Verifier</div>
+            <div class="role-stance">Transitional stance</div>
+            <div class="role-desc">Check claims against sources. Test reasoning for logical soundness. Confirm or refute what AI produces.</div>
+          </div>
+          <div class="role-card c3">
+            <div class="role-number">Role 3</div>
+            <div class="role-name">The Interlocutor</div>
+            <div class="role-stance">Middle ground</div>
+            <div class="role-desc">Use AI to develop thinking through conversation. Ideas are yours, being developed through dialogue.</div>
+          </div>
+          <div class="role-card c4">
+            <div class="role-number">Role 4</div>
+            <div class="role-name">The Editor</div>
+            <div class="role-stance">Collaborative stance</div>
+            <div class="role-desc">Work with AI suggestions to improve work. You make decisions about what serves your meaning.</div>
+          </div>
+          <div class="role-card c5" style="grid-column: span 2;">
+            <div class="role-number">Role 5</div>
+            <div class="role-name">The Architect</div>
+            <div class="role-stance">Maximum collaboration</div>
+            <div class="role-desc">Design systems where AI produces work to your specifications. Requires expert-level understanding of disciplinary standards. Novices who try to jump here often produce poor work.</div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <p><strong>Key principle:</strong> Every role keeps you responsible for the thinking. The roles differ in how that responsibility manifests, not whether it exists. Even in Architect role, ownership never disappears.</p>
+        </div>
+
+      </div>
+
+      <div class="chapter-nav">
+        <button class="nav-btn" onclick="show(1)">← Previous</button>
+        <span class="nav-progress">3 of 8</span>
+        <button class="nav-btn" onclick="show(3)">Next →</button>
+      </div>
+      <div class="footer-credit">Based on work by Nick Potkalitsky. Adapted for interactive reading with Claude Sonnet 4.6, <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    </div>
+
+    <!-- ══════════════ SECTION 3: CHAPTER 3 ══════════════ -->
+    <div class="book-section" id="sec-3">
+      <div class="chapter-hero">
+        <div class="chapter-label">Chapter 3 · Core Practices</div>
+        <h1 class="chapter-title">Critical Thinking</h1>
+        <p class="chapter-subtitle">The capacity to make reasoned judgments when certainty is not available — and why AI makes it both harder and more necessary.</p>
+        <div class="chapter-ornament"></div>
+        <div class="reading-time-badge">12 min read</div>
+      </div>
+
+      <div class="chapter-body">
+
+        <div class="callout">
+          <p>AI is more difficult to evaluate than traditional sources because its usual signals of credibility — authorship, citation, careful qualification — do not function the same way. It is more necessary because AI-generated content now appears everywhere.</p>
+        </div>
+
+        <h2 class="section-heading">3.1 The Critic Role — Analyzing AI's Reasoning</h2>
+        <p class="prose">The Critic role treats AI as an object to examine, not an authority to trust. You analyze outputs skeptically, studying what they reveal about how AI works and what it cannot do.</p>
+
+        <h3 class="sub-heading">Warning Signs in AI Outputs</h3>
+        <div class="warning-grid">
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Settled Complexity</div>
+              <div class="warning-desc">Debates presented as resolved when multiple valid perspectives exist. AI generates the most probable response, and probability reflects consensus or frequency — not truth.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Missing Disagreement</div>
+              <div class="warning-desc">Scholarly debate or competing schools of thought rarely surfaced unless explicitly prompted.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Unsupported Claims</div>
+              <div class="warning-desc">Specific facts — dates, statistics, names — presented without evidence or sources. The presentation does not distinguish accurate from invented.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Shallow Causation</div>
+              <div class="warning-desc">Simple linear explanations for phenomena with multiple interacting causes. Complex historical events reduced to one or two factors.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Absent Uncertainty</div>
+              <div class="warning-desc">No signal where knowledge is uncertain, evidence limited, or experts disagree. AI writes as if all information is equally solid.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Confidence Without Support</div>
+          <div class="try-this-body">
+            <p>Ask AI: <em>"Explain why one economic theory definitively explains the 2008 financial crisis better than all alternatives."</em> Read the response — does it acknowledge competing theories? Does it signal uncertainty anywhere?</p>
+            <p>Then revise your question: <em>"What are the major competing explanations for the 2008 financial crisis, and what evidence supports each?"</em> Compare. Notice what changed when you built uncertainty into the question itself.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">3.2 The Verifier Role — Checking Claims</h2>
+        <p class="prose">Verification means testing whether claims are accurate, whether reasoning is sound, and whether conclusions follow from evidence. It is deliberate, methodical work.</p>
+        <p class="prose">Break AI responses into testable parts: <strong>factual claims</strong> (check against established sources), <strong>logical connections</strong> (does the reasoning actually work?), <strong>source claims</strong> (find the original source and check whether it says what AI claims), and <strong>interpretations</strong> (what alternative interpretations are possible?).</p>
+
+        <h3 class="sub-heading">Testing Logical Consistency</h3>
+        <div class="warning-grid">
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Correlation as Causation</div>
+              <div class="warning-desc">"Social media use increased and depression rates increased, so social media causes depression." Timing may be real; the causal claim requires more evidence.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Circular Reasoning</div>
+              <div class="warning-desc">The conclusion used to support the premise. "This policy is good because it improves outcomes, and we know it improves outcomes because it is good policy."</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Overgeneralization</div>
+              <div class="warning-desc">"Studies show…" when one study showed one thing in one context. The plural suggests broader support than exists.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Trace One Claim to Its Source</div>
+          <div class="try-this-body">
+            <p>Ask AI to explain a concept from your current courses, including specific factual claims. Pick one claim that would matter if you were writing a paper. Find out whether it is accurate:</p>
+            <ul class="try-list">
+              <li>Search for the claim in your textbook or class materials</li>
+              <li>Look it up in a library database or reliable reference work</li>
+              <li>If AI attributed the claim to a source, find that source and see if it actually says what AI claims</li>
+            </ul>
+            <p>Most students find that AI's confidence level bears no relationship to accuracy.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">3.3 The Interlocutor Role — Dialogue and Development</h2>
+        <p class="prose">The Interlocutor role shifts the relationship. You begin using AI to develop your own thinking through dialogue while maintaining intellectual ownership. AI responds to your ideas; you decide what to do with its responses.</p>
+        <p class="prose">AI can simulate some aspects of dialogue — generating counterarguments, asking clarifying questions, pointing out assumptions. The value comes not from AI's understanding but from how dialogue forces you to make your thinking explicit and testable.</p>
+
+        <div class="callout">
+          <p><strong>Maintaining ownership:</strong> After a dialogue with AI, can you explain your position without referring back to what AI said? If yes, the dialogue helped you develop your own thinking. If no, you might be confusing AI's ideas with yours.</p>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Steelman the Opposition</div>
+          <div class="try-this-body">
+            <p>Choose a position you disagree with on a topic you are studying. Ask AI to argue for that position as strongly as possible — not a strawman version, but the best case someone could make. Then ask yourself:</p>
+            <ul class="try-list">
+              <li>What makes this position appealing to people who hold it?</li>
+              <li>What evidence or values underlie it?</li>
+              <li>Where does it have legitimate points, even if I disagree with the conclusion?</li>
+              <li>How would I respond to the strongest version of this argument?</li>
+            </ul>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">3.4 The Editor Role — Refinement and Revision</h2>
+        <p class="prose">The Editor role takes collaboration further. You work with AI feedback to improve your arguments, deciding which critiques strengthen your reasoning and which distort your meaning.</p>
+        <p class="prose">The core challenge: AI does not understand your goals, your audience, or what you are actually trying to argue. Every suggestion must be evaluated against your purpose — not "Is this suggestion valid?" but "Does this suggestion make my argument stronger in the way I intend?"</p>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Submit Your Claim for Critique</div>
+          <div class="try-this-body">
+            <p>Write a short argument (3–5 sentences) defending a claim related to something you are studying. Ask AI to critique it, then categorize each point:</p>
+            <ul class="try-list">
+              <li><strong>Valid and important:</strong> a real problem I need to address</li>
+              <li><strong>Valid but not critical:</strong> true but doesn't undermine my core argument</li>
+              <li><strong>Misunderstands my position:</strong> doesn't apply to what I'm actually arguing</li>
+              <li><strong>Would distort my meaning:</strong> addressing this would change what I'm trying to say</li>
+            </ul>
+            <p>Revise <em>only</em> in response to the first category.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">3.5 The Architect Role — Designing Critical Thinking Systems</h2>
+        <p class="prose">The Architect role is the most collaborative and most demanding. You design systems where AI produces critical analysis according to standards you define — encoding your disciplinary knowledge into the prompt design itself.</p>
+        <p class="prose"><strong>Critical requirement:</strong> This role requires deep expertise. If you do not yet understand what good critical thinking looks like in your discipline, you cannot design systems that produce it. Most students will spend most of their time in the first four roles.</p>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Create an Evaluation Rubric</div>
+          <div class="try-this-body">
+            <p>Choose a type of argument common in one of your courses. Create a rubric specifying what makes such arguments strong — what kinds of evidence are required, what logical moves are essential, what common weaknesses should be flagged. Be specific enough that AI can apply it.</p>
+            <p>Then ask AI to apply your rubric to an argument. Evaluate whether AI applies your criteria correctly. Revise and test again.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">The Two Trajectories Revisited</h2>
+        <p class="prose"><strong>The first trajectory leads to dependency.</strong> Students who primarily accept AI outputs without questioning them build no critical thinking capacity. They can produce work that looks adequate, but when asked to evaluate independently, they have no frameworks to apply.</p>
+        <p class="prose"><strong>The second trajectory leads to expertise.</strong> Students who analyze AI skeptically, verify systematically, engage dialogically while maintaining ownership, and work with critique thoughtfully — build increasingly sophisticated critical thinking capacity. AI becomes more useful to them over time because their judgment improves.</p>
+        <div class="callout">
+          <p>The difference between these trajectories is not innate ability or prior knowledge. It is how you engage. Critical engagement builds expertise. Passive consumption builds dependency.</p>
+        </div>
+
+      </div>
+
+      <div class="chapter-nav">
+        <button class="nav-btn" onclick="show(2)">← Previous</button>
+        <span class="nav-progress">4 of 8</span>
+        <button class="nav-btn" onclick="show(4)">Next →</button>
+      </div>
+      <div class="footer-credit">Based on work by Nick Potkalitsky. Adapted for interactive reading with Claude Sonnet 4.6, <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    </div>
+
+    <!-- ══════════════ SECTION 4: CHAPTER 4 ══════════════ -->
+    <div class="book-section" id="sec-4">
+      <div class="chapter-hero">
+        <div class="chapter-label">Chapter 4 · Core Practices</div>
+        <h1 class="chapter-title">Problem Solving</h1>
+        <p class="chapter-subtitle">Why formulating problems is harder than solving them — and how AI can undermine the most important intellectual work before it even begins.</p>
+        <div class="chapter-ornament"></div>
+        <div class="reading-time-badge">11 min read</div>
+      </div>
+
+      <div class="chapter-body">
+
+        <div class="callout">
+          <p>The hardest part of problem-solving is not finding solutions. It is recognizing that a problem exists, defining what that problem actually is, and determining whether it is worth solving. AI complicates this in a specific way: it provides solutions before you have defined problems.</p>
+        </div>
+
+        <h2 class="section-heading">4.1 The Critic Role — When Solutions Arrive Too Early</h2>
+        <p class="prose">When you present a situation to AI and ask for help, it will almost always provide a solution. This feels helpful. But it creates a specific risk: you might accept AI's framing of what the problem is without ever examining whether that framing is correct.</p>
+        <p class="prose">Imagine you ask AI: <em>"I'm struggling to finish my assignments on time. What should I do?"</em> AI might respond with time management strategies. But notice what happened: AI transformed your situation into a time management problem. What if the actual problem is comprehension? Anxiety? Overcommitment? Each framing points toward entirely different solutions.</p>
+
+        <h3 class="sub-heading">What Gets Lost When Problems Are Solved Too Early</h3>
+        <div class="warning-grid">
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">The Problem Appears Solved Before It Is Understood</div>
+              <div class="warning-desc">You receive advice that sounds reasonable without ever examining whether you are solving the right problem. Alternative framings disappear once AI has defined the problem one way.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Problem Recognition Atrophies</div>
+              <div class="warning-desc">If you always receive solutions without formulating problems, you never build the capacity to recognize when situations contain problems worth defining carefully.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Disciplinary Problem Types Remain Invisible</div>
+              <div class="warning-desc">Historians problematize gaps in evidence. Scientists problematize unexplained phenomena. If AI frames all problems generically, you do not learn these disciplinary approaches.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Comparing Problem Framings</div>
+          <div class="try-this-body">
+            <p>Take a situation from your own life or course material. Ask three different questions about it:</p>
+            <ul class="try-list">
+              <li>"What should I do about [situation]?"</li>
+              <li>"What problem does [situation] contain?"</li>
+              <li>"What are several different problems that [situation] might represent?"</li>
+            </ul>
+            <p>Compare how AI responds to each framing. Notice how the question shapes what you receive — and which framing gives you the most ownership over the thinking.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">4.2 The Verifier Role — Testing Problem Definitions</h2>
+        <p class="prose">The Verifier role teaches you to test whether problem definitions — yours or AI's — are actually well-formed. Not all problem definitions are equally good. Some are too vague to guide solutions. Some include contradictory constraints. Some assume things that are not true.</p>
+
+        <h3 class="sub-heading">What Makes a Problem Well-Defined</h3>
+        <div class="warning-grid">
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Clear Goals</div>
+              <div class="warning-desc">What would count as solving this problem? What would success look like?</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Explicit Constraints</div>
+              <div class="warning-desc">What limitations or requirements must solutions satisfy? Are they consistent with each other?</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Sufficient Information</div>
+              <div class="warning-desc">Do you have what you need to approach this problem, or is more information required first?</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Appropriate Scope</div>
+              <div class="warning-desc">Is the problem neither too broad to approach nor too narrow to matter?</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">The Missing Information Test</div>
+          <div class="try-this-body">
+            <p>Define a problem you are currently working on. Write out your problem statement. Now ask yourself: <em>What information would someone need to solve this problem?</em></p>
+            <p>Make a list of all the information, assumptions, constraints, and context that someone would need. Then ask: <em>What from this list is actually in my problem statement? What is only in my head?</em></p>
+            <p>Revise your problem statement to include what is missing. Then present it to AI and see whether the response improves.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">4.3 The Interlocutor Role — Exploring Problem Spaces</h2>
+        <p class="prose">Rather than accepting the first problem framing that seems reasonable, you use dialogue with AI to generate alternatives, test assumptions, and explore what happens if you frame the situation differently.</p>
+        <p class="prose">Instead of: <em>"What should I do about [situation]?"</em> — try: <em>"What are five different ways someone might frame [situation] as a problem?"</em> This shifts AI from solution-provider to problem-space mapper.</p>
+
+        <div class="callout">
+          <p><strong>Maintaining ownership:</strong> You adopt whichever framing fits your situation best — not whichever AI presented first or most confidently. You should be able to explain why you chose one problem framing over others.</p>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Uncover Problem Assumptions</div>
+          <div class="try-this-body">
+            <p>State a problem as you currently understand it. Ask AI: <em>"What assumptions would someone need to make to frame the situation this way? What might not be true?"</em></p>
+            <p>For each assumption AI identifies, ask yourself:</p>
+            <ul class="try-list">
+              <li>Am I actually making this assumption?</li>
+              <li>Is this assumption justified?</li>
+              <li>What would change if this assumption were wrong?</li>
+            </ul>
+            <p>Revise your problem framing if assumptions you are making should not be.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">4.4 The Editor Role — Sharpening Problem Definitions</h2>
+        <p class="prose">The Editor role uses AI feedback to tighten a chosen problem framing — not by accepting whatever AI suggests, but by using its responses to test whether your definition is clear enough.</p>
+        <p class="prose">If AI's solution misses what you actually care about, your definition was too vague about goals. If AI violates constraints you thought were obvious, you did not make those constraints explicit. If AI asks for clarification about multiple aspects, your definition has gaps. Each signal points to specific revision work.</p>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Draft, Test, Revise</div>
+          <div class="try-this-body">
+            <p>Write a problem statement for something you are currently working on. Present it to AI and ask for a solution. Read the solution carefully. Then ask yourself:</p>
+            <ul class="try-list">
+              <li>Does this solution address what I actually need?</li>
+              <li>What is missing — what does that tell me my problem statement needs?</li>
+              <li>What constraints did I fail to make explicit?</li>
+            </ul>
+            <p>Revise your problem statement to address these gaps. Test the revision. Repeat until the problem statement guides AI toward useful responses.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">4.5 The Architect Role — Designing Problem-Solving Systems</h2>
+        <p class="prose">The Architect role is the most demanding. You design systems that help you explore problem spaces systematically, generate multiple approaches, or map solution landscapes. This requires understanding problem-solving processes well enough to encode them.</p>
+        <p class="prose"><strong>Critical requirement:</strong> This role does not work if you are still learning. You cannot design systems that handle problems in your discipline if you do not yet understand how problems work in that discipline. The Architect role is not a shortcut past the other four roles — it requires the foundation they build.</p>
+
+        <div class="callout">
+          <p><strong>When orchestration creates illusions:</strong> Sophisticated systems can produce outputs that look like problem-solving without actual understanding. A system might generate five problem framings that all sound plausible but are actually superficial variations. If you lack the expertise to recognize this, you might think you are doing sophisticated problem-solving when you are just generating elaborate outputs.</p>
+        </div>
+
+        <h2 class="section-heading">The Two Trajectories</h2>
+        <p class="prose"><strong>Solution dependency:</strong> Students who immediately accept AI's problem framings, never verify definitions, and take the first solution offered build no problem formulation capacity. When asked to define problems themselves, they struggle. When AI frames problems poorly, they do not notice.</p>
+        <p class="prose"><strong>Problem-solving expertise:</strong> Students who analyze AI's framings critically, verify definitions, explore problem spaces thoughtfully, refine iteratively, and orchestrate only when they have deep understanding build sophisticated capacity. Their understanding and capability grow together.</p>
+
+      </div>
+
+      <div class="chapter-nav">
+        <button class="nav-btn" onclick="show(3)">← Previous</button>
+        <span class="nav-progress">5 of 8</span>
+        <button class="nav-btn" onclick="show(5)">Next →</button>
+      </div>
+      <div class="footer-credit">Based on work by Nick Potkalitsky. Adapted for interactive reading with Claude Sonnet 4.6, <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    </div>
+
+    <!-- ══════════════ SECTION 5: CHAPTER 5 ══════════════ -->
+    <div class="book-section" id="sec-5">
+      <div class="chapter-hero">
+        <div class="chapter-label">Chapter 5 · Core Practices</div>
+        <h1 class="chapter-title">Reading</h1>
+        <p class="chapter-subtitle">In a world where AI can summarize anything instantly, the temptation to skip reading is enormous. But summaries miss what makes reading valuable.</p>
+        <div class="chapter-ornament"></div>
+        <div class="reading-time-badge">10 min read</div>
+      </div>
+
+      <div class="chapter-body">
+
+        <div class="callout">
+          <p>Reading is an active process of interpretation. The struggle to interpret, the work of making meaning, the capacity to engage with complex ideas — these are not obstacles to overcome. They are where reading develops into a capacity for understanding.</p>
+        </div>
+
+        <h2 class="section-heading">5.1 The Critic Role — Reading Texts With No Human Author</h2>
+        <p class="prose">When you encounter an AI-generated summary of a text, you are reading something fundamentally different from what human authors produce. Human authors write with intention — they make choices about what to emphasize, qualify, leave implicit. They position arguments within ongoing conversations. AI does none of this.</p>
+
+        <h3 class="sub-heading">What Gets Lost in AI Summaries</h3>
+        <div class="warning-grid">
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Complexity Gets Smoothed Away</div>
+              <div class="warning-desc">Careful qualifications become settled claims. Uncertainty becomes confidence. The author's hedging disappears entirely.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Authorial Voice Vanishes</div>
+              <div class="warning-desc">What the author valued, found surprising, wanted you to notice — the personality and positioning that give human writing its character — are gone.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Debate and Disagreement Disappear</div>
+              <div class="warning-desc">If a text is responding to other scholars or challenging conventional wisdom, AI summaries rarely capture this positioning unless it is stated in the simplest possible terms.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Important Absences Cannot Be Noted</div>
+              <div class="warning-desc">If an author deliberately does not address something — if the text reveals itself through what it omits — AI summaries cannot recognize these meaningful silences.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Reading for What Is Not There</div>
+          <div class="try-this-body">
+            <p>Choose a text that is responding to other scholars, challenging common views, or positioning itself within a debate. Get an AI summary. Read it carefully.</p>
+            <p>Then ask yourself: <em>Can I tell from this summary what conversation this text is part of? What it is arguing against? What makes it distinctive?</em></p>
+            <p>If the answer is no, that is what the Critic role helps you notice. AI cannot reliably capture these contextual relationships.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">5.2 The Verifier Role — Checking Against Original Sources</h2>
+        <p class="prose">AI makes two kinds of errors frequently: it invents details that are not in the source, and it misrepresents what sources actually argue. Verification means checking AI summaries against original texts methodically.</p>
+        <p class="prose">Check <strong>factual accuracy</strong> (are dates, names, statistics actually in the source?), <strong>claim representation</strong> (does the text actually make the claims AI attributes?), <strong>context and qualification</strong> (does the original include caveats AI stripped away?), and <strong>emphasis</strong> (has AI foregrounded minor points while missing major ones?).</p>
+
+        <div class="callout">
+          <p>A text might say <em>"This suggests that X could be related to Y"</em> and AI summarizes <em>"The author argues X causes Y."</em> The original expresses uncertainty and proposes a relationship. The summary presents a causal claim. These are not the same thing.</p>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Compare AI's Version to the Original's</div>
+          <div class="try-this-body">
+            <p>Take one paragraph from an AI summary that seems important. Find where that content appears in the original text. Read the original carefully. Then ask:</p>
+            <ul class="try-list">
+              <li>Did the author actually say this, or did AI infer it?</li>
+              <li>Are there qualifications in the original that the summary omits?</li>
+              <li>Does the original express more uncertainty than the summary suggests?</li>
+              <li>Is the emphasis the same?</li>
+            </ul>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">5.3 The Interlocutor Role — Testing Your Interpretations</h2>
+        <p class="prose">The Interlocutor role shifts focus: instead of analyzing AI summaries, you use dialogue to test and develop your own interpretations of texts you have already read. This requires having done the reading first — it fails when you use dialogue instead of reading.</p>
+
+        <h3 class="sub-heading">The Sequence Matters</h3>
+        <p class="prose">If you dialogue before reading — asking AI to explain texts you have not read yourself — you receive AI's interpretation without developing your own. If you read first, struggle with meaning, form initial interpretations, <em>then</em> use dialogue — you are testing and extending your own work. The sequence determines whether dialogue builds your reading capacity or undermines it.</p>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Read First, Discuss Second</div>
+          <div class="try-this-body">
+            <p>Choose a challenging passage from something you are reading. Before looking at any AI explanations, read it carefully yourself. Write down:</p>
+            <ul class="try-list">
+              <li>What you think it means</li>
+              <li>What is unclear</li>
+              <li>What questions you have</li>
+            </ul>
+            <p>Now ask AI to explain the passage. Compare AI's explanation to your notes. Where does your understanding align? Where do they differ? Return to the original text and revise your understanding based on textual evidence — not just on what AI said.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">5.4 The Editor Role — Strategic Support for Difficult Texts</h2>
+        <p class="prose">Sometimes texts are genuinely inaccessible — because of unfamiliar vocabulary, complex sentence structure, or context you lack. The Editor role uses AI to overcome access barriers while maintaining the interpretive work yourself.</p>
+        <p class="prose">AI can help with: <strong>vocabulary clarification</strong>, <strong>sentence untangling</strong>, <strong>context provision</strong> (historical or disciplinary background), and <strong>structural overview</strong>. None of these should replace the work of interpretation.</p>
+
+        <h3 class="sub-heading">Access vs. Interpretation</h3>
+        <p class="prose">Access means understanding what a text says — its literal meaning, its information. Interpretation means understanding what a text means — its significance, its argument's strength. AI can help substantially with access. It cannot do interpretation for you.</p>
+
+        <div class="callout">
+          <p><strong>Signs support has become dependency:</strong> You need the same help repeatedly without learning. You never return to original texts after getting explanations. You cannot interpret without AI's framing. Your vocabulary and background knowledge are not growing. You become less capable of reading independently over time.</p>
+        </div>
+
+        <div class="try-this collapsed">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Get Help, Then Read</div>
+          <div class="try-this-body">
+            <p>Choose a passage you find difficult. Before asking for general help, identify specifically what makes it difficult:</p>
+            <ul class="try-list">
+              <li>Vocabulary you do not know?</li>
+              <li>Sentence structure you cannot untangle?</li>
+              <li>Context you are missing?</li>
+            </ul>
+            <p>Ask for help only with what is actually blocking you. Then return to the passage and read it yourself with that support in place. Compare your understanding to what AI would produce if you had just asked it to summarize the whole thing.</p>
+          </div>
+        
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">5.5 The Architect Role — Designing Reading Support Systems</h2>
+        <p class="prose">The Architect role in reading means designing systems that support reading processes without replacing the reading work itself — annotation frameworks, comprehension checks, comparative reading structures for multiple sources.</p>
+        <p class="prose"><strong>Critical requirement:</strong> Designing reading support requires sophisticated understanding of what reading involves in your discipline. You cannot design systems that support disciplinary reading if you do not yet understand what disciplinary reading requires. The Architect role is appropriate in advanced coursework, not as an early workaround.</p>
+
+        <h2 class="section-heading">The Two Trajectories</h2>
+        <p class="prose"><strong>Reading dependency:</strong> Students who rely on AI summaries without reading sources, never verify against originals, dialogue instead of reading, and use support to avoid all difficulty build no reading capacity. They can answer questions about texts — AI provides information. But when asked to read independently or interpret deeply, they struggle.</p>
+        <p class="prose"><strong>Reading expertise:</strong> Students who analyze summaries critically, verify against sources, dialogue after reading to test understanding, and use support strategically to overcome genuine barriers build sophisticated reading capacity. They read texts they could not access before. They interpret more sophisticatedly. Their understanding and capability grow together.</p>
+
+        <div class="callout">
+          <p>Summaries are not substitutes for reading. Access support is not the same as interpretation. Dialogue serves understanding when it tests your reading, not when it replaces it. AI can support this work — but it cannot do the work for you.</p>
+        </div>
+
+      </div>
+
+      <div class="chapter-nav">
+        <button class="nav-btn" onclick="show(4)">← Previous</button>
+        <span class="nav-progress">6 of 8</span>
+        <button class="nav-btn" onclick="show(6)">Next →</button>
+      </div>
+      <div class="footer-credit">Based on work by Nick Potkalitsky. Adapted for interactive reading with Claude Sonnet 4.6, <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    </div>
+
+    <!-- ══════════════ SECTION 6: CHAPTER 6 ══════════════ -->
+    <div class="book-section" id="sec-6">
+      <div class="chapter-hero">
+        <div class="chapter-label">Chapter 6 · Advanced Practice</div>
+        <h1 class="chapter-title">Writing</h1>
+        <p class="chapter-subtitle">Writing is thinking made visible through language. AI can support the process — but the thinking must be yours.</p>
+        <div class="chapter-ornament"></div>
+        <div class="reading-time-badge">14 min read</div>
+      </div>
+
+      <div class="chapter-body">
+
+        <div class="callout">
+          <p>AI-generated writing looks like thinking happened. It produces fluent text with coherent structure and polished sentences. But the thinking that makes writing valuable never occurred. Understanding this distinction is foundational.</p>
+        </div>
+
+        <h2 class="section-heading">6.1 The Critic Role — Writing Is Thinking Made Visible</h2>
+        <p class="prose">When you write, you make choices about what matters, how to explain it, what examples clarify meaning, what order makes sense, which words capture your intention. Each choice reveals and refines your thinking. The difficulty of writing — the struggle to articulate what you mean — is where learning happens.</p>
+        <p class="prose">AI writing excels at producing what writing scholar Nancy Sommers calls "generic fluff" — language that sounds academic while avoiding any actual claim. Watch for these patterns:</p>
+
+        <div class="warning-grid">
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">The Balanced Non-Position</div>
+              <div class="warning-desc">"While some argue X, others contend Y. Both perspectives have merit." Acknowledges disagreement while avoiding actual thinking about which position has better support.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">The Vague Intensifier</div>
+              <div class="warning-desc">"Technology has significantly impacted society in numerous ways." Count the empty modifiers: significantly, numerous, many, extremely. Remove them and nothing changes.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">The Safe Generalization</div>
+              <div class="warning-desc">"Throughout history, people have struggled with complex challenges." This could describe anything. It commits to nothing.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">⚑</span>
+            <div>
+              <div class="warning-title">Placeholder Transitions</div>
+              <div class="warning-desc">"It is interesting to note that…" / "One might argue that…" These phrases promise thought is coming but deliver none.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <p><strong>Polish ≠ Thought.</strong> AI writes smoothly. Students who struggle with mechanics often mistake this polish for quality. "It sounds so much better than what I wrote" actually means "it's more fluent than my draft." But fluency is not thinking.</p>
+        </div>
+
+        <div class="try-this">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Fluency Versus Thinking</div>
+          <div class="try-this-body">
+            <p>Generate an AI response to: "Write three paragraphs explaining why critical thinking matters in education." Now analyze what you received:</p>
+            <ul class="try-list">
+              <li>Identify claims — underline any sentence making a specific assertion. How many?</li>
+              <li>Test specificity — could these paragraphs describe any subject? If yes, the writing is generic.</li>
+              <li>Look for evidence — does the text support claims with specific examples, or rely on vague assertions?</li>
+              <li>Notice decisions — what choices did the writer make about what matters most?</li>
+            </ul>
+            <p>Most students find AI writing contains no specific claims, works for any topic, provides no real evidence, and makes no visible decisions.</p>
+          </div>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">6.2 The Verifier Role — Checking What AI Writes</h2>
+        <p class="prose">AI writing sounds authoritative. It makes factual claims, cites research, presents evidence. The confidence suggests everything has been verified. <strong>Nothing has been checked.</strong> AI generates plausible-sounding text based on patterns. Sometimes claims are accurate. Sometimes they're fabricated.</p>
+        <p class="prose">Treat every claim in AI-generated writing as unverified until you check it yourself. This applies to factual assertions, citations, statistical claims, logical connections, and interpretations presented as fact.</p>
+
+        <div class="callout">
+          <p>Perhaps the most dangerous feature: AI generates citations that sound completely legitimate but don't exist — specific author name, recent date, named journal, precise statistic. Check them and you may find the entire citation is fabricated.</p>
+        </div>
+
+        <div class="try-this">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Test Whether AI's Sources Exist</div>
+          <div class="try-this-body">
+            <p>Ask AI to write three paragraphs about any academic topic, including at least three citations. Verify each source:</p>
+            <ul class="try-list">
+              <li>Does it exist? Search for the exact citation.</li>
+              <li>Is the author correct? Did this person write about this topic?</li>
+              <li>Are the claims accurate? Does the source actually say what AI claims?</li>
+              <li>Is context preserved? Has AI removed important qualifications?</li>
+            </ul>
+            <p>Many students discover 30–50% of AI-generated citations are partly or completely wrong.</p>
+          </div>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">6.3 The Interlocutor Role — Developing Ideas Through Exchange</h2>
+        <p class="prose">Writing is thinking. The process of finding words forces you to clarify what you mean, test whether ideas hold together, discover what you actually believe. AI can accelerate this process — <em>if</em> you use it as an interlocutor rather than a replacement for thinking.</p>
+        <p class="prose"><strong>The key distinction:</strong> dialogue develops ideas you're working on. It doesn't generate ideas for you.</p>
+
+        <h3 class="sub-heading">Warning Signs You've Lost Ownership</h3>
+        <p class="prose">You're asking "What should I write about X?" rather than "How can I develop this idea I'm working on?" You're accepting AI's framing instead of clarifying your own. You feel lost when AI goes in a direction you didn't expect — because you never had a direction.</p>
+
+        <div class="try-this">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Use Dialogue to Find Your Actual Claim</div>
+          <div class="try-this-body">
+            <ul class="try-list">
+              <li>Start with interest, not claim: "I'm writing about [topic] and I'm interested in [specific aspect]."</li>
+              <li>Test directions: ask AI to identify different angles. Which interests you most?</li>
+              <li>Push against AI: when AI responds, notice what doesn't fit your thinking.</li>
+              <li>Draft your claim after dialogue in your own words — without referencing AI's responses.</li>
+            </ul>
+            <p><strong>The practical test:</strong> Can you write your argument without referring to AI's responses? If yes, dialogue served thinking. If no, dialogue replaced thinking.</p>
+          </div>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">6.4 The Editor Role — Working With AI as Reader and Responder</h2>
+        <p class="prose">You've written a draft. The ideas are yours. Now you want to make the writing better. This is where AI can function as editor — responding to your writing, identifying weaknesses, suggesting improvements.</p>
+        <p class="prose"><strong>Critical difference:</strong> the writing you're improving is writing YOU created. Editing AI-generated writing doesn't build capacity because the thinking never happened. The sequence matters: you write first, AI responds, you evaluate, you revise.</p>
+
+        <div class="try-this">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Categorize the Feedback You Receive</div>
+          <div class="try-this-body">
+            <p>Take a paragraph you've written. Ask AI: "What would make this writing stronger?" Now categorize each suggestion:</p>
+            <ul class="try-list">
+              <li><strong>Valid and Useful:</strong> identifies a real problem and preserves your meaning.</li>
+              <li><strong>Valid but Not Useful:</strong> identifies a real issue but the fix changes what you mean.</li>
+              <li><strong>Missing Your Point:</strong> treats something intentional as a mistake.</li>
+              <li><strong>Introduces New Problems:</strong> adds wordiness, vagueness, or removes your voice.</li>
+            </ul>
+            <p>Most students find AI feedback falls across all four categories. Your job is distinguishing which is which.</p>
+          </div>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">6.5 The Architect Role — Designing Writing Systems</h2>
+        <p class="prose">The Architect role represents maximum collaboration: you design the system, AI executes to your specifications. This means encoding your ideas, your understanding of disciplinary conventions, and your decision-making into detailed prompts that generate drafts you can actually use.</p>
+        <p class="prose"><strong>This is NOT</strong> asking AI "write an essay about X." That's delegation without design. Orchestration means YOU have done all the intellectual work first. Orchestration should be the last role you develop, not the first.</p>
+
+        <div class="callout">
+          <p><strong>The practical test:</strong> Could you write this yourself without AI, just more slowly? If yes, orchestration saves time while you maintain expertise. If no, you've delegated thinking you haven't done.</p>
+        </div>
+
+        <h2 class="section-heading">The Two Trajectories</h2>
+        <p class="prose"><strong>Students who build capacity</strong> analyse AI writing critically, verify all claims, use dialogue to develop ideas they're already working on, evaluate feedback against their intended meaning, and maintain intellectual ownership across all roles. Their writing capacity grows faster than students without AI access.</p>
+        <p class="prose"><strong>Students who lose capacity</strong> accept AI-generated text without critical analysis, submit work containing ideas they didn't develop, use AI to avoid the difficulty of writing, and delegate thinking along with text production. Their writing capacity stagnates or declines.</p>
+
+      </div>
+
+      <div class="chapter-nav">
+        <button class="nav-btn" onclick="show(5)">← Previous</button>
+        <span class="nav-progress">7 of 8</span>
+        <button class="nav-btn" onclick="show(7)">Next →</button>
+      </div>
+      <div class="footer-credit">Based on work by Nick Potkalitsky. Adapted for interactive reading with Claude Sonnet 4.6, <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    </div>
+
+    <!-- ══════════════ SECTION 7: CHAPTER 7 ══════════════ -->
+    <div class="book-section" id="sec-7">
+      <div class="chapter-hero">
+        <div class="chapter-label">Chapter 7 · Advanced Practice</div>
+        <h1 class="chapter-title">How Expertise Develops Across the Spectrum</h1>
+        <p class="chapter-subtitle">The five roles aren't just different ways of working with AI — they represent stages in developing genuine disciplinary expertise.</p>
+        <div class="chapter-ornament"></div>
+        <div class="reading-time-badge">13 min read</div>
+      </div>
+
+      <div class="chapter-body">
+
+        <div class="callout">
+          <p>Students using AI intentionally develop faster than those working without AI — AND faster than those using AI passively. Same tool. Different engagement. Opposite outcomes.</p>
+        </div>
+
+        <h2 class="section-heading">7.1 The Five Roles as Developmental Progression</h2>
+        <p class="prose">Think about how you learn any complex skill. You start by observing carefully, noticing what success looks like. You practice fundamentals until they become automatic. You experiment, test your judgment, refine based on feedback. Eventually you understand the skill so deeply you can design systems that embody it.</p>
+
+        <div class="roles-grid">
+          <div class="role-card c1">
+            <div class="role-number">Role 1 — Foundational</div>
+            <div class="role-name">Critic</div>
+            <div class="role-stance">Learning standards</div>
+            <div class="role-desc">Every time you identify what's wrong with an AI response, you strengthen your understanding of what's right in your field.</div>
+          </div>
+          <div class="role-card c2">
+            <div class="role-number">Role 2 — Building Confidence</div>
+            <div class="role-name">Verifier</div>
+            <div class="role-stance">Building your knowledge base</div>
+            <div class="role-desc">Systematic checking builds knowledge and trust in your own judgment. Slow, deliberate practice that pays off fast.</div>
+          </div>
+          <div class="role-card c3">
+            <div class="role-number">Role 3 — Developing Ideas</div>
+            <div class="role-name">Interlocutor</div>
+            <div class="role-stance">Thinking made visible</div>
+            <div class="role-desc">Dialogue becomes productive only after you can evaluate responses critically. This is where your thinking develops through exchange.</div>
+          </div>
+          <div class="role-card c4">
+            <div class="role-number">Role 4 — Refining Output</div>
+            <div class="role-name">Editor</div>
+            <div class="role-stance">Judgment about quality</div>
+            <div class="role-desc">Working with feedback requires judgment developed through the Critic and Verifier roles. You can now improve work you've created.</div>
+          </div>
+          <div class="role-card c5" style="grid-column: span 2;">
+            <div class="role-number">Role 5 — Encoding Expertise</div>
+            <div class="role-name">Architect</div>
+            <div class="role-stance">Making expertise explicit</div>
+            <div class="role-desc">Orchestration requires understanding processes deeply enough to specify them. This metacognitive awareness represents advanced expertise. You cannot skip to here.</div>
+          </div>
+        </div>
+
+        <h3 class="sub-heading">Why the Sequence Matters</h3>
+        <p class="prose">Students often want to jump straight to Architect role. This fails predictably: you can't specify what you don't understand. A novice asks AI to "write an essay about the causes of the Civil War" and gets generic content — because they couldn't specify what historical question matters, what evidence supports which claims, or what they actually think. An expert encodes a specific claim, precise evidence from sources they've studied, and awareness of the historiographical debate. The orchestration works because expertise preceded it.</p>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">7.2 Why Expertise Accelerates With Intentional Engagement</h2>
+        <p class="prose">Early research on AI and education revealed a striking pattern. Students who engaged with AI intentionally showed faster development of disciplinary skills than students without AI access. Students who used AI passively showed stagnating or declining skills. The tool was the same. The difference was engagement.</p>
+        <p class="prose">The research finding that surprises many: students who worked harder when using AI learned more. They used AI to create <em>more</em> productive struggle, not less — more ideas to evaluate critically, more claims to verify, more feedback to process thoughtfully. Students who stagnated used AI to avoid struggle.</p>
+
+        <div class="callout">
+          <p>Skills build through deliberate practice: working at the edge of current ability, getting immediate feedback, making adjustments, struggling productively. AI can support all of this — or undermine all of it — depending on how you engage.</p>
+        </div>
+
+        <div class="try-this">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Tracking Your Learning Across One Week</div>
+          <div class="try-this-body">
+            <p>Consciously engage with AI across multiple roles for a single assignment. Document:</p>
+            <ul class="try-list">
+              <li><strong>Critic role:</strong> what did analyzing AI outputs teach you about quality standards?</li>
+              <li><strong>Verifier role:</strong> what content knowledge did you build by checking claims?</li>
+              <li><strong>Interlocutor role:</strong> what became clearer about your thinking through dialogue?</li>
+              <li><strong>Editor role:</strong> what did feedback reveal about strengths and weaknesses in your work?</li>
+            </ul>
+            <p>Most students find intentional multi-role engagement accelerated learning — but required more active thinking, not less.</p>
+          </div>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">7.3 Disciplinary Differences — How Expertise Looks Across Fields</h2>
+        <p class="prose">The five roles aren't equally important across all disciplines. Fields differ in what counts as evidence, how knowledge is validated, and how expertise develops. Understanding your discipline's emphasis helps you prioritize which roles to develop first.</p>
+
+        <div class="warning-grid">
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">History — Critic and Verifier central</div>
+              <div class="warning-desc">AI often presents events without historical context and smooths over interpretive debates. Noticing this teaches what historians actually do.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Mathematics — Verifier and Architect central</div>
+              <div class="warning-desc">AI often makes logical leaps without justification. Catching these failures makes visible what mathematical rigour requires.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Literature — Interlocutor and Editor central</div>
+              <div class="warning-desc">AI often summarizes plot instead of analyzing meaning. Literary analysis develops through articulating interpretations and refining them.</div>
+            </div>
+          </div>
+          <div class="warning-item">
+            <span class="warning-icon">◈</span>
+            <div>
+              <div class="warning-title">Science — Verifier and Architect central</div>
+              <div class="warning-desc">AI often conflates correlation with causation and describes methodology vaguely. Catching this teaches what scientific precision requires.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">7.4 From Novice to Expert</h2>
+        <p class="prose"><strong>Novice engagement:</strong> overrelying on Architect role as delegation, mistaking polish for quality, trusting AI's confident claims without checking, adopting AI's framing instead of developing your own.</p>
+        <p class="prose"><strong>Developing engagement:</strong> moving between roles more fluidly, automatically evaluating outputs, verifying strategically, pushing back when AI's approach doesn't match your understanding.</p>
+        <p class="prose"><strong>Expert engagement:</strong> using roles strategically based on deep understanding of the task and your learning needs, recognising AI's systematic weaknesses in your discipline, maintaining standards regardless of whether you used AI.</p>
+
+        <div class="try-this">
+          <div class="try-this-header">Try This</div>
+          <div class="try-this-collapsible">
+          <div class="try-this-title">Self-Assessment Across the Five Roles</div>
+          <div class="try-this-body">
+            <p>Rate yourself honestly for each role (Novice / Developing / Proficient):</p>
+            <ul class="try-list">
+              <li><strong>Critic</strong> — Novice: accept outputs if they sound good. Proficient: automatically evaluate against disciplinary standards.</li>
+              <li><strong>Verifier</strong> — Novice: trust AI's claims; verification feels too slow. Proficient: know what needs checking and do it efficiently.</li>
+              <li><strong>Interlocutor</strong> — Novice: ask AI to generate ideas. Proficient: maintain intellectual ownership throughout dialogue.</li>
+              <li><strong>Editor</strong> — Novice: accept most AI feedback. Proficient: evaluate all feedback against intended meaning.</li>
+              <li><strong>Architect</strong> — Novice: delegate without specifying. Proficient: encode expertise clearly; AI executes to your specifications.</li>
+            </ul>
+          </div>
+          </div>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">7.5 Maintaining Intellectual Ownership — The Core Principle</h2>
+        <p class="prose">You can learn all five roles. You can move fluidly between them. But none of this builds expertise if you lose intellectual ownership. The thinking must be yours, the decisions must be yours, the understanding must be yours.</p>
+
+        <h3 class="sub-heading">The Responsibility Test</h3>
+        <p class="prose"><em>Can I explain the thinking without referencing AI's responses?</em> If yes, the thinking is yours. If no, you've relied on AI's intellectual work instead of your own.</p>
+        <p class="prose"><em>Could I recreate this work without AI, just more slowly?</em> If yes, AI provided efficiency while you maintained expertise. If no, AI provided capacity you don't possess independently.</p>
+        <p class="prose"><em>Do I understand this better now than before I used AI?</em> If yes, engagement built understanding. If no, engagement produced results without understanding.</p>
+
+        <div class="callout">
+          <p><strong>The core principle:</strong> every use of AI should strengthen your capacity, not replace it. The question is not "Can AI help with this?" but "Does this use of AI build or bypass the capacity I'm trying to develop?"</p>
+        </div>
+
+        <div class="ornamental-divider">· · ·</div>
+
+        <h2 class="section-heading">7.6 Integration — How the Four Literacies Work Together</h2>
+        <p class="prose">Critical thinking, problem-solving, reading, and writing don't develop in isolation. When you verify sources while reading, you're building both reading skills and critical thinking. When you articulate ideas in writing, you're developing both writing ability and problem-solving skills. The five roles transfer across all practices — a student who develops strong Verifier habits while reading applies the same systematic checking to writing and critical thinking.</p>
+
+        <h2 class="section-heading">The Two Trajectories</h2>
+        <p class="prose"><strong>Path 1 — Building Capacity:</strong> uses Critic role to build evaluative judgment, verifies systematically, maintains ownership through dialogue, revises thoughtfully with evaluated feedback, orchestrates only when expertise warrants it. Result: accelerated development, transferable skills, genuine understanding, independent capacity.</p>
+        <p class="prose"><strong>Path 2 — Replacing Capacity:</strong> accepts AI outputs without critical analysis, skips verification, delegates thinking, accepts all feedback without evaluation, tries to orchestrate without sufficient expertise. Result: stagnant development, tool dependency, shallow understanding, limited transfer.</p>
+
+        <div class="callout">
+          <p>Choose intentionally. Build systematically. Maintain ownership relentlessly. The expertise you develop through this work will serve you far beyond any current assignment or technology.</p>
+        </div>
+
+      </div>
+
+      <div class="chapter-nav">
+        <button class="nav-btn" onclick="show(6)">← Previous</button>
+        <span class="nav-progress">8 of 8</span>
+        <button class="nav-btn" disabled>Next →</button>
+      </div>
+      <div class="footer-credit">Based on work by Nick Potkalitsky. Adapted for interactive reading with Claude Sonnet 4.6, <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.book-section');
+  const tocItems = document.querySelectorAll('.toc-item');
+  let current = 0;
+
+  function show(n) {
+    sections[current].classList.remove('visible');
+    tocItems[current].classList.remove('active');
+    current = n;
+    sections[current].classList.add('visible');
+    tocItems[current].classList.add('active');
+    document.getElementById('main').scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.innerWidth <= 720)
+      document.getElementById('sidebar').classList.remove('open');
+    return false;
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+  }
+
+  document.getElementById('main').addEventListener('click', function() {
+    if (window.innerWidth <= 720)
+      document.getElementById('sidebar').classList.remove('open');
+  });
+
+  /* ── PROGRESS BAR ── */
+  function updateProgress() {
+    var main = document.getElementById('main');
+    var bar  = document.getElementById('progress-bar');
+    var section = sections[current];
+    var scrollable = section.scrollHeight - main.clientHeight;
+    var pct = scrollable > 0 ? Math.min(100, (main.scrollTop / scrollable) * 100) : 100;
+    bar.style.width = pct + '%';
+  }
+  document.getElementById('main').addEventListener('scroll', updateProgress);
+
+  /* ── DARK / LIGHT MODE ── */
+  var lightMode = false;
+  function toggleDark() {
+    lightMode = !lightMode;
+    document.body.classList.toggle('light-mode', lightMode);
+    document.querySelector('.toggle-label').textContent = lightMode ? '🌙 Dark mode' : '☀ Light mode';
+  }
+
+  /* ── COLLAPSIBLE TRY-THIS ── */
+  document.querySelectorAll('.try-this-header').forEach(function(header) {
+    header.addEventListener('click', function() {
+      var box = this.closest('.try-this');
+      box.classList.toggle('collapsed');
+    });
+  });
+
+  /* ── ROLE SPECTRUM ── */
+  var roleData = [
+    {
+      title: 'The Critic',
+      desc: 'Analyse AI outputs skeptically against disciplinary standards. Treat AI as an object to examine, not a collaborator. Best for: learning what quality looks like in your field.',
+      pos: '10%'
+    },
+    {
+      title: 'The Verifier',
+      desc: 'Check claims against sources. Test reasoning for logical soundness. Best for: fact-checking, source verification, logic testing.',
+      pos: '30%'
+    },
+    {
+      title: 'The Interlocutor',
+      desc: 'Use AI to develop thinking through conversation. Ideas are yours, being refined through dialogue. Best for: exploring problems, testing arguments, clarifying what you think.',
+      pos: '50%'
+    },
+    {
+      title: 'The Editor',
+      desc: 'Work with AI feedback to improve work you have already created. You make all decisions about what serves your meaning. Best for: refining drafts, strengthening arguments.',
+      pos: '72%'
+    },
+    {
+      title: 'The Architect',
+      desc: 'Design systems where AI produces work to your expert specifications. Requires deep disciplinary expertise — not a shortcut, a tool for those who already know the work well.',
+      pos: '90%'
+    }
+  ];
+
+  function selectRole(idx) {
+    document.querySelectorAll('.spectrum-role').forEach(function(el, i) {
+      el.classList.toggle('active', i === idx);
+    });
+    var cursor = document.getElementById('spec-cursor');
+    var info   = document.getElementById('spec-info');
+    if (cursor) cursor.style.left = roleData[idx].pos;
+    if (info) {
+      info.style.opacity = '0';
+      setTimeout(function() {
+        info.innerHTML =
+          '<div class="spectrum-info-title">' + roleData[idx].title + '</div>' +
+          '<div class="spectrum-info-desc">' + roleData[idx].desc + '</div>';
+        info.style.opacity = '1';
+      }, 150);
+    }
+  }
+</script>
+</body>
+</html>
