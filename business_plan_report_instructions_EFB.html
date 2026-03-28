@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Business Plan Report – Assignment Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #1a56db;
+    --blue-light: #e8f0fe;
+    --green: #057a55;
+    --green-light: #def7ec;
+    --yellow: #c27803;
+    --yellow-light: #fdf6b2;
+    --red: #c81e1e;
+    --red-light: #fde8e8;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --accent: #1a56db;
+    --radius: 8px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--gray-800);
+    background: var(--gray-50);
+  }
+
+  /* HEADER */
+  .site-header {
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .site-header .course-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    letter-spacing: .02em;
+  }
+  .site-header a { color: var(--blue); text-decoration: none; }
+  .site-header a:hover { text-decoration: underline; }
+  .site-header .inst { font-size: 13px; color: var(--gray-600); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1a56db 60%, #2563eb 100%);
+    color: white;
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .hero p {
+    font-size: 15px;
+    opacity: .85;
+    max-width: 560px;
+    margin: 0 auto 24px;
+  }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .badge {
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .credit {
+    font-size: 12px;
+    opacity: .6;
+    margin-top: 4px;
+  }
+  .credit a { color: white; }
+
+  /* TABS */
+  .tabs-bar {
+    background: white;
+    border-bottom: 2px solid var(--gray-200);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 57px;
+    z-index: 99;
+  }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    border: none;
+    background: none;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color .15s, border-color .15s;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .container { max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  /* ACCORDION */
+  .accordion { border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 10px; background: white; overflow: hidden; }
+  .accordion summary {
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    user-select: none;
+  }
+  .accordion summary::-webkit-details-marker { display: none; }
+  .accordion summary::after {
+    content: '▾';
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--gray-600);
+    transition: transform .2s;
+  }
+  .accordion[open] summary::after { transform: rotate(180deg); }
+  .accordion summary:hover { background: var(--gray-50); }
+  .accordion-body {
+    padding: 0 18px 18px;
+    border-top: 1px solid var(--gray-100);
+    font-size: 14px;
+    color: var(--gray-700);
+  }
+  .accordion-body p { margin-top: 10px; }
+  .accordion-body ul, .accordion-body ol { margin: 10px 0 0 18px; }
+  .accordion-body li { margin-bottom: 4px; }
+  .accordion-body strong { color: var(--gray-900); }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--gray-600);
+    margin: 32px 0 12px;
+  }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--gray-100); text-align: left; padding: 8px 12px; font-weight: 600; color: var(--gray-700); border-bottom: 2px solid var(--gray-200); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--gray-50); }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 6px; bottom: 6px; width: 2px; background: var(--gray-200); }
+  .tl-item { position: relative; margin-bottom: 8px; }
+  .tl-item::before { content: ''; position: absolute; left: -24px; top: 18px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); border: 2px solid white; box-shadow: 0 0 0 2px var(--blue); }
+  .tl-accordion { border: 1px solid var(--gray-200); border-radius: var(--radius); background: white; overflow: hidden; }
+  .tl-header {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    list-style: none;
+    user-select: none;
+    font-size: 14px;
+  }
+  .tl-header::-webkit-details-marker { display: none; }
+  .tl-header::after { content: '▾'; margin-left: auto; font-size: 11px; color: var(--gray-600); transition: transform .2s; }
+  .tl-accordion[open] .tl-header::after { transform: rotate(180deg); }
+  .tl-phase { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--blue); background: var(--blue-light); border-radius: 999px; padding: 2px 8px; }
+  .tl-body { padding: 0 16px 16px; border-top: 1px solid var(--gray-100); font-size: 13.5px; color: var(--gray-700); }
+  .tl-body ul { margin: 10px 0 0 16px; }
+  .tl-body li { margin-bottom: 5px; }
+  .tl-body .note { background: var(--yellow-light); border-left: 3px solid var(--yellow); padding: 8px 12px; border-radius: 4px; margin-top: 10px; font-size: 13px; }
+
+  /* PAIRR STEPS */
+  .steps { counter-reset: step; }
+  .step-card { display: flex; gap: 16px; background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
+  .step-num { background: var(--blue); color: white; font-size: 20px; font-weight: 700; min-width: 52px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-content { padding: 16px 16px 16px 0; flex: 1; }
+  .step-content details summary { font-weight: 600; font-size: 14px; cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }
+  .step-content details summary::-webkit-details-marker { display: none; }
+  .step-content details summary::after { content: '▾'; margin-left: auto; font-size: 11px; color: var(--gray-600); transition: transform .2s; }
+  .step-content details[open] summary::after { transform: rotate(180deg); }
+  .step-meta { font-size: 12px; color: var(--gray-600); margin-bottom: 6px; }
+  .step-body { margin-top: 10px; font-size: 13.5px; color: var(--gray-700); }
+  .step-body ul { margin: 8px 0 0 16px; }
+  .step-body li { margin-bottom: 5px; }
+  .step-body p { margin-top: 8px; }
+  .step-body strong { color: var(--gray-900); }
+
+  /* CALLOUT */
+  .callout { border-radius: var(--radius); padding: 12px 16px; margin: 12px 0; font-size: 13.5px; display: flex; gap: 10px; }
+  .callout.info { background: var(--blue-light); border-left: 3px solid var(--blue); color: #1e3a8a; }
+  .callout.warn { background: var(--yellow-light); border-left: 3px solid var(--yellow); color: #78350f; }
+  .callout.danger { background: var(--red-light); border-left: 3px solid var(--red); color: #7f1d1d; }
+  .callout.success { background: var(--green-light); border-left: 3px solid var(--green); color: #064e3b; }
+
+  /* RUBRIC */
+  /* AI RULES TAB */
+  .traffic-lights { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+  .tl-btn { padding: 8px 18px; border: 2px solid transparent; border-radius: 999px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all .15s; }
+  .tl-btn.blue { background: #1a56db; color: white; }
+  .tl-btn.green { background: #057a55; color: white; }
+  .tl-btn.yellow { background: #c27803; color: white; }
+  .tl-btn.red { background: #c81e1e; color: white; }
+  .tl-btn.inactive { opacity: .4; filter: grayscale(.6); }
+  .tl-panel { display: none; border-radius: var(--radius); padding: 14px 16px; margin-top: 4px; font-size: 13.5px; }
+  .tl-panel.show { display: block; }
+  .tl-panel.blue { background: var(--blue-light); color: #1e3a8a; border-left: 4px solid var(--blue); }
+  .tl-panel.green { background: var(--green-light); color: #064e3b; border-left: 4px solid var(--green); }
+  .tl-panel.yellow { background: var(--yellow-light); color: #78350f; border-left: 4px solid var(--yellow); }
+  .tl-panel.red { background: var(--red-light); color: #7f1d1d; border-left: 4px solid var(--red); }
+
+  /* DRAG-DROP SCENARIO */
+  .scenario-game { margin-top: 12px; }
+  .cards-pool { display: flex; flex-wrap: wrap; gap: 8px; min-height: 50px; padding: 10px; background: var(--gray-100); border-radius: var(--radius); border: 2px dashed var(--gray-300); margin-bottom: 16px; }
+  .drop-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .drop-zone { min-height: 80px; padding: 10px; border-radius: var(--radius); border: 2px dashed; }
+  .drop-zone.acceptable { background: var(--green-light); border-color: var(--green); }
+  .drop-zone.not-acceptable { background: var(--red-light); border-color: var(--red); }
+  .drop-zone-label { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .drop-zone.acceptable .drop-zone-label { color: var(--green); }
+  .drop-zone.not-acceptable .drop-zone-label { color: var(--red); }
+  .scenario-card { background: white; border: 1px solid var(--gray-200); border-radius: 6px; padding: 6px 10px; font-size: 12.5px; cursor: grab; user-select: none; box-shadow: 0 1px 3px rgba(0,0,0,.08); transition: box-shadow .15s; }
+  .scenario-card:hover { box-shadow: 0 3px 8px rgba(0,0,0,.12); }
+  .scenario-card.dragging { opacity: .4; }
+  .scenario-card.correct { border-color: var(--green); background: var(--green-light); }
+  .scenario-card.incorrect { border-color: var(--red); background: var(--red-light); }
+  .check-btn, .reset-btn { padding: 8px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; border: none; margin-right: 8px; }
+  .check-btn { background: var(--blue); color: white; }
+  .reset-btn { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
+
+  /* SPECTRUM */
+  .spectrum { display: flex; gap: 4px; margin: 12px 0; flex-wrap: wrap; }
+  .sp-btn { padding: 7px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 2px solid transparent; transition: all .15s; }
+  .sp-btn:nth-child(1) { background: #dcfce7; color: #166534; }
+  .sp-btn:nth-child(2) { background: #d1fae5; color: #065f46; }
+  .sp-btn:nth-child(3) { background: #fef9c3; color: #854d0e; }
+  .sp-btn:nth-child(4) { background: #fed7aa; color: #9a3412; }
+  .sp-btn:nth-child(5) { background: #fee2e2; color: #991b1b; }
+  .sp-btn.active { border-color: currentColor; box-shadow: 0 0 0 2px rgba(0,0,0,.1); }
+  .sp-panel { display: none; font-size: 13.5px; padding: 12px 16px; border-radius: var(--radius); margin-top: 4px; }
+  .sp-panel.show { display: block; }
+
+  /* TIER CARDS */
+  .tier-btns { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+  .tier-btn { padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; transition: all .15s; }
+  .tier-btn.t1 { background: var(--green-light); color: var(--green); border: 2px solid var(--green); }
+  .tier-btn.t2 { background: var(--yellow-light); color: var(--yellow); border: 2px solid var(--yellow); }
+  .tier-btn.t3 { background: var(--red-light); color: var(--red); border: 2px solid var(--red); }
+  .tier-panel { display: none; padding: 12px 16px; border-radius: var(--radius); font-size: 13.5px; }
+  .tier-panel.show { display: block; }
+  .tier-panel.t1 { background: var(--green-light); color: #064e3b; border-left: 4px solid var(--green); }
+  .tier-panel.t2 { background: var(--yellow-light); color: #78350f; border-left: 4px solid var(--yellow); }
+  .tier-panel.t3 { background: var(--red-light); color: #7f1d1d; border-left: 4px solid var(--red); }
+
+  /* PROMPT BOX */
+  .prompt-box { background: var(--gray-900); color: #e2e8f0; border-radius: var(--radius); padding: 16px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; margin-top: 10px; position: relative; }
+  .copy-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,.1); color: white; border: none; border-radius: 4px; padding: 4px 10px; font-size: 11px; cursor: pointer; }
+  .copy-btn:hover { background: rgba(255,255,255,.2); }
+
+  /* LINKS */
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* RESOURCE LINKS */
+  .resource-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .resource-link { display: flex; align-items: center; gap: 6px; background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 8px 14px; font-size: 13px; font-weight: 500; color: var(--blue); text-decoration: none; transition: box-shadow .15s; }
+  .resource-link:hover { box-shadow: 0 2px 8px rgba(0,0,0,.1); text-decoration: none; }
+
+  /* BACK TO TOP */
+  .back-top { display: inline-block; margin-top: 24px; font-size: 13px; color: var(--blue); cursor: pointer; }
+
+  /* GRADE SCALE */
+
+  @media (max-width: 600px) {
+    .drop-zones { grid-template-columns: 1fr; }
+    .step-card { flex-direction: column; }
+    .step-num { min-width: auto; padding: 10px 16px; justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="course-name">English for Business &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    <div class="inst" style="font-size:12px;color:#9ca3af;">LAB University of Applied Sciences</div>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Business Plan Report<br>Assignment Guide</h1>
+  <p>Everything you need to understand the assignment, write your report, and submit with confidence.</p>
+  <div class="badges">
+    <span class="badge">Individual assignment</span>
+    <span class="badge">25–30 hours total</span>
+    <span class="badge">Graded 0–5</span>
+    <span class="badge">PAIRR framework</span>
+  </div>
+  <div class="credit">Generated with Claude Sonnet 4.6, <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a>. The assignment is inspired by PAIRR: <a href="https://writing.ucdavis.edu/pairr" target="_blank">writing.ucdavis.edu/pairr</a></div>
+</div>
+
+<nav class="tabs-bar" id="tabsBar">
+  <button class="tab-btn active" data-tab="overview">📋 Overview</button>
+  <button class="tab-btn" data-tab="airules">🚦 AI Rules</button>
+  <button class="tab-btn" data-tab="pairr">✍️ PAIRR Steps</button>
+  <button class="tab-btn" data-tab="instructions">📖 Instructions</button>
+  <button class="tab-btn" data-tab="fair">🏪 Business Fair</button>
+  <button class="tab-btn" data-tab="downloads">📥 Downloads</button>
+</nav>
+
+<!-- ══════════════ OVERVIEW TAB ══════════════ -->
+<div class="tab-panel active" id="tab-overview">
+<div class="container">
+
+  <details class="accordion" open>
+    <summary>What is this assignment?</summary>
+    <div class="accordion-body">
+      <p>📋 <strong>Overview and individual work</strong></p>
+      <p>You will write a <strong>Business Plan Report</strong> by yourself. You will choose an imaginary business idea, define key business terms, and write a business plan. You will also give and receive peer feedback, use an AI tool in class, and reflect on both types of feedback. At the end of the semester, you will present your business idea at a <strong>Business Fair</strong>. The whole process runs across the semester.</p>
+      <p><strong>Individual work:</strong> This is an individual assignment. You write your own report. For peer feedback, you will be part of a small peer team. Your team will meet twice on your own to exchange feedback on drafts, and once more in class with your instructor. After the in-class peer session, you will experiment with AI feedback. All writing must be your own.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>🎯 Learning goals</summary>
+    <div class="accordion-body">
+      <p><strong>Writing and research:</strong> Write a structured report and learn how professional writing works in English. Search for good sources online. Cite sources correctly.</p>
+      <p><strong>Feedback and reflection:</strong> Give and receive peer feedback within a small peer team — two self-scheduled meetings and one in-class session. After the in-class peer session, use an AI tool (with your instructor) to get feedback on your writing. Compare peer and AI feedback critically and reflect on what you learned.</p>
+      <p><strong>Definitions and concepts:</strong> Define key business plan terms using sources. Write clear, source-supported definitions in your own words.</p>
+      <p><strong>Speaking and presenting:</strong> Present your business idea at the end-of-semester Business Fair. Practise explaining your idea clearly in English and answering questions from other students.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>⏱️ How long will this take?</summary>
+    <div class="accordion-body">
+      <p>The time depends on your previous experience with academic writing in English and with digital tools.</p>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Assignment part</th><th>What this includes</th><th>Estimated time</th></tr>
+          <tr><td><strong>Understanding key concepts and sources</strong></td><td>Reading about business plan concepts, finding and reading sources, understanding terms</td><td>4–6 hours</td></tr>
+          <tr><td><strong>Writing the report text</strong></td><td>Planning, drafting, and revising approximately 1,750–2,000 words</td><td>10–12 hours</td></tr>
+          <tr><td><strong>Tables, figures, and formatting</strong></td><td>Creating tables and figures, adding images and screenshots, using Word styles, formatting the document</td><td>3–4 hours</td></tr>
+          <tr><td><strong>Peer feedback</strong></td><td>Two self-scheduled team meetings + one in-class session; writing your reflection on the feedback you received</td><td>3–4 hours</td></tr>
+          <tr><td><strong>AI use and reflection</strong></td><td>Using AI for feedback, analyzing its suggestions, writing reflections, adding screenshots</td><td>2–3 hours</td></tr>
+          <tr><td><strong>Final checking and submission</strong></td><td>Language checking, reference list, final edits before submission</td><td>2–3 hours</td></tr>
+          <tr><td><strong>Business Fair</strong></td><td>Preparing to present your business idea; taking part as a business partner for other students</td><td>1–2 hours</td></tr>
+          <tr><td><strong>Total estimated workload</strong></td><td>Approximately 1.5–2 ECTS credits</td><td><strong>26–32 hours</strong></td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📄 Report structure</summary>
+    <div class="accordion-body">
+      <p>Use the official Word template. Do not change the section headings or numbering.</p>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Section</th><th>Title</th><th>Notes</th></tr>
+          <tr><td>Cover</td><td>Title page</td><td>Business name, course, instructor, your name and student ID</td></tr>
+          <tr><td>—</td><td>Summary</td><td><strong>Leave blank.</strong> You write this in the midterm exam.</td></tr>
+          <tr><td>1</td><td>Introduction</td><td>Two paragraphs, 60–75 words each. Overview of your business idea and report structure.</td></tr>
+          <tr><td>2</td><td>Term definitions</td><td>Define all 8 key business plan terms — one paragraph per subsection (2.1–2.8), 60–75 words each</td></tr>
+          <tr><td>3</td><td>Your business plan</td><td>8 subsections (value proposition, customer segments, channels, etc.)</td></tr>
+          <tr><td>4</td><td>Feedback</td><td>Peer feedback (4.1), AI feedback (4.2), comparison and reflection (4.3)</td></tr>
+          <tr><td>5</td><td>AI tool use</td><td>Describe all AI tools you used. Required even if use was minimal.</td></tr>
+          <tr><td>—</td><td>References</td><td>Full list — author, date, title, source, URL or DOI</td></tr>
+          <tr><td>—</td><td>Appendices</td><td>Any supporting materials (e.g. screenshots)</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>🗓️ Semester timeline</summary>
+    <div class="accordion-body">
+      <div class="timeline" style="margin-top:12px;">
+
+        <div class="tl-item">
+          <details class="tl-accordion">
+            <summary class="tl-header">
+              <span class="tl-phase">🌱 Early to mid semester</span>
+              <span style="font-size:13px;font-weight:600;margin-left:4px;">Choose your topic, start researching, peer feedback</span>
+            </summary>
+            <div class="tl-body">
+              <ul>
+                <li>Brainstorm and choose your business idea for Section 3.</li>
+                <li>Start searching for sources and drafting term definitions for Section 2.</li>
+                <li>Share your early draft with your peer team.</li>
+                <li>Schedule and hold your <strong>first peer team meeting</strong> — give and receive written feedback on each other's early drafts.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+
+        <div class="tl-item">
+          <details class="tl-accordion">
+            <summary class="tl-header">
+              <span class="tl-phase">✏️ Mid semester</span>
+              <span style="font-size:13px;font-weight:600;margin-left:4px;">First draft, peer feedback, AI feedback</span>
+            </summary>
+            <div class="tl-body">
+              <ul>
+                <li>Complete your first draft. Sections 2 and 3 have real content (mostly complete).</li>
+                <li>Share your first draft with your peer team.</li>
+                <li>Schedule and hold your <strong>second peer team meeting</strong> — give and receive feedback on first drafts.</li>
+                <li><strong>In-class peer session:</strong> give and receive feedback with your instructor present.</li>
+                <li><strong>After the in-class session:</strong> use AI tools for feedback (in class with your instructor).</li>
+                <li>Start reflecting on and comparing the feedback in Section 4.</li>
+                <li>Start drafting the introduction and Sections 4 and 5.</li>
+              </ul>
+              <div class="note">📌 <strong>What counts as a first draft?</strong> All template sections are present and contain real content. Perfect grammar is not required — errors are normal and expected. You can use placeholders like <em>TBC</em> (to be completed) or <em>NSS</em> (needs a source).</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="tl-item">
+          <details class="tl-accordion">
+            <summary class="tl-header">
+              <span class="tl-phase">📝 Midterm exam</span>
+              <span style="font-size:13px;font-weight:600;margin-left:4px;">Write the summary individually</span>
+            </summary>
+            <div class="tl-body">
+              <ul>
+                <li>Sections 2 and 3 must be complete before the midterm exam.</li>
+                <li>In the exam, you write a summary of your report (sections 2 and 3).</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+
+        <div class="tl-item">
+          <details class="tl-accordion">
+            <summary class="tl-header">
+              <span class="tl-phase">🏁 End of semester</span>
+              <span style="font-size:13px;font-weight:600;margin-left:4px;">Submit report + Business Fair</span>
+            </summary>
+            <div class="tl-body">
+              <ul>
+                <li>Complete the introduction.</li>
+                <li>Complete Sections 4 and 5.</li>
+                <li>Finalize your references list.</li>
+                <li>Upload your final version before the deadline (the submission link closes automatically).</li>
+                <li>Take part in the <strong>Business Fair</strong> — present your business idea and act as a business partner for other students.</li>
+              </ul>
+              <div class="note">⚠️ <strong>No late submissions.</strong> The submission link closes at the deadline. Plan ahead.</div>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📤 How to submit</summary>
+    <div class="accordion-body">
+      <ol>
+        <li>Use the correct Word template. Do not rename sections or change the structure.</li>
+        <li>Submit your final, complete version before the deadline.</li>
+      </ol>
+      <div class="callout warn" style="margin-top:12px;">⚠️ <strong>No late submissions.</strong> The submission link closes at the deadline. Plan ahead.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>⚠️ What is plagiarism?</summary>
+    <div class="accordion-body">
+      <p>Plagiarism is using someone else's words or ideas without saying where they come from. This includes copying text without a citation, paraphrasing too closely, or submitting AI-generated text as your own. Always write in your own words and cite your sources. If you are not sure, cite — it is better to cite too much than too little.</p>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════════ AI RULES TAB ══════════════ -->
+<div class="tab-panel" id="tab-airules">
+<div class="container">
+
+  <details class="accordion" open>
+    <summary>🚦 Part A: The AI Traffic Light System (<a href="https://arene.fi/wp-content/uploads/PDF/2024/tekoalysuositukset/ARENE%20AI%20english.pdf?_t=1731419903" target="_blank" onclick="event.stopPropagation()">Arene AI Traffic Lights</a>)</summary>
+    <div class="accordion-body">
+      <p>Your institution uses a four-colour system to show how AI may be used in each task. Click a colour to learn what it means.</p>
+      <div class="traffic-lights">
+        <button class="tl-btn blue" onclick="showTL('blue')">🔵 BLUE</button>
+        <button class="tl-btn green" onclick="showTL('green')">🟢 GREEN</button>
+        <button class="tl-btn yellow" onclick="showTL('yellow')">🟡 YELLOW</button>
+        <button class="tl-btn red" onclick="showTL('red')">🔴 RED</button>
+      </div>
+      <div class="tl-panel blue" id="tl-blue"><strong>🔵 Blue — AI freely permitted.</strong> You may use AI tools freely to complete the task. No need to disclose use.</div>
+      <div class="tl-panel green" id="tl-green"><strong>🟢 Green — AI permitted with disclosure.</strong> You may use AI to assist your work, but you must report how you used it. All final writing must be your own.</div>
+      <div class="tl-panel yellow" id="tl-yellow"><strong>🟡 Yellow — Limited AI use, full disclosure required.</strong> AI may be used for specific purposes only (e.g. proofreading, brainstorming). You must document every use and all final text must be written by you.</div>
+      <div class="tl-panel red" id="tl-red"><strong>🔴 Red — No AI use permitted.</strong> This task must be completed without any AI assistance. Using AI is treated as fraud.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📌 Part B: What colour is this assignment?</summary>
+    <div class="accordion-body">
+      <div class="callout warn">🟡 This assignment is <strong>YELLOW</strong> — you can use AI, but you must report every time you use it.</div>
+      <p><strong>You may:</strong></p>
+      <ul>
+        <li>Use AI to check grammar, spelling, and punctuation</li>
+        <li>Use AI to give feedback on your draft (in class, with your instructor)</li>
+        <li>Use AI to brainstorm ideas — but you must write all final text yourself</li>
+        <li>Use AI to create a logo or brand image for Section 3.1</li>
+      </ul>
+      <p style="margin-top:10px;"><strong>You must NOT:</strong></p>
+      <ul>
+        <li>Ask AI to write any section of your report</li>
+        <li>Copy AI-generated text and submit it as your own</li>
+        <li>Use AI to summarize sources instead of reading them yourself</li>
+        <li>Ask AI to generate a reference list (AI often invents fake sources)</li>
+      </ul>
+      <p style="margin-top:10px;"><strong>If you use AI, you must:</strong></p>
+      <ul>
+        <li>Save screenshots or copies of your AI chat sessions</li>
+        <li>Describe your AI use in Section 5 of your report</li>
+        <li>Complete the AI disclosure form provided by your instructor</li>
+      </ul>
+      <div class="callout danger" style="margin-top:10px;">🚫 Failing to disclose AI use is treated as fraud and will affect your grade.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>💡 Recommended proofreading prompt</summary>
+    <div class="accordion-body">
+      <p>Copy and paste this into your AI tool when you want it to proofread — and only proofread — your writing:</p>
+      <div class="prompt-box" id="promptBox">Role: You are a proofreading tool.
+Focus area: Proofread for grammar, spelling, and punctuation only.
+Boundaries: Do not rewrite anything. Respect my original voice and only flag objective writing mistakes.
+Context: I am writing an academic report.
+Feedback format: Provide your feedback in bullet points.
+How to start: Wait for me to give you a passage to check.
+        <button class="copy-btn" onclick="copyPrompt()">Copy</button>
+      </div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>🎯 Part C: Scenario Activity</summary>
+    <div class="accordion-body">
+      <p>Drag each card to the correct category, or click to select then click a zone.</p>
+      <div class="scenario-game">
+        <div class="cards-pool" id="cardPool">
+          <div class="scenario-card" draggable="true" data-answer="acceptable" data-id="s1">Using AI to check grammar in my draft</div>
+          <div class="scenario-card" draggable="true" data-answer="not-acceptable" data-id="s2">Asking AI to write Section 2 for me</div>
+          <div class="scenario-card" draggable="true" data-answer="acceptable" data-id="s3">Using AI to generate a logo</div>
+          <div class="scenario-card" draggable="true" data-answer="not-acceptable" data-id="s4">Copying AI feedback without reading it</div>
+          <div class="scenario-card" draggable="true" data-answer="acceptable" data-id="s5">Using AI to brainstorm business ideas</div>
+          <div class="scenario-card" draggable="true" data-answer="not-acceptable" data-id="s6">Using AI to generate my reference list</div>
+        </div>
+        <div class="drop-zones">
+          <div class="drop-zone acceptable" id="zone-acceptable" ondragover="event.preventDefault()" ondrop="dropCard(event,'acceptable')">
+            <div class="drop-zone-label">🟢 Acceptable</div>
+          </div>
+          <div class="drop-zone not-acceptable" id="zone-not-acceptable" ondragover="event.preventDefault()" ondrop="dropCard(event,'not-acceptable')">
+            <div class="drop-zone-label">🔴 Not acceptable</div>
+          </div>
+        </div>
+        <button class="check-btn" onclick="checkScenarios()">Check answers</button>
+        <button class="reset-btn" onclick="resetScenarios()">Reset</button>
+        <div id="scenario-result" style="margin-top:10px;font-size:13.5px;"></div>
+      </div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📊 Part D: The Writing Spectrum</summary>
+    <div class="accordion-body">
+      <p>How much AI use is too much? Tap each level to explore.</p>
+      <p style="font-size:12px;color:#9ca3af;margin-bottom:8px;">Inspired by <a href="https://www.linkedin.com/feed/update/urn:li:activity:7385644512616034304/" target="_blank">Jim O'Mahony</a> and Ville Arvola (ITK2025)</p>
+      <div class="spectrum">
+        <button class="sp-btn" onclick="showSpectrum(1,this)">Level 1</button>
+        <button class="sp-btn" onclick="showSpectrum(2,this)">Level 2</button>
+        <button class="sp-btn" onclick="showSpectrum(3,this)">Level 3</button>
+        <button class="sp-btn" onclick="showSpectrum(4,this)">Level 4</button>
+        <button class="sp-btn" onclick="showSpectrum(5,this)">Level 5</button>
+      </div>
+      <div class="sp-panel" id="sp1" style="background:#dcfce7;color:#166534;border-left:4px solid #16a34a;"><strong>Level 1 — No AI use.</strong> You wrote everything yourself without any AI assistance. All ideas, phrasing, and structure are entirely your own.</div>
+      <div class="sp-panel" id="sp2" style="background:#d1fae5;color:#065f46;border-left:4px solid #059669;"><strong>Level 2 — AI for proofreading only.</strong> You used AI to catch grammar or spelling errors. The content and ideas are entirely your own.</div>
+      <div class="sp-panel" id="sp3" style="background:#fef9c3;color:#854d0e;border-left:4px solid #ca8a04;"><strong>Level 3 — AI for feedback and brainstorming.</strong> You used AI to get feedback on your draft or brainstorm ideas. You evaluated the suggestions critically and rewrote everything in your own words.</div>
+      <div class="sp-panel" id="sp4" style="background:#fed7aa;color:#9a3412;border-left:4px solid #ea580c;"><strong>Level 4 — Heavy AI assistance.</strong> AI significantly shaped the content, structure, or phrasing of your report. You may have edited or paraphrased AI output. This is approaching the boundary of acceptable use.</div>
+      <div class="sp-panel" id="sp5" style="background:#fee2e2;color:#991b1b;border-left:4px solid #dc2626;"><strong>Level 5 — AI-generated text submitted as your own.</strong> The text was generated by AI and submitted without meaningful rewriting. This is academic fraud.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>🤖 Part E: Ethical AI Use Tiers</summary>
+    <div class="accordion-body">
+      <p>These three tiers describe different types of AI use. Know which tier your activity falls into before you start.</p>
+      <p style="font-size:12px;color:#9ca3af;margin-bottom:8px;">Inspired by <a href="https://doi.org/10.1186/s41077-025-00350-6" target="_blank">Cheng, Calhoun &amp; Reedy 2025</a></p>
+      <div class="tier-btns">
+        <button class="tier-btn t1" onclick="showTier('t1')">✅ Tier 1 — Acceptable</button>
+        <button class="tier-btn t2" onclick="showTier('t2')">⚠️ Tier 2 — Use with care</button>
+        <button class="tier-btn t3" onclick="showTier('t3')">🚫 Tier 3 — Avoid</button>
+      </div>
+      <div class="tier-panel t1" id="tier-t1"><strong>✅ Tier 1 — Acceptable:</strong> Using AI as a tool to support your own thinking. Examples: proofreading, getting feedback on a draft you wrote, using AI to create a logo or image, brainstorming ideas you then develop yourself.</div>
+      <div class="tier-panel t2" id="tier-t2"><strong>⚠️ Tier 2 — Use with care:</strong> Using AI in ways that could blur the line between your work and AI output. Examples: asking AI to rewrite a paragraph you wrote, using AI suggestions without critically evaluating them. Always disclose and reflect.</div>
+      <div class="tier-panel t3" id="tier-t3"><strong>🚫 Tier 3 — Avoid:</strong> Using AI in ways that replace your own thinking or writing. Examples: asking AI to write a section, copying AI-generated text, using AI to summarize sources instead of reading them. This is academic fraud.</div>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════════ PAIRR TAB ══════════════ -->
+<div class="tab-panel" id="tab-pairr">
+<div class="container">
+  <p style="font-size:14px;color:var(--gray-600);margin-bottom:20px;">PAIRR stands for <strong>Peer and AI Review + Reflection</strong>. This assignment follows a five-step process. Click each step to read the instructions.</p>
+
+  <div class="steps">
+
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <details>
+          <summary>Step 1 — Learn about AI<br><span class="step-meta">Before you write · See the AI Rules tab</span></summary>
+          <div class="step-body">
+            <p>Before you start writing, understand what AI use is and is not acceptable in this assignment. Go to the <strong>AI Rules</strong> tab and work through all five parts (A–E).</p>
+            <p>This step is not assessed directly, but it helps you avoid mistakes that could affect your grade.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <details>
+          <summary>Step 2 — Peer Review<br><span class="step-meta">Two self-scheduled meetings + one in-class session · Write your reflection in Section 4.1</span></summary>
+          <div class="step-body">
+            <p>Peer review happens in <strong>three rounds</strong>. You write individually, but you are part of a small peer team for feedback purposes.</p>
+            <ul>
+              <li><strong>Meeting 1</strong> (self-scheduled, early semester): share your early draft with your peer team and give written feedback on theirs.</li>
+              <li><strong>Meeting 2</strong> (self-scheduled, mid semester): share your first draft and give feedback on your peers' first drafts.</li>
+              <li><strong>Meeting 3</strong> (in class): peer feedback session with your instructor present. AI feedback follows directly after this session.</li>
+            </ul>
+            <div class="callout info">ℹ️ There are no right or wrong answers in your reflection. Disagreeing with feedback is a valid response. What matters is that you explain your reasoning.</div>
+            <p><strong>What to write in Section 4.1:</strong></p>
+            <ul>
+              <li>What were the <strong>main strengths</strong> of your text according to your peers?</li>
+              <li>What <strong>specific suggestions</strong> for improvement did you receive?</li>
+              <li>Did your peers point out <strong>problems you had not noticed yourself</strong>? Explain.</li>
+              <li>How did the feedback <strong>confirm or challenge your own view</strong> of your writing?</li>
+              <li>What <strong>changes</strong> did you make — and were there suggestions you chose <strong>not</strong> to act on? Why?</li>
+            </ul>
+            <p><strong>Length:</strong> 2–3 paragraphs, approximately 60–75 words each. Write as continuous text, not a bullet list.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <details>
+          <summary>Step 3 — AI Feedback<br><span class="step-meta">In class, after the peer session · Write your reflection in Section 4.2</span></summary>
+          <div class="step-body">
+            <p>This takes place <strong>in class</strong>, immediately after the in-class peer feedback session, with your instructor's guidance. You will use an AI feedback tool to get feedback on your draft.</p>
+            <p><strong>What to write in Section 4.2:</strong></p>
+            <ul>
+              <li>What <strong>kind of feedback</strong> did the AI mainly give you?</li>
+              <li>Which parts were <strong>helpful or accurate</strong>, and why?</li>
+              <li>Did the feedback feel <strong>general or specific</strong> to your text? Give an example.</li>
+              <li>Did you notice any <strong>errors or misleading suggestions</strong>? Explain.</li>
+              <li>How did you <strong>decide which suggestions to accept, modify, or ignore</strong>?</li>
+              <li>Overall, <strong>how useful was the AI feedback</strong>?</li>
+            </ul>
+            <p><strong>Screenshots:</strong> Add a few screenshots of the AI feedback. Label and number them as images.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <details>
+          <summary>Step 4 — Compare and Reflect<br><span class="step-meta">Mid semester onwards · Write Section 4.3</span></summary>
+          <div class="step-body">
+            <p>Write 2–3 paragraphs (~60–75 words each) comparing the peer feedback and the AI feedback you received.</p>
+            <p><strong>Guiding questions for Section 4.3:</strong></p>
+            <ul>
+              <li>In what ways was <strong>peer feedback different from AI feedback</strong>?</li>
+              <li>Which type helped you more with <strong>content and ideas</strong>, and why?</li>
+              <li>Which type helped you more with <strong>language or clarity</strong>?</li>
+              <li>Did the two types of feedback ever <strong>contradict each other</strong>? How did you handle this?</li>
+              <li>What does this tell you about the <strong>strengths and limitations of AI</strong> in writing?</li>
+            </ul>
+            <div class="tbl-wrap" style="margin-top:10px;">
+              <table>
+                <tr><th>Dimension</th><th>Peer feedback</th><th>AI feedback</th></tr>
+                <tr><td><strong>Content and ideas</strong></td><td>Often stronger — humans understand your specific context</td><td>Can be general or miss your specific topic</td></tr>
+                <tr><td><strong>Language and clarity</strong></td><td>Depends on your peer team's language level</td><td>Often detailed and consistent</td></tr>
+                <tr><td><strong>Citations</strong></td><td>Peer may notice missing or incorrect citations</td><td>AI can invent fake sources — always verify</td></tr>
+                <tr><td><strong>Accuracy</strong></td><td>Less likely to invent facts</td><td>May sound confident while being wrong</td></tr>
+              </table>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <details>
+          <summary>Step 5 — Revise and Submit<br><span class="step-meta">Update your draft based on feedback</span></summary>
+          <div class="step-body">
+            <p>Use the feedback you received from your peer team and from the AI to improve your draft. Then complete the report and prepare for submission.</p>
+            <p><strong>Section 5 — AI tool use:</strong></p>
+            <ul>
+              <li>Write 2–3 paragraphs describing how you used AI throughout the assignment and how it may have affected your work</li>
+              <li>Add screenshots of your AI prompts (labelled and numbered)</li>
+            </ul>
+            <p>Go to the <strong>Checklist</strong> tab to check that your report is complete before you submit.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════════ INSTRUCTIONS TAB ══════════════ -->
+<div class="tab-panel" id="tab-instructions">
+<div class="container">
+
+  <details class="accordion">
+    <summary>📄 Cover page and author information</summary>
+    <div class="accordion-body">
+      <ul>
+        <li>Write the <strong>name of your business idea</strong> where it says "XYZ" at the top of the document.</li>
+        <li>Fill in your <strong>first name, last name, and student ID number</strong> in the author field.</li>
+        <li>Leave the <strong>Summary completely blank</strong> — you write it during the midterm exam.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>§ 1 — Introduction</summary>
+    <div class="accordion-body">
+      <p><strong>What to write:</strong></p>
+      <ul>
+        <li>Say what your report is about and introduce your business idea</li>
+        <li>Explain why your business idea is good — give one reason (your claim) and one example or fact to support it</li>
+        <li>In the last paragraph, briefly say what the reader will find in each section of your report</li>
+      </ul>
+      <p style="margin-top:10px;"><strong>Length:</strong> Two paragraphs, 60–75 words each</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>§ 2 — Definitions of Key Business Plan Terms</summary>
+    <div class="accordion-body">
+      <p>Write one paragraph for each of the 8 terms below. Each paragraph must be <strong>4–6 sentences, approximately 60–75 words</strong>. Use at least one source in each paragraph.</p>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Subsection</th><th>Term</th></tr>
+          <tr><td>2.1</td><td>Value proposition</td></tr>
+          <tr><td>2.2</td><td>Customer segmentation</td></tr>
+          <tr><td>2.3</td><td>Delivery and communication channel</td></tr>
+          <tr><td>2.4</td><td>Customer relations management</td></tr>
+          <tr><td>2.5</td><td>Key partner</td></tr>
+          <tr><td>2.6</td><td>Revenue model</td></tr>
+          <tr><td>2.7</td><td>Key resource</td></tr>
+          <tr><td>2.8</td><td>Cost structure</td></tr>
+        </table>
+      </div>
+
+      <details style="margin-top:12px;">
+        <summary style="cursor:pointer;font-weight:600;font-size:13.5px;">How to write a definition paragraph</summary>
+        <div style="margin-top:8px;font-size:13.5px;color:var(--gray-700);">
+          <ol style="margin-left:18px;">
+            <li style="margin-bottom:4px;"><strong>First sentence</strong> — introduce the term and say why it is important</li>
+            <li style="margin-bottom:4px;"><strong>Definition</strong> — explain what the term means, using a source</li>
+            <li style="margin-bottom:4px;"><strong>Example or explanation</strong> — add an example or more detail to help the reader understand</li>
+          </ol>
+        </div>
+      </details>
+
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer;font-weight:600;font-size:13.5px;">How to cite a source in your text</summary>
+        <div style="margin-top:8px;font-size:13.5px;color:var(--gray-700);">
+          <p>When you use information from a source, say where it comes from. You can do this in two ways:</p>
+          <p style="margin-top:8px;"><strong>Option 1 — name in the sentence:</strong><br><em>According to Smith (2024), a value proposition explains the main benefit a business offers its customers.</em></p>
+          <p style="margin-top:8px;"><strong>Option 2 — name at the end:</strong><br><em>A value proposition explains the main benefit a business offers its customers (Smith 2024).</em></p>
+        </div>
+      </details>
+
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer;font-weight:600;font-size:13.5px;">How to write your reference list</summary>
+        <div style="margin-top:8px;font-size:13.5px;color:var(--gray-700);">
+          <p>At the end of your report, list all the sources you used. Use this format:</p>
+          <div style="margin-top:8px;background:var(--gray-50);border-left:3px solid var(--blue);padding:10px 14px;border-radius:4px;font-size:13px;line-height:1.9;">
+            <strong>Last name, First initial. Year. Title of the source. Cited on [date]. [link or website address]</strong><br><br>
+            <em>Example:</em><br>
+            Smith, A. 2026. What is a business model canvas? Cited on 15 March 2026. https://www.example.com/business-model
+          </div>
+          <p style="margin-top:8px;">You need at least one source for each paragraph in Section 2.</p>
+        </div>
+      </details>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>§ 3 — Your Business Plan</summary>
+    <div class="accordion-body">
+      <p>Explain and discuss your <em>imaginary</em> business plan. <strong>You do not need to cite sources in this section.</strong></p>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Subsection</th><th>What to write</th><th>Length</th></tr>
+          <tr><td><strong>3.1 Value proposition</strong></td><td>One paragraph explaining your value proposition and how you came up with it. Add a brand image or logo (you may use AI). Label it as Image 1.</td><td>~60–75 words</td></tr>
+          <tr><td><strong>3.2 Customer segments</strong></td><td>Identify two customer segments. Write two paragraphs. Create a table (Table 1) with segments and their characteristics. Refer to the table in your text.</td><td>~100 words per paragraph</td></tr>
+          <tr><td><strong>3.3 Channels</strong></td><td>Identify at least two channels. Write two paragraphs. Create a figure (Figure 1) showing how one channel works. Refer to the figure in your text.</td><td>~60–75 words per paragraph</td></tr>
+          <tr><td><strong>3.4 Customer relations</strong></td><td>Write one paragraph on how you will keep customers loyal. Give examples.</td><td>~60–75 words</td></tr>
+          <tr><td><strong>3.5 Key partners</strong></td><td>Write one paragraph: who are your key partners and how do they help create customer value?</td><td>~60–75 words</td></tr>
+          <tr><td><strong>3.6 Revenue model</strong></td><td>Write one paragraph identifying and explaining your revenue model(s).</td><td>~60–75 words</td></tr>
+          <tr><td><strong>3.7 Key resources</strong></td><td>Write one paragraph: what resources do you need to make the business work?</td><td>~60–75 words</td></tr>
+          <tr><td><strong>3.8 Cost structure</strong></td><td>Write one paragraph: what are the costs and expenses to run your business?</td><td>~60–75 words</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>§ 4 — Peer and AI Feedback on Your Writing</summary>
+    <div class="accordion-body">
+      <div class="callout info">ℹ️ Section 4 is not graded, but you must complete it to pass. There are no right or wrong answers. If you disagree with feedback you received, that is fine — just explain why.</div>
+      <ul style="margin-top:10px;">
+        <li><strong>4.1 Peer feedback</strong> — write about the feedback you got from your peer team in all three rounds (2–3 paragraphs, ~60–75 words each)</li>
+        <li style="margin-top:4px;"><strong>4.2 AI feedback</strong> — write about the AI feedback you got in class; mention anything that seemed wrong or unclear; add a few screenshots (2–3 paragraphs, ~60–75 words each)</li>
+        <li style="margin-top:4px;"><strong>4.3 Compare and reflect</strong> — compare the two types of feedback (2–3 paragraphs, ~60–75 words each)</li>
+      </ul>
+      <p style="margin-top:10px;">See the <strong>PAIRR Steps</strong> tab for guiding questions.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>§ 5 — Use of AI Tools</summary>
+    <div class="accordion-body">
+      <ul>
+        <li>Write 2–3 paragraphs (~60–75 words each) about how you used AI tools when writing this report and how it affected your work</li>
+        <li>Add screenshots of your AI conversations (label each one, for example: Image 4)</li>
+        <li>Do not delete the AI traffic light image in the template</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>References</summary>
+    <div class="accordion-body">
+      <p>List all the sources you used. You need at least one source for each paragraph in Section 2. Use this format:</p>
+      <div style="margin-top:10px;background:var(--gray-50);border-left:3px solid var(--blue);padding:10px 14px;border-radius:4px;font-size:13.5px;line-height:1.9;">
+        Last name, First initial. Year. Title. Cited on [date]. [link]<br>
+        <span style="color:var(--gray-600);font-size:13px;"><em>Example:</em> Smith, A. 2026. What is a value proposition? Cited on 15 March 2026. https://www.example.com</span>
+      </div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>Appendices</summary>
+    <div class="accordion-body">
+      <p>Include any required supporting material here: screenshots, survey questions, or other materials relevant to your report.</p>
+    </div>
+  </details>
+
+  <p class="section-label">Key resources</p>
+  <div class="resource-links">
+    <a class="resource-link" href="https://hamgued.github.io/html-tools/business%20model%20canvas.html" target="_blank">🗂️ Business Model Canvas Explorer</a>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════════ BUSINESS FAIR TAB ══════════════ -->
+<div class="tab-panel" id="tab-fair">
+<div class="container">
+
+  <p style="font-size:14px;color:var(--gray-600);margin-bottom:20px;">The Business Fair takes place at the end of the semester. Every student takes part twice — once as a <strong>presenter</strong> and once as a <strong>business partner</strong>. The roles switch halfway through the class.</p>
+
+  <details class="accordion" open>
+    <summary>🏪 What is the Business Fair?</summary>
+    <div class="accordion-body">
+      <p>The Business Fair is like a small trade fair in your classroom. Half of the students stand at their own "stand" and talk about their business idea. The other half walk around and listen, ask questions, and give feedback — like interested business partners or investors.</p>
+      <p style="margin-top:10px;">Halfway through, the roles switch. The presenters become the business partners, and the business partners become the presenters.</p>
+      <p style="margin-top:10px;">You will prepare up to three PowerPoint slides to help you talk about your idea. The slides are a support — not a script. You talk to your visitors naturally, as if you are really trying to convince someone to be your business partner.</p>
+      <div style="margin-top:12px;background:var(--green-light);border-left:3px solid var(--green);border-radius:var(--radius);padding:12px 16px;font-size:13.5px;color:#064e3b;">✅ The Business Fair is <strong>pass/fail</strong>. You pass by taking part actively — both as a presenter and as a business partner.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>🎤 Your role: Presenter</summary>
+    <div class="accordion-body">
+      <p>When you are the presenter, you stand at your stand and talk to the business partners who visit you. You do not need to memorise a speech. Just be ready to talk about your business idea in a clear and friendly way.</p>
+      <p style="margin-top:10px;"><strong>Be ready to explain:</strong></p>
+      <ul>
+        <li>What is your business idea? What problem does it solve?</li>
+        <li>Who are your customers?</li>
+        <li>How does your business make money?</li>
+        <li>Why is your idea better than other options?</li>
+        <li>What do you need to make it work? (resources, partners)</li>
+      </ul>
+      <div style="margin-top:12px;background:var(--blue-light);border-left:3px solid var(--blue);border-radius:var(--radius);padding:12px 16px;font-size:13.5px;color:#1e3a8a;">💡 <strong>Tip:</strong> You can bring your report, notes, or a printed image of your business model canvas to refer to. You do not need to memorise anything.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>🤝 Your role: Business Partner</summary>
+    <div class="accordion-body">
+      <p>When you are the business partner, you walk around and visit other students' stands. You listen to their business idea, ask questions, and fill in a short feedback form for each student you visit.</p>
+      <p style="margin-top:10px;"><strong>Your job is to:</strong></p>
+      <ul>
+        <li>Listen carefully to the presenter</li>
+        <li>Ask at least one question (see examples below)</li>
+        <li>Fill in the feedback form honestly</li>
+      </ul>
+      <p style="margin-top:10px;"><strong>Example questions you can ask:</strong></p>
+      <ul>
+        <li><em>"Who is your main customer? Can you give me an example?"</em></li>
+        <li><em>"How is your business different from similar businesses?"</em></li>
+        <li><em>"What is the biggest challenge for your business?"</em></li>
+        <li><em>"How much would a customer pay for this?"</em></li>
+        <li><em>"What would you need from a business partner like me?"</em></li>
+      </ul>
+      <div style="margin-top:12px;background:var(--blue-light);border-left:3px solid var(--blue);border-radius:var(--radius);padding:12px 16px;font-size:13.5px;color:#1e3a8a;">💡 <strong>Tip:</strong> You do not need to be an expert. Just be curious and ask questions you are genuinely interested in.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📋 Feedback Form</summary>
+    <div class="accordion-body">
+      <p>Fill in one form for each presenter you visit. Be specific and honest — your feedback helps the presenter improve.</p>
+      <div id="fairForm" style="margin-top:14px;">
+        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;font-size:13.5px;">
+
+          <div style="margin-bottom:16px;">
+            <label style="font-weight:600;display:block;margin-bottom:4px;">Presenter's name</label>
+            <input type="text" placeholder="Write the presenter's name here" style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13.5px;font-family:inherit;">
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <label style="font-weight:600;display:block;margin-bottom:6px;">1. What was the business idea? Write one sentence.</label>
+            <textarea rows="2" placeholder="e.g. A mobile app that helps students find cheap food near their university." style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13.5px;font-family:inherit;resize:vertical;"></textarea>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <label style="font-weight:600;display:block;margin-bottom:6px;">2. What did you find most interesting about this business idea?</label>
+            <textarea rows="2" placeholder="Write one or two sentences." style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13.5px;font-family:inherit;resize:vertical;"></textarea>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <label style="font-weight:600;display:block;margin-bottom:6px;">3. What question did you ask? What was the answer?</label>
+            <textarea rows="3" placeholder="My question: ...\nThe answer: ..." style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13.5px;font-family:inherit;resize:vertical;"></textarea>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <label style="font-weight:600;display:block;margin-bottom:6px;">4. One suggestion for improvement</label>
+            <textarea rows="2" placeholder="e.g. It would be clearer if you explained who your main customer is with an example." style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13.5px;font-family:inherit;resize:vertical;"></textarea>
+          </div>
+
+          <div style="margin-bottom:6px;">
+            <label style="font-weight:600;display:block;margin-bottom:6px;">5. Would you invest in this business? (Circle one)</label>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;" id="investBtns">
+              <button onclick="selectInvest(this,'yes')" style="padding:8px 18px;border-radius:999px;border:2px solid var(--green);background:white;color:var(--green);font-weight:700;font-size:13px;cursor:pointer;">✅ Yes, definitely</button>
+              <button onclick="selectInvest(this,'maybe')" style="padding:8px 18px;border-radius:999px;border:2px solid var(--yellow);background:white;color:var(--yellow);font-weight:700;font-size:13px;cursor:pointer;">🤔 Maybe</button>
+              <button onclick="selectInvest(this,'no')" style="padding:8px 18px;border-radius:999px;border:2px solid var(--red);background:white;color:var(--red);font-weight:700;font-size:13px;cursor:pointer;">❌ Not yet</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+          <button onclick="printForm()" style="padding:9px 20px;background:var(--blue);color:white;border:none;border-radius:6px;font-weight:600;font-size:13px;cursor:pointer;">🖨️ Print this form</button>
+          <button onclick="clearForm()" style="padding:9px 20px;background:var(--gray-100);color:var(--gray-700);border:1px solid var(--gray-200);border-radius:6px;font-weight:600;font-size:13px;cursor:pointer;">Clear form</button>
+        </div>
+        <p style="font-size:12px;color:var(--gray-600);margin-top:8px;">Print one copy per presenter you visit, or ask your instructor for printed copies.</p>
+      </div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>✅ How are you assessed?</summary>
+    <div class="accordion-body">
+      <p>The Business Fair is <strong>pass/fail</strong>. It is not included in your report grade.</p>
+      <p style="margin-top:10px;">You pass if you:</p>
+      <ul>
+        <li>Are present for the full session</li>
+        <li>Present your business idea as a presenter</li>
+        <li>Visit other students and fill in feedback forms as a business partner</li>
+        <li>Communicate in English throughout</li>
+      </ul>
+      <div style="margin-top:12px;background:var(--yellow-light);border-left:3px solid var(--yellow);border-radius:var(--radius);padding:12px 16px;font-size:13.5px;color:#78350f;">⚠️ If you are absent or do not take part, you will get a <strong>fail</strong>, and your instructor may lower your final report grade. How much depends on the situation — your instructor will decide.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>💡 How to prepare</summary>
+    <div class="accordion-body">
+      <p>You need to prepare a short PowerPoint presentation with <strong>a maximum of three slides</strong>. The slides are there to help you talk — not to read from. Keep them simple: a few words or an image per slide.</p>
+      <p style="margin-top:10px;"><strong>Suggested slide structure:</strong></p>
+      <ul>
+        <li><strong>Slide 1 — Your business idea:</strong> Name of the business, what it does, and who it is for</li>
+        <li><strong>Slide 2 — Why it is a good idea:</strong> Your value proposition and what makes it different</li>
+        <li><strong>Slide 3 — How it works:</strong> How you make money, who your key partners are, and what you need to get started</li>
+      </ul>
+      <p style="margin-top:10px;">Read through your business plan before the fair and practise explaining it in simple English. Think about what questions you might get and how you would answer them.</p>
+      <div style="margin-top:12px;background:var(--blue-light);border-left:3px solid var(--blue);border-radius:var(--radius);padding:12px 16px;font-size:13.5px;color:#1e3a8a;">💬 <strong>Useful phrases:</strong><br>
+        <em>"My business idea is…"</em><br>
+        <em>"The main customer is… because…"</em><br>
+        <em>"We make money by…"</em><br>
+        <em>"The biggest challenge is… but we plan to…"</em><br>
+        <em>"That's a great question. I think…"</em>
+      </div>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<script>
+// ── TABS ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    window.scrollTo({top: document.getElementById('tabsBar').offsetTop - 60, behavior: 'smooth'});
+  });
+});
+
+// ── TRAFFIC LIGHTS ──
+function showTL(color) {
+  ['blue','green','yellow','red'].forEach(c => document.getElementById('tl-' + c).classList.remove('show'));
+  document.getElementById('tl-' + color).classList.add('show');
+}
+
+// ── COPY PROMPT ──
+function copyPrompt() {
+  const text = document.getElementById('promptBox').innerText.replace('Copy','').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
+// ── SCENARIO DRAG & DROP ──
+let selected = null;
+document.querySelectorAll('.scenario-card').forEach(card => {
+  card.addEventListener('dragstart', e => { e.dataTransfer.setData('id', card.dataset.id); card.classList.add('dragging'); });
+  card.addEventListener('dragend', () => card.classList.remove('dragging'));
+  card.addEventListener('click', () => {
+    if (selected === card) { selected = null; card.style.outline = ''; return; }
+    if (selected) selected.style.outline = '';
+    selected = card;
+    card.style.outline = '2px solid var(--blue)';
+  });
+});
+document.querySelectorAll('.drop-zone').forEach(zone => {
+  zone.addEventListener('click', () => {
+    if (selected) { zone.appendChild(selected); selected.style.outline = ''; selected = null; }
+  });
+});
+function dropCard(e, zone) {
+  const id = e.dataTransfer.getData('id');
+  const card = document.querySelector('[data-id="' + id + '"]');
+  document.getElementById('zone-' + zone).appendChild(card);
+}
+function checkScenarios() {
+  let correct = 0, total = 0;
+  document.querySelectorAll('.scenario-card').forEach(card => {
+    const zone = card.parentElement.id.replace('zone-','');
+    if (!zone || card.parentElement.id === 'cardPool') return;
+    total++;
+    if (zone === card.dataset.answer) { card.classList.add('correct'); card.classList.remove('incorrect'); correct++; }
+    else { card.classList.add('incorrect'); card.classList.remove('correct'); }
+  });
+  const r = document.getElementById('scenario-result');
+  if (total === 0) { r.innerHTML = '<span style="color:var(--gray-600)">Drag all cards to a zone first.</span>'; return; }
+  r.innerHTML = correct === total
+    ? '<span style="color:var(--green);font-weight:600;">✅ All correct!</span>'
+    : '<span style="color:var(--red);font-weight:600;">' + correct + '/' + total + ' correct. Try again.</span>';
+}
+function resetScenarios() {
+  const pool = document.getElementById('cardPool');
+  document.querySelectorAll('.scenario-card').forEach(c => { c.classList.remove('correct','incorrect'); pool.appendChild(c); });
+  document.getElementById('scenario-result').innerHTML = '';
+}
+
+// ── SPECTRUM ──
+function showSpectrum(n, btn) {
+  document.querySelectorAll('.sp-btn').forEach(b => b.classList.remove('active'));
+  for (let i=1;i<=5;i++) document.getElementById('sp'+i).classList.remove('show');
+  btn.classList.add('active');
+  document.getElementById('sp'+n).classList.add('show');
+}
+
+// ── TIERS ──
+function showTier(t) {
+  ['t1','t2','t3'].forEach(x => document.getElementById('tier-'+x).classList.remove('show'));
+  document.getElementById('tier-'+t).classList.add('show');
+}
+
+// ── BUSINESS FAIR FORM ──
+function selectInvest(btn, val) {
+  document.querySelectorAll('#investBtns button').forEach(b => {
+    b.style.background = 'white';
+  });
+  const colors = { yes: 'var(--green)', maybe: 'var(--yellow)', no: 'var(--red)' };
+  btn.style.background = colors[val];
+  btn.style.color = 'white';
+}
+function printForm() { window.print(); }
+function clearForm() {
+  document.querySelectorAll('#fairForm input, #fairForm textarea').forEach(el => el.value = '');
+  document.querySelectorAll('#investBtns button').forEach(b => b.style.background = 'white');
+  document.querySelectorAll('#investBtns button').forEach((b,i) => {
+    const c = ['var(--green)','var(--yellow)','var(--red)'][i];
+    b.style.color = c;
+  });
+}
+
+</script>
+
+<!-- ══════════════ DOWNLOADS TAB ══════════════ -->
+<div class="tab-panel" id="tab-downloads">
+<div class="container">
+
+  <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;">Download the official files for this assignment. All files open in Microsoft Word.</p>
+
+  <div style="display:grid;gap:14px;">
+
+    <!-- Report Template -->
+    <div style="background:white;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;background:var(--blue-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">📄</div>
+        <div>
+          <div style="font-weight:700;font-size:15px;color:var(--gray-900);">Report Template</div>
+          <div style="font-size:13px;color:var(--gray-600);margin-top:2px;">The Word template for your Business Plan Report. Use this file — do not change the section headings or structure.</div>
+        </div>
+      </div>
+      <a href="https://drive.google.com/uc?export=download&id=18cwog7ytS9WFPLqMTvuOBSbJnFvCrahs"
+         style="display:inline-flex;align-items:center;gap:7px;background:var(--blue);color:white;text-decoration:none;padding:9px 20px;border-radius:6px;font-weight:600;font-size:13px;white-space:nowrap;flex-shrink:0;"
+         download>
+        ⬇️ Download
+      </a>
+    </div>
+
+    <!-- Meeting 1 -->
+    <div style="background:white;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;background:var(--green-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🤝</div>
+        <div>
+          <div style="font-weight:700;font-size:15px;color:var(--gray-900);">Peer Team Meeting 1 — Agenda</div>
+          <div style="font-size:13px;color:var(--gray-600);margin-top:2px;">Early semester. Share your business idea and exchange early drafts. Each student submits their own completed copy.</div>
+        </div>
+      </div>
+      <a href="https://drive.google.com/uc?export=download&id=1Hhze016O_ekv1p8YpkyOqKvRsFXz-fJ2"
+         style="display:inline-flex;align-items:center;gap:7px;background:var(--blue);color:white;text-decoration:none;padding:9px 20px;border-radius:6px;font-weight:600;font-size:13px;white-space:nowrap;flex-shrink:0;"
+         download>
+        ⬇️ Download
+      </a>
+    </div>
+
+    <!-- Meeting 2 -->
+    <div style="background:white;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;background:var(--yellow-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🤝</div>
+        <div>
+          <div style="font-weight:700;font-size:15px;color:var(--gray-900);">Peer Team Meeting 2 — Agenda</div>
+          <div style="font-size:13px;color:var(--gray-600);margin-top:2px;">Mid-semester. Exchange first drafts and give detailed written feedback. Each student submits their own completed copy.</div>
+        </div>
+      </div>
+      <a href="https://drive.google.com/uc?export=download&id=1FqTHezITm_11DlPCFlddNyri8JVQ8aoJ"
+         style="display:inline-flex;align-items:center;gap:7px;background:var(--blue);color:white;text-decoration:none;padding:9px 20px;border-radius:6px;font-weight:600;font-size:13px;white-space:nowrap;flex-shrink:0;"
+         download>
+        ⬇️ Download
+      </a>
+    </div>
+
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+</body>
+</html>
