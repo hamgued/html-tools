@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Job Interview Explorer — English for Business</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue: #1a56db;
+  --blue-light: #e8f2fe;
+  --blue-mid: #d4eef4;
+  --blue-dark: #1a4a56;
+  --green: #057a55;
+  --green-light: #def7ec;
+  --yellow: #c27803;
+  --yellow-light: #fdf6b2;
+  --red: #c81e1e;
+  --red-light: #fde8e8;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --radius: 10px;
+  --teal-bg: #e8f6f9;
+  --teal-border: #b2dce8;
+  --teal-text: #1a4a56;
+}
+body { font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; color: var(--gray-800); background: var(--gray-50); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* HEADER */
+.site-header { background: white; border-bottom: 1px solid var(--gray-200); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.site-header h1 { font-size: 20px; font-weight: 700; color: var(--gray-900); }
+.site-header .sub { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+.site-header a { color: var(--blue); text-decoration: none; }
+.site-header a:hover { text-decoration: underline; }
+nav { display: flex; gap: 8px; flex-wrap: wrap; }
+.nav-btn { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; display: flex; align-items: center; gap: 6px; }
+.nav-btn.active { background: var(--blue); color: white; }
+.nav-btn:not(.active) { background: var(--gray-100); color: var(--gray-700); }
+.nav-btn:not(.active):hover { background: var(--gray-200); }
+
+/* MAIN */
+main { flex: 1; max-width: 1000px; margin: 0 auto; width: 100%; padding: 28px 20px 60px; }
+.view { display: none; }
+.view.active { display: block; }
+
+/* INFO STRIP */
+.info-strip { background: var(--teal-bg); border-left: 4px solid var(--blue); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 14px; font-size: 13.5px; color: var(--blue-dark); }
+
+/* INTERVIEW GRID */
+.interview-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 14px; }
+@media (max-width: 600px) { .interview-grid { grid-template-columns: 1fr; } }
+.phase-card { background: white; border: 2px solid var(--gray-200); border-radius: var(--radius); padding: 20px 18px; cursor: pointer; transition: border-color .15s, box-shadow .15s; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+.phase-card:hover { border-color: var(--blue); box-shadow: 0 4px 12px rgba(26,86,219,.1); }
+.phase-card .icon { font-size: 28px; }
+.phase-card .label { font-weight: 700; font-size: 14px; color: var(--gray-900); }
+.phase-card .hint { font-size: 12px; color: var(--gray-600); }
+
+/* Full-width bottom cards */
+.interview-grid-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .interview-grid-bottom { grid-template-columns: 1fr; } }
+
+/* VOCABULARY */
+.vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 32px; }
+@media (max-width: 640px) { .vocab-grid { grid-template-columns: 1fr; } }
+.vocab-item { border-bottom: 1px solid var(--gray-100); padding-bottom: 14px; cursor: pointer; }
+.vocab-item:hover .vocab-term { color: var(--blue); }
+.vocab-term { font-weight: 600; font-size: 14px; color: var(--gray-900); margin-bottom: 2px; transition: color .15s; }
+.vocab-def { font-size: 13px; color: var(--gray-600); display: none; margin-top: 4px; line-height: 1.5; }
+.vocab-example { font-size: 12px; color: var(--gray-600); font-style: italic; margin-top: 4px; border-left: 2px solid var(--blue-light); padding-left: 8px; display: none; }
+.vocab-item.open .vocab-def, .vocab-item.open .vocab-example { display: block; }
+
+/* QUIZ */
+.quiz-wrap { max-width: 640px; margin: 0 auto; }
+.quiz-info { background: var(--teal-bg); border-left: 4px solid var(--blue); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; font-size: 13.5px; color: var(--blue-dark); }
+.quiz-card { background: white; border: 1px solid var(--gray-200); border-radius: 14px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+.quiz-q { font-size: 16px; font-weight: 600; color: var(--gray-900); margin-bottom: 20px; line-height: 1.5; }
+.quiz-progress { font-size: 12px; color: var(--gray-600); margin-bottom: 14px; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.quiz-opt { background: var(--gray-50); border: 2px solid var(--gray-200); border-radius: 8px; padding: 12px 16px; font-size: 14px; cursor: pointer; text-align: left; transition: all .15s; }
+.quiz-opt:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-light); }
+.quiz-opt.correct { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+.quiz-opt.incorrect { border-color: var(--red); background: var(--red-light); color: #7f1d1d; }
+.quiz-feedback { font-size: 13.5px; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; display: none; line-height: 1.5; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: var(--green-light); color: #064e3b; border-left: 3px solid var(--green); }
+.quiz-feedback.incorrect { background: var(--red-light); color: #7f1d1d; border-left: 3px solid var(--red); }
+.quiz-next { background: var(--blue); color: white; border: none; border-radius: 8px; padding: 10px 24px; font-weight: 600; font-size: 14px; cursor: pointer; display: none; }
+.quiz-next.show { display: inline-block; }
+.quiz-done { text-align: center; padding: 20px 0; }
+.quiz-done .score { font-size: 40px; font-weight: 700; color: var(--blue); }
+.quiz-done .score-label { font-size: 14px; color: var(--gray-600); margin-top: 4px; }
+.quiz-restart { background: var(--blue); color: white; border: none; border-radius: 8px; padding: 10px 24px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 16px; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 200; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 16px; max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.2); animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.modal-header { padding: 20px 22px 16px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: white; z-index: 1; }
+.modal-title { font-size: 18px; font-weight: 700; color: var(--gray-900); display: flex; align-items: center; gap: 10px; }
+.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--gray-600); line-height: 1; padding: 4px; }
+.modal-close:hover { color: var(--gray-900); }
+.modal-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 20px; }
+.modal-section h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--blue); margin-bottom: 8px; }
+.modal-section p, .modal-section li { font-size: 14px; color: var(--gray-700); line-height: 1.65; }
+.modal-section ul { margin-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.modal-vocab-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.modal-pill { background: var(--teal-bg); border: 1px solid var(--teal-border); color: var(--teal-text); border-radius: 999px; padding: 4px 12px; font-size: 12.5px; font-weight: 500; }
+.modal-example { background: var(--gray-50); border-left: 3px solid var(--blue); border-radius: 4px; padding: 12px 14px; font-size: 13.5px; color: var(--gray-700); font-style: italic; }
+.modal-phrases { display: flex; flex-direction: column; gap: 6px; }
+.phrase-item { background: var(--teal-bg); border-radius: 6px; padding: 8px 12px; font-size: 13.5px; color: var(--teal-text); font-style: italic; }
+.modal-footer { padding: 14px 22px; border-top: 1px solid var(--gray-100); background: var(--gray-50); display: flex; justify-content: flex-end; border-radius: 0 0 16px 16px; }
+.modal-footer button { background: var(--blue); color: white; border: none; border-radius: 8px; padding: 9px 22px; font-weight: 600; font-size: 14px; cursor: pointer; }
+
+/* TOOLTIP PILLS */
+.pill-wrap { position: relative; display: inline-block; }
+.modal-pill {
+  background: var(--teal-bg); border: 1px solid var(--teal-border); color: var(--teal-text);
+  border-radius: 999px; padding: 4px 12px; font-size: 12.5px; font-weight: 500;
+  cursor: default; transition: background .15s, border-color .15s;
+}
+.pill-wrap:hover .modal-pill { background: var(--blue); border-color: var(--blue); color: white; }
+.pill-tooltip {
+  display: none;
+  position: fixed;
+  background: var(--gray-900);
+  color: white;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  width: 230px;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+}
+.pill-tooltip strong { display: block; font-size: 13.5px; margin-bottom: 3px; color: white; }
+.pill-tooltip em { font-style: italic; color: #9ca3af; font-size: 12px; display: block; margin-top: 4px; }
+.pill-tooltip.visible { display: block; }
+
+/* SKILLS */
+.skills-toggle { margin-bottom: 16px; border: 1px solid var(--teal-border); border-radius: var(--radius); overflow: hidden; }
+.skills-toggle > summary { background: var(--teal-bg); color: var(--teal-text); padding: 14px 18px; font-weight: 700; font-size: 15px; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; user-select: none; }
+.skills-toggle > summary::-webkit-details-marker { display: none; }
+.skills-toggle > summary::after { content: "▾"; font-size: 13px; color: #4a8fa0; transition: transform .2s; }
+.skills-toggle[open] > summary::after { transform: rotate(180deg); }
+.skills-toggle > summary:hover { background: var(--blue-mid); }
+.skills-count { font-size: 12px; font-weight: 400; color: #4a8fa0; margin-left: 6px; }
+.skills-toggle .skills-desc { font-size: 13px; color: var(--gray-600); margin: 12px 18px 10px; line-height: 1.5; }
+.skills-toggle .skills-grid { padding: 4px 18px 18px; }
+.skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 600px) { .skills-grid { grid-template-columns: 1fr; } }
+.skill-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 13px 15px; display: flex; align-items: flex-start; gap: 10px; }
+.skill-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.skill-name { font-weight: 600; font-size: 13.5px; color: var(--gray-900); margin-bottom: 2px; }
+.skill-def { font-size: 12.5px; color: var(--gray-600); line-height: 1.45; }
+.skill-eg { font-size: 12px; color: var(--blue); font-style: italic; margin-top: 3px; }
+
+/* FOOTER */
+footer { background: var(--gray-900); color: var(--gray-600); text-align: center; font-size: 12px; padding: 24px; margin-top: auto; }
+footer a { color: var(--gray-600); }
+footer a:hover { color: white; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="h1" style="font-size:20px;font-weight:700;color:var(--gray-900);">Job Interview Explorer</div>
+    <div class="sub">English for Business &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="switchView('phases', this)">🗂 Interview</button>
+    <button class="nav-btn" onclick="switchView('skills', this)">💡 Skills</button>
+    <button class="nav-btn" onclick="switchView('vocabulary', this)">📖 Vocabulary</button>
+    <button class="nav-btn" onclick="switchView('quiz', this)">🎯 Practice Quiz</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ── INTERVIEW PHASES VIEW ── -->
+  <div class="view active" id="view-phases">
+    <div class="info-strip"><strong>What is a job interview?</strong> A job interview is a conversation between you and an employer. They want to find out if you are the right person for the job. Click any stage or topic below to learn what to expect and how to prepare.</div>
+    <div class="info-strip" style="background:var(--blue-light);border-color:var(--blue);margin-top:0;">💡 <strong>How to use:</strong> Click on any card to explore what happens, key questions, useful language, and example answers.</div>
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-600);margin:20px 0 10px;">Interview stages</div>
+    <div class="interview-grid">
+      <div class="phase-card" onclick="openModal('Before the interview')"><div class="icon">📋</div><div class="label">Before the interview</div><div class="hint">Research, preparation, SWOT & STAR</div></div>
+      <div class="phase-card" onclick="openModal('The opening')"><div class="icon">👋</div><div class="label">The opening</div><div class="hint">First impressions, small talk, tell me about yourself</div></div>
+      <div class="phase-card" onclick="openModal('Competency questions')"><div class="icon">⭐</div><div class="label">Competency questions</div><div class="hint">STAR method — teamwork, conflict, decisions</div></div>
+      <div class="phase-card" onclick="openModal('Motivation questions')"><div class="icon">🎯</div><div class="label">Motivation questions</div><div class="hint">Why this job? What are your strengths?</div></div>
+    </div>
+    <div class="interview-grid-bottom">
+      <div class="phase-card" onclick="openModal('Your questions')"><div class="icon">🙋</div><div class="label">Your questions</div><div class="hint">What to ask the interviewer</div></div>
+      <div class="phase-card" onclick="openModal('The closing')"><div class="icon">🤝</div><div class="label">The closing</div><div class="hint">Ending professionally, next steps</div></div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-600);margin:24px 0 10px;">STAR topics — prepare one story for each</div>
+    <div class="interview-grid">
+      <div class="phase-card" onclick="openModal('Teamwork')"><div class="icon">🤝</div><div class="label">Teamwork</div><div class="hint">Working well with others</div></div>
+      <div class="phase-card" onclick="openModal('Conflict management')"><div class="icon">⚡</div><div class="label">Conflict management</div><div class="hint">Handling disagreements professionally</div></div>
+      <div class="phase-card" onclick="openModal('Decision-making')"><div class="icon">🧭</div><div class="label">Decision-making</div><div class="hint">Making important choices</div></div>
+      <div class="phase-card" onclick="openModal('Achievement')"><div class="icon">🏆</div><div class="label">Achievement</div><div class="hint">Something you are proud of</div></div>
+    </div>
+  </div>
+
+  <!-- ── SKILLS VIEW ── -->
+  <div class="view" id="view-skills">
+    <div class="info-strip"><strong>Skills and competences</strong> — Employers look for two types of skills: soft skills and hard skills. You need both to do a job well. Use this page to learn what they mean and how to talk about them in an interview.</div>
+
+    <details class="skills-toggle" open>
+      <summary>🧠 Soft skills <span class="skills-count">20 skills</span></summary>
+      <p class="skills-desc">Soft skills are personal qualities that help you work well with other people and deal with different situations. You use these skills in almost every job.</p>
+      <div class="skills-grid">
+        <div class="skill-card"><div class="skill-icon">🗣️</div><div><div class="skill-name">Communication</div><div class="skill-def">You can share ideas clearly, both when speaking and writing. You listen well and make sure others understand you.</div><div class="skill-eg">"I am a clear communicator — I always check that my message is understood."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🤝</div><div><div class="skill-name">Teamwork</div><div class="skill-def">You work well with other people. You share tasks, support your colleagues, and work toward a common goal.</div><div class="skill-eg">"I enjoy working in teams because different people bring different ideas."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🧩</div><div><div class="skill-name">Problem-solving</div><div class="skill-def">You can look at a difficult situation, think of different options, and find a good solution.</div><div class="skill-eg">"When a problem comes up, I stay calm and focus on finding a practical solution."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🔄</div><div><div class="skill-name">Adaptability</div><div class="skill-def">You can change easily when the situation changes. You are comfortable with new tasks, tools, or people.</div><div class="skill-eg">"I adapt quickly — when our project changed direction, I adjusted my work without difficulty."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">⏰</div><div><div class="skill-name">Time management</div><div class="skill-def">You can organise your work and finish tasks on time. You know which tasks are most important and do those first.</div><div class="skill-eg">"I use a weekly plan to make sure I meet all my deadlines."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🌟</div><div><div class="skill-name">Initiative</div><div class="skill-def">You start things yourself without waiting to be asked. You see what needs to be done and do it.</div><div class="skill-eg">"I noticed a gap in our process and proposed a solution before anyone asked me to."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🪞</div><div><div class="skill-name">Self-awareness</div><div class="skill-def">You understand your own strengths and weaknesses. You know how your behaviour affects other people.</div><div class="skill-eg">"I know that I sometimes work too fast, so I now take time to check my work carefully."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🎯</div><div><div class="skill-name">Goal-setting</div><div class="skill-def">You can decide what you want to achieve, make a plan, and work towards it step by step.</div><div class="skill-eg">"I set clear goals for each semester and track my progress regularly."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">💬</div><div><div class="skill-name">Active listening</div><div class="skill-def">You give your full attention when someone is speaking. You do not interrupt and you ask questions to make sure you understand.</div><div class="skill-eg">"I always listen carefully before I answer — it helps me give better responses."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🤔</div><div><div class="skill-name">Critical thinking</div><div class="skill-def">You think carefully before you decide or act. You look at information from different sides and do not accept everything without questioning.</div><div class="skill-eg">"Before making a decision, I always consider the possible risks and benefits."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">💪</div><div><div class="skill-name">Resilience</div><div class="skill-def">You can deal with difficulties and keep going even when things are hard. You learn from failure instead of giving up.</div><div class="skill-eg">"When I failed my first attempt, I analysed what went wrong and tried again with a better approach."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🌍</div><div><div class="skill-name">Cultural awareness</div><div class="skill-def">You understand that people have different backgrounds and ways of working. You respect these differences and work well with people from different cultures.</div><div class="skill-eg">"Working in international teams has helped me understand and respect different communication styles."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🙌</div><div><div class="skill-name">Empathy</div><div class="skill-def">You can understand how other people feel. This helps you communicate better and support your colleagues.</div><div class="skill-eg">"I try to understand my teammates' situations before giving feedback."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">📣</div><div><div class="skill-name">Presentation skills</div><div class="skill-def">You can share information clearly in front of a group. You speak in a way that is easy to follow and keep people's attention.</div><div class="skill-eg">"I have practised presenting by giving short talks in class and at the Business Fair."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🔍</div><div><div class="skill-name">Attention to detail</div><div class="skill-def">You check your work carefully and notice small errors. You do not rush and make sure everything is correct before finishing.</div><div class="skill-eg">"I always proofread my written work twice before submitting it."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🔁</div><div><div class="skill-name">Willingness to learn</div><div class="skill-def">You are open to learning new things, even when they are difficult. You see feedback as a chance to improve.</div><div class="skill-eg">"I asked for feedback after every draft and used it to improve my writing."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">⚡</div><div><div class="skill-name">Conflict management</div><div class="skill-def">You can deal with disagreements calmly and professionally. You try to find a solution that works for everyone.</div><div class="skill-eg">"When there was a disagreement in the group, I suggested a meeting so everyone could share their views."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🧭</div><div><div class="skill-name">Decision-making</div><div class="skill-def">You can look at a situation, consider your options, and choose the best action. You take responsibility for your choices.</div><div class="skill-eg">"I had to decide which tasks to prioritise. I chose based on the deadline and the impact."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">📋</div><div><div class="skill-name">Organisation</div><div class="skill-def">You keep your work and information in order. You plan ahead and manage your tasks so nothing is forgotten.</div><div class="skill-eg">"I use a shared document to track tasks and deadlines for all my projects."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">😊</div><div><div class="skill-name">Positive attitude</div><div class="skill-def">You approach challenges with energy and optimism. Even in difficult moments, you focus on what can be done instead of what cannot.</div><div class="skill-eg">"Even when the project was behind schedule, I encouraged the team to keep going."</div></div></div>
+      </div>
+    </details>
+
+    <details class="skills-toggle">
+      <summary>🔧 Hard skills <span class="skills-count">15 skills</span></summary>
+      <p class="skills-desc">Hard skills are specific abilities you learn through study, training, or practice. They are often connected to a particular job or subject area.</p>
+      <div class="skills-grid">
+        <div class="skill-card"><div class="skill-icon">🌐</div><div><div class="skill-name">Business English</div><div class="skill-def">You can communicate in English in a professional context — writing emails, reports, and taking part in meetings or interviews.</div><div class="skill-eg">"I have studied Business English and can write professional reports and emails."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">📊</div><div><div class="skill-name">Data analysis</div><div class="skill-def">You can collect and study information (numbers, results, trends) and explain what it means.</div><div class="skill-eg">"I used data from a survey to identify the most common customer problems."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">💻</div><div><div class="skill-name">Microsoft Office / Google Workspace</div><div class="skill-def">You can use tools like Word, Excel, PowerPoint, or Google Docs, Sheets, and Slides to create documents, spreadsheets, and presentations.</div><div class="skill-eg">"I use Excel to track budgets and create clear tables and charts."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">📝</div><div><div class="skill-name">Report writing</div><div class="skill-def">You can plan, structure, and write a professional report that is clear, accurate, and well-organised.</div><div class="skill-eg">"I wrote a business plan report during my studies, which included research and structured sections."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">💰</div><div><div class="skill-name">Basic financial literacy</div><div class="skill-def">You understand basic financial concepts such as budgets, costs, revenue, and profit.</div><div class="skill-eg">"I understand how to read a simple budget and identify where costs can be reduced."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">📣</div><div><div class="skill-name">Marketing basics</div><div class="skill-def">You understand how businesses attract customers, including ideas like target audience, channels, and value proposition.</div><div class="skill-eg">"I studied the basics of marketing and created a customer segment table for my business plan."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🔎</div><div><div class="skill-name">Research skills</div><div class="skill-def">You can find, read, and evaluate sources of information. You know which sources are reliable and which are not.</div><div class="skill-eg">"I found and evaluated sources for my report using online databases and websites."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🗂️</div><div><div class="skill-name">Project management basics</div><div class="skill-def">You understand how to plan a project, divide tasks, set deadlines, and track progress.</div><div class="skill-eg">"I managed a group project by creating a timeline and making sure everyone knew their role."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🤖</div><div><div class="skill-name">AI tool use</div><div class="skill-def">You can use AI tools to help with tasks like checking writing, getting feedback, or researching a topic. You understand the limits of AI and use it responsibly.</div><div class="skill-eg">"I used an AI tool to get feedback on my draft report and then rewrote it in my own words."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">📞</div><div><div class="skill-name">Customer communication</div><div class="skill-def">You can communicate clearly and professionally with customers or clients — in writing, by phone, or in person.</div><div class="skill-eg">"I handled customer questions in my part-time job, which improved my professional communication."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🌍</div><div><div class="skill-name">Foreign language skills</div><div class="skill-def">You can communicate in one or more languages other than your first language. This is especially useful in international business.</div><div class="skill-eg">"I speak Finnish, English, and basic Spanish, which has been useful in customer-facing roles."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">📈</div><div><div class="skill-name">Sales fundamentals</div><div class="skill-def">You understand the basics of how selling works — identifying customer needs, presenting a product, and handling questions or objections.</div><div class="skill-eg">"I learned about the sales process through my business plan project and the Business Fair."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🖥️</div><div><div class="skill-name">Social media literacy</div><div class="skill-def">You understand how social media platforms work and how businesses use them to communicate with customers.</div><div class="skill-eg">"I have experience managing social media content and know how to write posts that engage an audience."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">📐</div><div><div class="skill-name">Process thinking</div><div class="skill-def">You can look at how something is done and identify clear steps or improvements. You think logically about how systems and workflows operate.</div><div class="skill-eg">"I mapped out our team's workflow and suggested a simpler process that saved time."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🎨</div><div><div class="skill-name">Visual presentation</div><div class="skill-def">You can create clear, professional-looking presentations or documents using tools like PowerPoint or Canva.</div><div class="skill-eg">"I designed the slides for my Business Fair presentation to make the information easy to follow."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🔐</div><div><div class="skill-name">Digital literacy</div><div class="skill-def">You are comfortable using digital tools and platforms. You can learn new software quickly and use technology to work more efficiently.</div><div class="skill-eg">"I picked up the project management tool quickly and helped my team use it effectively."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">📬</div><div><div class="skill-name">Professional email writing</div><div class="skill-def">You can write clear, polite, and well-structured emails in a professional style.</div><div class="skill-eg">"I have practised writing professional emails in English, including follow-up and thank-you messages."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🏢</div><div><div class="skill-name">Business model understanding</div><div class="skill-def">You understand how businesses create and deliver value — including concepts like value proposition, customer segments, and revenue models.</div><div class="skill-eg">"I studied the Business Model Canvas and applied it to my own imaginary business idea."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🧾</div><div><div class="skill-name">Academic and professional writing</div><div class="skill-def">You can write in a formal, clear, and structured way — using correct grammar, citations, and paragraph organisation.</div><div class="skill-eg">"I completed a structured academic report and learned how to write definitions, arguments, and reflections."</div></div></div>
+        <div class="skill-card"><div class="skill-icon">🤝</div><div><div class="skill-name">Networking</div><div class="skill-def">You can build and maintain professional relationships with people in your field. You know how to introduce yourself and have professional conversations.</div><div class="skill-eg">"I practised professional networking at the Business Fair by presenting my idea to different people."</div></div></div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ── VOCABULARY VIEW ── -->
+  <div class="view" id="view-vocabulary">
+    <div style="background:white;border:1px solid var(--gray-200);border-radius:14px;padding:28px;">
+      <h2 style="font-size:20px;font-weight:700;color:var(--gray-900);border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:6px;">Job Interview Vocabulary</h2>
+      <p style="font-size:13px;color:var(--gray-600);margin-bottom:24px;">Click any term to see its definition and an example sentence.</p>
+      <div class="vocab-grid" id="vocab-container"></div>
+    </div>
+  </div>
+
+  <!-- ── QUIZ VIEW ── -->
+  <div class="view" id="view-quiz">
+    <div class="quiz-wrap">
+      <div class="quiz-info"><strong>How to use:</strong> Choose an answer, read the explanation, then click <strong>Next</strong> to continue.</div>
+      <div class="quiz-card" id="quiz-card"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title"><span id="modal-icon"></span><span id="modal-title-text"></span></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer"><button onclick="closeModal()">Close</button></div>
+  </div>
+</div>
+
+<footer>
+  <p>Generated with Claude Sonnet 4.6 &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp; LAB University of Applied Sciences</p>
+</footer>
+
+<script>
+// ── DATA ──
+const phaseData = {
+  'Before the interview': {
+    icon: '📋',
+    description: 'Good preparation makes a big difference. Before the interview, you should learn about the company and the job, prepare your answers, and think about what you want to say.',
+    questions: [
+      'What do you know about this company?',
+      'What does the job description say? What skills are they looking for?',
+      'What are your main strengths for this role?',
+      'What examples from your experience can you use?',
+    ],
+    vocab: ['to research', 'job description', 'requirements', 'to prepare', 'STAR method', 'personal SWOT'],
+    phrases: [
+      '"I researched the company and found that…"',
+      '"The job description mentioned… which matches my experience in…"',
+      '"I prepared an example of a time when I…"',
+    ],
+    example: 'Before the interview, Karim read the company website, practised his STAR answers out loud, and prepared two questions to ask at the end.',
+  },
+  'The opening': {
+    icon: '👋',
+    description: 'The first few minutes of an interview are very important. You will greet the interviewer, make small talk, and then answer the most common first question: "Tell me about yourself."',
+    questions: [
+      'How do you greet someone professionally in English?',
+      'What should you say in "Tell me about yourself"?',
+      'How long should your opening answer be?',
+    ],
+    vocab: ['to introduce yourself', 'small talk', 'first impression', 'to make eye contact', 'body language', 'to summarise'],
+    phrases: [
+      '"Good morning, thank you for having me."',
+      '"Nice to meet you. I\'m [name]."',
+      '"I am currently studying… and I have experience in…"',
+      '"In a nutshell, I am someone who…"',
+      '"I am particularly interested in this role because…"',
+    ],
+    example: '"Tell me about yourself" — a good answer covers: who you are, your relevant experience or studies, and why you are interested in this role. Keep it to about 2 minutes.',
+  },
+  'Competency questions': {
+    icon: '⭐',
+    description: 'Competency questions ask you to describe a real situation from your past. This shows the interviewer how you behave at work. Use the STAR method to structure your answer: Situation, Task, Action, Result.',
+    questions: [
+      'What is the STAR method?',
+      'How long should a STAR answer be?',
+      'What if I do not have much work experience?',
+    ],
+    vocab: ['STAR method', 'competency', 'behavioural question', 'situation', 'task', 'action', 'result', 'to demonstrate'],
+    phrases: [
+      '"In that situation, I…"',
+      '"My role was to…"',
+      '"The steps I took were…"',
+      '"As a result, we managed to…"',
+      '"What I learned from this was…"',
+    ],
+    example: 'Question: "Tell me about a time you worked under pressure." → Situation: I had final exams and a part-time job at the same time. Task: I needed to manage both without falling behind. Action: I made a weekly schedule and talked to my manager. Result: I passed all my exams and kept the job.',
+  },
+  'Motivation questions': {
+    icon: '🎯',
+    description: 'Motivation questions ask why you want this job and what kind of person you are. The interviewer wants to understand what you care about, what your goals are, and how well you know yourself.',
+    questions: [
+      'Why do you want to work here?',
+      'What are your strengths and weaknesses?',
+      'Where do you see yourself in five years?',
+      'Why should we hire you?',
+    ],
+    vocab: ['motivated by', 'career goal', 'ambition', 'to align with', 'strengths', 'areas for improvement', 'self-awareness'],
+    phrases: [
+      '"I am motivated by… because…"',
+      '"One of my key strengths is… For example…"',
+      '"Something I am working on improving is… and what I do is…"',
+      '"I chose this role because it matches my goal to…"',
+      '"What I can bring to this team is…"',
+    ],
+    example: 'For "What is your weakness?" — be honest and show self-awareness: "I sometimes find it hard to ask for help, but I am working on this by communicating more openly with my team."',
+  },
+  'Your questions': {
+    icon: '🙋',
+    description: 'At the end of the interview, the interviewer will ask if you have any questions. Always prepare at least two questions. This shows you are genuinely interested in the role.',
+    questions: [
+      'What questions show you are interested?',
+      'What should you avoid asking?',
+      'Is it okay to ask about salary?',
+    ],
+    vocab: ['to enquire', 'onboarding', 'team culture', 'career progression', 'expectations', 'feedback'],
+    phrases: [
+      '"Could you tell me more about the team I would be working with?"',
+      '"What does a typical day in this role look like?"',
+      '"What opportunities are there for learning and development?"',
+      '"What are the next steps in the process?"',
+      '"How would you describe the team culture here?"',
+    ],
+    example: 'Avoid questions like "How many days of holiday do I get?" at a first interview. Focus on the role and the company first. Save questions about salary and benefits for after an offer.',
+  },
+  'The closing': {
+    icon: '🤝',
+    description: 'How you finish the interview matters. Thank the interviewer, ask about next steps, and leave a positive final impression.',
+    questions: [
+      'How do you end an interview professionally?',
+      'What should you say if you are asked "Do you have anything to add?"',
+      'What do you do after the interview?',
+    ],
+    vocab: ['to follow up', 'to confirm', 'next steps', 'to express interest', 'thank-you note', 'to reiterate'],
+    phrases: [
+      '"Thank you very much for your time. I really enjoyed this conversation."',
+      '"I am very interested in this role and would love the chance to join your team."',
+      '"Could you tell me what the next steps are?"',
+      '"I look forward to hearing from you."',
+      '"It was a pleasure meeting you."',
+    ],
+    example: 'After the interview, send a short thank-you email within 24 hours. Mention something specific from the conversation to show you were listening and are genuinely interested.',
+  },
+
+  // STAR Topics
+  'Teamwork': {
+    icon: '🤝',
+    description: 'Teamwork questions ask you to describe a time you worked well with other people to reach a shared goal.',
+    questions: [
+      '"Tell me about a time you worked well as part of a team."',
+      '"Describe a situation where you had to work with people who had different working styles."',
+      '"How do you contribute to a team?"',
+    ],
+    vocab: ['to collaborate', 'to contribute', 'shared goal', 'to support', 'team dynamics', 'to coordinate', 'to communicate'],
+    phrases: [
+      '"My role in the team was to…"',
+      '"We agreed to divide the tasks by…"',
+      '"I supported my teammates by…"',
+      '"We communicated regularly to make sure…"',
+      '"As a result, the team managed to…"',
+    ],
+    example: 'S: Group project with a tight deadline. T: My role was to organise communication. A: I set up a shared document and organised two short check-in meetings. R: We submitted on time and received positive feedback.',
+  },
+  'Conflict management': {
+    icon: '⚡',
+    description: 'Conflict management questions ask how you deal with disagreements or difficult situations with other people. Show that you stay calm and professional.',
+    questions: [
+      '"Tell me about a time you dealt with a disagreement."',
+      '"How do you handle conflict in a team?"',
+      '"Describe a situation where you had to give difficult feedback."',
+    ],
+    vocab: ['to resolve', 'to compromise', 'to stay calm', 'to address', 'to listen actively', 'misunderstanding', 'to find common ground'],
+    phrases: [
+      '"There was a disagreement about… so I decided to…"',
+      '"I asked to speak privately with… to understand their point of view."',
+      '"We found a solution by…"',
+      '"I stayed calm and focused on the problem, not the person."',
+      '"After the conversation, we were able to…"',
+    ],
+    example: 'S: Disagreement in a group about how to divide the work. T: I needed to solve the problem without damaging relationships. A: I suggested a team meeting where everyone could share their concerns. R: We agreed on a new plan and the atmosphere improved.',
+  },
+  'Decision-making': {
+    icon: '🧭',
+    description: 'Decision-making questions ask you to describe a time you had to make an important or difficult choice. Show how you looked at the options, thought carefully, and took responsibility.',
+    questions: [
+      '"Tell me about a time you had to make an important decision."',
+      '"Describe a situation where you had to decide quickly."',
+      '"How do you make decisions when you do not have all the information?"',
+    ],
+    vocab: ['to evaluate options', 'to weigh up', 'to take responsibility', 'pros and cons', 'to consult', 'to prioritise', 'to act on'],
+    phrases: [
+      '"I had to decide between… and…"',
+      '"I gathered information by…"',
+      '"I looked at the pros and cons and decided to…"',
+      '"I spoke with… before making the final decision."',
+      '"Looking back, I think it was the right decision because…"',
+    ],
+    example: 'S: I had to choose which part of a project to focus on with limited time. T: I needed to decide quickly. A: I looked at the deadlines, thought about the impact of each task, and chose the most important one. R: We met the key deadline and finished the rest the following week.',
+  },
+  'Achievement': {
+    icon: '🏆',
+    description: 'Achievement questions ask you to talk about something you are proud of. This is your chance to show what you can do and what drives you.',
+    questions: [
+      '"Tell me about something you are proud of achieving."',
+      '"What has been your greatest achievement so far?"',
+      '"Describe a goal you set for yourself and how you reached it."',
+    ],
+    vocab: ['to accomplish', 'to overcome', 'challenge', 'to set a goal', 'persistence', 'outcome', 'to be proud of'],
+    phrases: [
+      '"One achievement I am particularly proud of is…"',
+      '"The challenge I faced was… but I dealt with it by…"',
+      '"I set a goal to… and achieved it by…"',
+      '"What I learned from this experience was…"',
+      '"This showed me that I am able to…"',
+    ],
+    example: 'S: I was finding academic English difficult in my first semester. T: I needed to improve my writing to pass the course. A: I went to writing workshops, asked for feedback, and rewrote my work. R: My grades improved and I became more confident in academic writing.',
+  },
+};
+
+
+const quizData = [
+  { q: 'What does STAR stand for in a job interview?', opts: ['Skills, Tasks, Answers, Results', 'Situation, Task, Action, Result', 'Subject, Topic, Argument, Response', 'Strengths, Training, Abilities, Record'], correct: 1, explanation: 'STAR stands for Situation, Task, Action, Result — a structure for answering competency questions clearly.' },
+  { q: 'Which is the best way to start a STAR answer about teamwork?', opts: ['"I am a very good team player."', '"In my last group project, our deadline was moved forward by a week."', '"Teamwork is very important in every job."', '"I always work hard in a team."'], correct: 1, explanation: 'STAR answers should open with a specific real situation, not a general claim about yourself.' },
+  { q: 'An interviewer asks: "Tell me about yourself." What is the best approach?', opts: ['Talk about your hobbies and personal life', 'Give a 10-minute speech about your whole life', 'Give a short summary of your studies, relevant experience, and why you want this role', 'Say you are not sure what to say'], correct: 2, explanation: '"Tell me about yourself" is an opener. Aim for 1–2 minutes: who you are, relevant background, and why you are here.' },
+  { q: 'What does "to tailor your answer" mean?', opts: ['To make your answer very long', 'To adapt your answer to match the specific job and company', 'To memorise a fixed answer for every interview', 'To speak more slowly'], correct: 1, explanation: 'Tailoring means connecting your experience to the specific skills and values in the job description.' },
+  { q: 'Which question is NOT appropriate to ask the interviewer at the end of a first interview?', opts: ['"What does a typical day look like?"', '"How many days of holiday do I get?"', '"What opportunities are there for development?"', '"What are the next steps?"'], correct: 1, explanation: 'Questions about holidays or salary too early can create a poor impression. Focus on the role first.' },
+  { q: 'What is a "transferable skill"?', opts: ['A skill that only works in one specific job', 'A skill you can use in many different jobs and contexts', 'A skill listed on a certificate', 'A skill that requires special training'], correct: 1, explanation: 'Transferable skills — like communication and teamwork — are valuable across almost any job or industry.' },
+  { q: 'An interviewer asks about your weakness. What is the best response?', opts: ['"I don\'t really have any weaknesses."', '"I am terrible at managing time and often miss deadlines."', '"I sometimes struggle to ask for help, but I am working on communicating more openly."', '"That\'s a difficult question. I\'d rather not answer it."'], correct: 2, explanation: 'The best answer is honest and shows self-awareness: acknowledge a real weakness AND explain what you are doing to improve.' },
+  { q: 'What is the purpose of a follow-up email after an interview?', opts: ['To ask for a higher salary', 'To thank the interviewer and reinforce your interest in the role', 'To tell them you changed your mind', 'To send your CV again'], correct: 1, explanation: 'A thank-you email shows professionalism and genuine interest. Mention something specific from the conversation.' },
+  { q: 'In the STAR method, what should the "Action" section focus on?', opts: ['What your team did together', 'What the result was', 'What YOU personally did, step by step', 'What the problem was'], correct: 2, explanation: 'The Action section is the most important — interviewers want to know what YOU specifically did, not just the team.' },
+  { q: 'What does "proactive" mean in a work context?', opts: ['Waiting for instructions before doing anything', 'Taking initiative and acting before being asked', 'Working very quickly', 'Being very organised'], correct: 1, explanation: 'Proactive means you identify what needs to be done and act on it without being told — a quality most employers value highly.' },
+  { q: 'Which of these is a soft skill?', opts: ['Report writing', 'Data analysis', 'Empathy', 'Using Excel'], correct: 2, explanation: 'Empathy is a personal quality — a soft skill. Report writing, data analysis, and Excel are learned technical abilities — hard skills.' },
+  { q: 'What does a "screening interview" usually involve?', opts: ['A full day of tests and presentations', 'A short call to check you meet the basic requirements', 'A panel of five interviewers', 'A written exam'], correct: 1, explanation: 'A screening interview is typically a short call used to filter candidates before inviting them to a full interview.' },
+  { q: 'What does "to come across as confident" mean?', opts: ['To shout loudly', 'To give the impression of being confident', 'To say the word \"confident\" often', 'To wear formal clothes'], correct: 1, explanation: '"To come across as" means to give a certain impression. Body language, tone, and clear answers all help.' },
+  { q: 'When should you use the STAR method?', opts: ['When answering salary questions', 'When answering competency questions about past experience', 'When asking the interviewer a question', 'When introducing yourself'], correct: 1, explanation: 'STAR is designed for questions that start with "Tell me about a time when..." or "Describe a situation where...".' },
+  { q: 'What does "career progression" mean?', opts: ['Starting a new career in a different field', 'Moving forward or upward in your career over time', 'Leaving a job quickly', 'Applying for many jobs at once'], correct: 1, explanation: 'Career progression refers to developing your skills and moving into more senior or responsible roles over time.' },
+];
+
+
+// Vocab lookup for tooltip pills (term → {def, example})
+const vocabLookup = {};
+
+const vocabData = [
+  // Interview process
+  { term: 'job interview', def: 'A formal meeting where an employer asks questions to decide if someone is suitable for a job.', example: 'She prepared carefully for the job interview by researching the company.' },
+  { term: 'competency question', def: 'A question that asks you to describe a real situation to show a specific skill or behaviour.', example: 'A competency question often starts with "Tell me about a time when you...".' },
+  { term: 'STAR method', def: 'A structure for answering interview questions: Situation, Task, Action, Result.', example: 'He used the STAR method to give a clear and organised answer.' },
+  { term: 'to shortlist', def: 'To select a small number of candidates from a larger group for the next stage.', example: 'Ten candidates were shortlisted for the final round of interviews.' },
+  { term: 'panel interview', def: 'An interview where you are questioned by more than one interviewer at the same time.', example: 'In the panel interview, three managers took turns asking questions.' },
+  { term: 'screening interview', def: 'A short first interview used to check if a candidate meets the basic requirements before a full interview.', example: 'The screening interview was a 20-minute phone call with the recruiter.' },
+  { term: 'to tailor', def: 'To adapt something to fit a specific purpose or audience.', example: 'She tailored her answer to match the skills listed in the job description.' },
+  { term: 'to follow up', def: 'To take further action after an event, such as sending an email after an interview.', example: 'He followed up with a thank-you email the day after the interview.' },
+  { term: 'to be shortlisted', def: 'To be selected as one of the final few candidates being considered for a role.', example: 'She was thrilled to hear she had been shortlisted for the position.' },
+  // Preparation
+  { term: 'job description', def: 'A document that lists the duties, responsibilities, and requirements for a specific job.', example: 'She read the job description carefully to understand what skills were needed.' },
+  { term: 'personal SWOT', def: 'An analysis of your own Strengths, Weaknesses, Opportunities, and Threats as a job applicant.', example: 'He completed a personal SWOT before the interview to understand his strengths.' },
+  { term: 'to research', def: 'To find and study information about a topic before an important event.', example: 'Candidates who research the company tend to give more relevant answers.' },
+  { term: 'mock interview', def: 'A practice interview to help you prepare for the real one.', example: 'She did a mock interview with her classmate to practise her STAR answers.' },
+  { term: 'to rehearse', def: 'To practise something, especially spoken answers, before a real performance or event.', example: 'He rehearsed his answers out loud several times before the interview.' },
+  // Self-presentation
+  { term: 'first impression', def: 'The opinion someone forms when they meet you for the first time.', example: 'Arriving on time and dressing professionally helps make a good first impression.' },
+  { term: 'body language', def: 'The way you communicate through your posture, gestures, and facial expressions, without words.', example: 'Good body language — such as eye contact and sitting up straight — shows confidence.' },
+  { term: 'to make eye contact', def: 'To look directly into someone\'s eyes while speaking or listening.', example: 'Making eye contact shows that you are confident and engaged.' },
+  { term: 'to come across as', def: 'To give a certain impression to others.', example: 'She wanted to come across as confident and well-prepared.' },
+  { term: 'to elaborate', def: 'To give more detail or explanation about something.', example: '"Could you elaborate on that point?" means "Can you explain it more?".' },
+  // Skills language
+  { term: 'transferable skill', def: 'A skill you have learned in one context that can be used in a different job or situation.', example: 'Communication and teamwork are transferable skills useful in almost every job.' },
+  { term: 'to demonstrate', def: 'To show clearly that you have a skill or quality, often by giving an example.', example: 'She demonstrated her leadership skills by describing a project she managed.' },
+  { term: 'to highlight', def: 'To draw attention to the most important or relevant points.', example: 'In your answer, highlight the skills that are most relevant to this role.' },
+  { term: 'proactive', def: 'Taking initiative and acting before being asked or before problems arise.', example: '"I am proactive — I prefer to identify problems early rather than wait for them to grow."' },
+  { term: 'to be self-aware', def: 'To understand your own strengths, weaknesses, and behaviours clearly.', example: 'Interviewers appreciate candidates who are self-aware about their areas for improvement.' },
+  { term: 'to take initiative', def: 'To start something or act independently without being told to.', example: 'She took initiative by proposing a new process that saved the team several hours a week.' },
+  { term: 'adaptable', def: 'Able to change or adjust easily to new situations or conditions.', example: '"I am adaptable — I find it easy to learn new systems and adjust to different working styles."' },
+  // Career and motivation
+  { term: 'career goal', def: 'What you want to achieve in your professional life in the future.', example: '"Where do you see yourself in five years?" is a question about your career goals.' },
+  { term: 'motivated by', def: 'Driven or inspired by something specific to put in effort or take action.', example: '"I am motivated by solving complex problems and seeing a clear impact."' },
+  { term: 'to align with', def: 'To match or fit well with something else, such as values or goals.', example: '"This role aligns with my goal to develop my skills in project management."' },
+  { term: 'ambition', def: 'A strong desire to achieve something, especially in your career.', example: '"My ambition is to work in international business within the next five years."' },
+  { term: 'to be passionate about', def: 'To have a strong and genuine interest in something.', example: '"I am passionate about sustainability and want to work for a company that shares this value."' },
+  // Answering techniques
+  { term: 'to give an example', def: 'To describe a specific real situation to support a point you are making.', example: 'Interviewers often say "Can you give an example?" when they want a STAR answer.' },
+  { term: 'in a nutshell', def: 'In summary; briefly and clearly.', example: '"In a nutshell, I am someone who works well under pressure and enjoys collaborative projects."' },
+  { term: 'to sum up', def: 'To give a short summary of the main points.', example: '"To sum up, this experience taught me the importance of clear communication."' },
+  { term: 'to be honest', def: 'To tell the truth without hiding important details.', example: 'When asked about weaknesses, it is important to be honest but also show self-awareness.' },
+  { term: 'area for improvement', def: 'Something you are not yet fully skilled at but are working to develop.', example: '"One area for improvement for me is public speaking, so I have been joining a presentation club."' },
+  // Closing and follow-up
+  { term: 'to express interest', def: 'To communicate clearly that you want something, such as a job.', example: 'At the end of the interview, always express your interest in the role.' },
+  { term: 'next steps', def: 'The actions that will happen after an event, such as after an interview.', example: '"Could you tell me what the next steps are in the process?"' },
+  { term: 'to reiterate', def: 'To say something again to make sure it is understood or remembered.', example: 'At the close, reiterate your enthusiasm for the role in one sentence.' },
+  { term: 'onboarding', def: 'The process of introducing a new employee to a company and their role.', example: '"Could you tell me what the onboarding process looks like for new hires?"' },
+  { term: 'team culture', def: 'The shared values, behaviours, and ways of working within a team or company.', example: '"How would you describe the team culture here?" is a good question to ask the interviewer.' },
+  { term: 'to meet expectations', def: 'To do what is required or what was hoped for.', example: '"I always aim to meet — and if possible exceed — the expectations set for my role."' },
+];
+
+vocabData.forEach(v => { vocabLookup[v.term] = v; });
+
+// Additional entries for modal pill tooltips
+[
+  { term: 'small talk', def: 'Light, friendly conversation about everyday topics before or after a more serious discussion.', example: 'The interviewer started with small talk about the weather to help the candidate relax.' },
+  { term: 'situation', def: 'In STAR: a brief description of the context or background of your example.', example: 'Start your STAR answer with a clear situation: when, where, and what was happening.' },
+  { term: 'task', def: 'In STAR: your specific role or responsibility in that situation.', example: 'My task was to coordinate the team and make sure everyone met the deadline.' },
+  { term: 'action', def: 'In STAR: the specific steps you personally took to deal with the situation.', example: 'The action section is the most important part — focus on what YOU did, not the team.' },
+  { term: 'result', def: 'In STAR: the outcome of your actions, ideally with a concrete positive impact.', example: 'Our result was a 20% reduction in errors and positive feedback from the client.' },
+  { term: 'competency', def: 'A specific skill or behaviour that is needed to do a job well.', example: 'Leadership is a key competency for management roles.' },
+  { term: 'behavioural question', def: 'An interview question that asks how you acted in a past situation, to predict future behaviour.', example: '"Tell me about a time you handled a difficult customer" is a behavioural question.' },
+  { term: 'self-awareness', def: 'Understanding your own emotions, strengths, weaknesses, and impact on others.', example: 'Showing self-awareness in an interview means being honest about areas you are still developing.' },
+  { term: 'strengths', def: 'The skills, qualities, or abilities you are particularly good at.', example: 'Identify your top three strengths before the interview and prepare examples for each.' },
+  { term: 'areas for improvement', def: 'Skills or behaviours you are still developing or working to get better at.', example: '"One of my areas for improvement is delegating — I sometimes try to do everything myself."' },
+  { term: 'to summarise', def: 'To express the main points of something briefly and clearly.', example: 'At the end of your STAR answer, summarise what you learned from the experience.' },
+  { term: 'to introduce yourself', def: 'To tell someone your name and relevant background for the first time.', example: 'At the start of the interview, you will be asked to introduce yourself briefly.' },
+  { term: 'to prepare', def: 'To get ready for something by gathering information, practising, or planning in advance.', example: 'The more you prepare, the more confident you will feel during the interview.' },
+  { term: 'requirements', def: 'The skills, qualifications, or experience that a job or role demands.', example: 'Read the requirements in the job description carefully before preparing your answers.' },
+  { term: 'expectations', def: 'What someone believes will happen or what they believe is needed.', example: '"What are the expectations for someone in this role in the first three months?"' },
+  { term: 'feedback', def: 'Information given to someone about their performance to help them improve.', example: 'He asked for feedback after the interview to understand how he could do better next time.' },
+  { term: 'career progression', def: 'The process of moving forward or upward in your career over time.', example: '"What opportunities are there for career progression within this company?"' },
+  { term: 'thank-you note', def: 'A short message sent after an interview to express gratitude and reinforce your interest.', example: 'A thank-you note sent within 24 hours shows professionalism and genuine interest.' },
+  { term: 'to collaborate', def: 'To work together with other people to achieve a shared goal.', example: 'She collaborated closely with the design team to deliver the project on time.' },
+  { term: 'to contribute', def: 'To give your effort, ideas, or skills to help achieve something as part of a group.', example: 'Each team member contributed their expertise to make the project successful.' },
+  { term: 'shared goal', def: 'An objective that all members of a team are working toward together.', example: 'Having a shared goal helped the team stay focused during a difficult period.' },
+  { term: 'to coordinate', def: 'To organise people or activities so they work together effectively.', example: 'My role was to coordinate communication between the development and marketing teams.' },
+  { term: 'to communicate', def: 'To share information, ideas, or feelings clearly with others.', example: 'We communicated daily via a shared platform to keep everyone updated.' },
+  { term: 'to support', def: 'To help someone or contribute to their success.', example: 'I supported my colleagues by reviewing their work before submission.' },
+  { term: 'team dynamics', def: 'The way a group of people interact, communicate, and work together.', example: 'Understanding team dynamics helped me adapt my communication style to different colleagues.' },
+  { term: 'to resolve', def: 'To find a solution to a problem or disagreement.', example: 'We resolved the conflict by having an open conversation about each person\'s concerns.' },
+  { term: 'to compromise', def: 'To reach an agreement where both sides give up something to find a solution that works for everyone.', example: 'We compromised by splitting the tasks differently so everyone felt the workload was fair.' },
+  { term: 'to stay calm', def: 'To remain composed and controlled in a stressful or difficult situation.', example: 'I stayed calm and focused on finding a solution rather than reacting emotionally.' },
+  { term: 'to address', def: 'To deal with or speak directly about a problem or issue.', example: 'I addressed the disagreement by asking to meet privately with my colleague.' },
+  { term: 'to listen actively', def: 'To pay full attention to what someone is saying and show that you understand them.', example: 'Active listening means not just hearing words but showing you understand by asking questions.' },
+  { term: 'misunderstanding', def: 'A situation where someone interprets information incorrectly, leading to confusion or conflict.', example: 'The conflict was actually caused by a misunderstanding about who was responsible for the task.' },
+  { term: 'to find common ground', def: 'To identify shared interests or values that both sides can agree on.', example: 'We found common ground by focusing on the shared goal rather than our individual preferences.' },
+  { term: 'to evaluate options', def: 'To carefully consider different possible choices before deciding.', example: 'Before deciding, I evaluated all the options and considered the likely impact of each.' },
+  { term: 'pros and cons', def: 'The advantages and disadvantages of a particular choice or situation.', example: 'I weighed up the pros and cons before deciding which approach to take.' },
+  { term: 'to weigh up', def: 'To carefully consider the advantages and disadvantages of different options.', example: 'I weighed up the options and decided the fastest solution was also the safest.' },
+  { term: 'to consult', def: 'To ask someone for their opinion or advice before making a decision.', example: 'I consulted with my supervisor before making the final decision to make sure I had support.' },
+  { term: 'to prioritise', def: 'To decide which tasks or goals are most important and deal with them first.', example: 'With limited time, I had to prioritise the tasks that had the biggest impact on the deadline.' },
+  { term: 'to act on', def: 'To take action based on a decision, plan, or piece of advice.', example: 'Once we agreed on the solution, I acted on it immediately to avoid further delays.' },
+  { term: 'to take responsibility', def: 'To accept that you are accountable for your actions and their consequences.', example: 'I took responsibility for the error and explained what I would do differently next time.' },
+  { term: 'to accomplish', def: 'To successfully complete or achieve something, especially after effort.', example: 'One thing I am proud of accomplishing is completing my internship project ahead of schedule.' },
+  { term: 'to overcome', def: 'To successfully deal with or get past a difficulty or challenge.', example: 'I overcame my fear of public speaking by practising regularly and joining a debate club.' },
+  { term: 'challenge', def: 'A difficult situation that requires effort and skill to deal with.', example: 'The biggest challenge was managing the project with a very limited budget.' },
+  { term: 'to set a goal', def: 'To decide on a specific target or outcome you want to achieve.', example: 'I set a goal to improve my English writing and worked consistently towards it every week.' },
+  { term: 'persistence', def: 'Continuing to try hard even when something is difficult or takes a long time.', example: 'My persistence paid off — I kept improving my application until I was shortlisted.' },
+  { term: 'outcome', def: 'The final result of a situation or set of actions.', example: 'The outcome was positive: the team delivered the project and the client was satisfied.' },
+  { term: 'to be proud of', def: 'To feel satisfaction and respect for something you or others have achieved.', example: '"Something I am really proud of is the improvement I made in my second semester grades."' },
+  { term: 'to enquire', def: 'To formally ask for information or clarification about something.', example: '"I would like to enquire about the typical career path for someone in this role."' },
+  { term: 'to confirm', def: 'To state clearly that something is correct or that an arrangement is definite.', example: '"Could you confirm what the next steps in the hiring process will be?"' },
+].forEach(v => { if (!vocabLookup[v.term]) vocabLookup[v.term] = v; });
+
+function switchView(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'vocabulary') buildVocab();
+  if (id === 'quiz') initQuiz();
+}
+
+// ── MODAL ──
+function makePill(term) {
+  const v = vocabLookup[term];
+  if (v) {
+    const id = 'tt-' + term.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+    return `<span class="pill-wrap"
+      onmouseenter="showTip('${id}', this)"
+      onmouseleave="hideTip('${id}')">
+      <span class="modal-pill">${term}</span>
+      <span class="pill-tooltip" id="${id}">
+        <strong>${term}</strong>${v.def}<em>${v.example}</em>
+      </span>
+    </span>`;
+  }
+  return `<span class="pill-wrap"><span class="modal-pill">${term}</span></span>`;
+}
+
+function showTip(id, el) {
+  const tip = document.getElementById(id);
+  if (!tip) return;
+  const rect = el.getBoundingClientRect();
+  const tipW = 230;
+  const margin = 8;
+  tip.classList.add('visible');
+  // Position above the pill by default
+  let top = rect.top - tip.offsetHeight - 10;
+  let left = rect.left + rect.width / 2 - tipW / 2;
+  // Clamp horizontally
+  if (left < margin) left = margin;
+  if (left + tipW > window.innerWidth - margin) left = window.innerWidth - tipW - margin;
+  // If not enough room above, show below
+  if (top < margin) top = rect.bottom + 10;
+  tip.style.top = top + 'px';
+  tip.style.left = left + 'px';
+}
+
+function hideTip(id) {
+  const tip = document.getElementById(id);
+  if (tip) tip.classList.remove('visible');
+}
+function openModal(key) {
+  const d = phaseData[key];
+  if (!d) return;
+  document.getElementById('modal-icon').textContent = d.icon + ' ';
+  document.getElementById('modal-title-text').textContent = key;
+  const body = document.getElementById('modal-body');
+  body.innerHTML = `
+    <div class="modal-section">
+      <h3>What is this?</h3>
+      <p>${d.description}</p>
+    </div>
+    <div class="modal-section">
+      <h3>Key questions</h3>
+      <ul>${d.questions.map(q => `<li>${q}</li>`).join('')}</ul>
+    </div>
+    <div class="modal-section">
+      <h3>Useful vocabulary <span style="font-size:11px;font-weight:400;color:var(--gray-600);font-style:italic;">— hover for definitions</span></h3>
+      <div class="modal-vocab-pills">${d.vocab.map(v => makePill(v)).join('')}</div>
+    </div>
+    <div class="modal-section">
+      <h3>Useful phrases</h3>
+      <div class="modal-phrases">${d.phrases.map(p => `<div class="phrase-item">${p}</div>`).join('')}</div>
+    </div>
+    <div class="modal-section">
+      <h3>Example</h3>
+      <div class="modal-example">${d.example}</div>
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+
+// ── VOCABULARY ──
+
+// ── VOCABULARY ──
+const vocabCategories = [
+  {
+    label: 'Verbs',
+    icon: '🔵',
+    terms: ['to accomplish','to act on','to address','to align with','to be honest','to be passionate about','to be proud of','to be self-aware','to be shortlisted','to collaborate','to come across as','to communicate','to compromise','to confirm','to consult','to contribute','to coordinate','to demonstrate','to elaborate','to enquire','to evaluate options','to express interest','to find common ground','to follow up','to give an example','to highlight','to introduce yourself','to listen actively','to make eye contact','to meet expectations','to overcome','to prepare','to prioritise','to rehearse','to reiterate','to research','to resolve','to set a goal','to shortlist','to stay calm','to sum up','to summarise','to support','to take initiative','to take responsibility','to tailor','to weigh up'],
+  },
+  {
+    label: 'Nouns',
+    icon: '🟡',
+    terms: ['action','ambition','area for improvement','areas for improvement','behavioural question','body language','career goal','career progression','challenge','competency','competency question','expectations','feedback','first impression','job description','job interview','misunderstanding','mock interview','next steps','onboarding','outcome','panel interview','persistence','personal SWOT','pros and cons','requirements','result','screening interview','self-awareness','shared goal','situation','STAR method','strengths','task','team culture','team dynamics','thank-you note','transferable skill'],
+  },
+  {
+    label: 'Adjectives & expressions',
+    icon: '🟢',
+    terms: ['adaptable','in a nutshell','motivated by','proactive'],
+  },
+];
+
+function buildVocab() {
+  const container = document.getElementById('vocab-container');
+  if (container.children.length > 0) return;
+  container.innerHTML = vocabCategories.map(cat => {
+    const sorted = [...cat.terms].sort((a, b) => a.replace(/^to /, '').localeCompare(b.replace(/^to /, '')));
+    const items = sorted.map(term => {
+      const v = vocabLookup[term];
+      if (!v) return '';
+      return `<div class="vocab-item" onclick="this.classList.toggle('open')">
+        <div class="vocab-term">${v.term}</div>
+        <div class="vocab-def">${v.def}</div>
+        <div class="vocab-example">${v.example}</div>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:28px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-600);padding:6px 0 10px;border-bottom:2px solid var(--teal-border);margin-bottom:14px;">${cat.icon} ${cat.label}</div>
+      <div class="vocab-grid">${items}</div>
+    </div>`;
+  }).join('');
+}
+
+
+// ── QUIZ ──
+let quizIndex = 0, quizScore = 0, quizAnswered = false;
+const shuffled = [...quizData].sort(() => Math.random() - .5);
+
+function initQuiz() {
+  quizIndex = 0; quizScore = 0; quizAnswered = false;
+  shuffled.sort(() => Math.random() - .5);
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const card = document.getElementById('quiz-card');
+  if (quizIndex >= shuffled.length) {
+    card.innerHTML = `<div class="quiz-done">
+      <div class="score">${quizScore}/${shuffled.length}</div>
+      <div class="score-label">Questions correct</div>
+      <p style="font-size:14px;color:var(--gray-600);margin-top:12px;">${quizScore === shuffled.length ? 'Perfect score! Great preparation.' : quizScore >= shuffled.length * .7 ? 'Good work! Review the ones you missed.' : 'Keep practising — you\'ll get there!'}</p>
+      <button class="quiz-restart" onclick="initQuiz()">Try again</button>
+    </div>`;
+    return;
+  }
+  const q = shuffled[quizIndex];
+  quizAnswered = false;
+  card.innerHTML = `
+    <div class="quiz-progress">Question ${quizIndex + 1} of ${shuffled.length}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-options">
+      ${q.opts.map((o, i) => `<button class="quiz-opt" onclick="answerQuiz(${i})" id="qopt-${i}">${o}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="quiz-feedback"></div>
+    <button class="quiz-next" id="quiz-next" onclick="nextQuiz()">Next →</button>
+  `;
+}
+
+function answerQuiz(i) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q = shuffled[quizIndex];
+  const fb = document.getElementById('quiz-feedback');
+  document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+  document.getElementById('qopt-' + q.correct).classList.add('correct');
+  if (i === q.correct) {
+    quizScore++;
+    fb.textContent = '✅ Correct! ' + q.explanation;
+    fb.className = 'quiz-feedback show correct';
+  } else {
+    document.getElementById('qopt-' + i).classList.add('incorrect');
+    fb.textContent = '❌ Not quite. ' + q.explanation;
+    fb.className = 'quiz-feedback show incorrect';
+  }
+  document.getElementById('quiz-next').classList.add('show');
+}
+
+function nextQuiz() {
+  quizIndex++;
+  renderQuiz();
+}
+</script>
+</body>
+</html>
