@@ -334,6 +334,7 @@
 
 <nav class="tabs-bar" id="tabsBar">
   <button class="tab-btn active" data-tab="overview">📋 Overview</button>
+  <button class="tab-btn" data-tab="timeline">🗓️ Timeline</button>
   <button class="tab-btn" data-tab="airules">🚦 AI Rules</button>
   <button class="tab-btn" data-tab="pairr">✍️ PAIRR Steps</button>
   <button class="tab-btn" data-tab="instructions">📖 Report</button>
@@ -393,31 +394,37 @@
     </div>
   </details>
 
+
+
   <details class="accordion">
-    <summary>📄 Report structure</summary>
+    <summary>📤 How to submit</summary>
     <div class="accordion-body">
-      <p>Use the official Word template. Do not change the section headings or numbering.</p>
-      <div class="tbl-wrap">
-        <table>
-          <tr><th>Section</th><th>Title</th><th>Notes</th></tr>
-          <tr><td>Cover</td><td>Title page</td><td>Business name, course, instructor, your name and student ID</td></tr>
-          <tr><td>—</td><td>Summary</td><td><strong>Leave blank.</strong> You write this in the midterm exam.</td></tr>
-          <tr><td>1</td><td>Introduction</td><td>Two paragraphs, 60–75 words each. Overview of your business idea and report structure.</td></tr>
-          <tr><td>2</td><td>Term definitions</td><td>Define all 8 key business plan terms — one paragraph per subsection (2.1–2.8), 60–75 words each</td></tr>
-          <tr><td>3</td><td>Your business plan</td><td>8 subsections (value proposition, customer segments, channels, etc.)</td></tr>
-          <tr><td>4</td><td>Feedback</td><td>Peer feedback (4.1), AI feedback (4.2), comparison and reflection (4.3)</td></tr>
-          <tr><td>5</td><td>AI tool use</td><td>Describe all AI tools you used. Required even if use was minimal.</td></tr>
-          <tr><td>—</td><td>References</td><td>Full list — author, date, title, source, URL or DOI</td></tr>
-          <tr><td>—</td><td>Appendices</td><td>Peer team meeting minutes (both meetings), your job advertisement, your Business Fair PowerPoint slides</td></tr>
-        </table>
-      </div>
+      <ol>
+        <li>Use the correct Word template. Do not rename sections or change the structure.</li>
+        <li>Submit your final, complete version before the deadline.</li>
+      </ol>
+      <div class="callout warn" style="margin-top:12px;">⚠️ <strong>No late submissions.</strong> The submission link closes at the deadline. Plan ahead.</div>
     </div>
   </details>
 
   <details class="accordion">
-    <summary>🗓️ Semester timeline</summary>
+    <summary>⚠️ What is plagiarism?</summary>
     <div class="accordion-body">
-      <div class="timeline" style="margin-top:12px;">
+      <p>Plagiarism is using someone else's words or ideas without saying where they come from. This includes copying text without a citation, paraphrasing too closely, or submitting AI-generated text as your own. Always write in your own words and cite your sources. If you are not sure, cite — it is better to cite too much than too little.</p>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════════ TIMELINE TAB ══════════════ -->
+<div class="tab-panel" id="tab-timeline">
+<div class="container">
+
+  <p style="font-size:14px;color:var(--gray-600);margin-bottom:20px;">A guide to what happens each phase of the semester. Click each phase to see what you need to do.</p>
+
+  <div class="timeline" style="margin-top:12px;">
 
         <div class="tl-item">
           <details class="tl-accordion">
@@ -512,27 +519,7 @@
           </details>
         </div>
 
-      </div>
-    </div>
-  </details>
-
-  <details class="accordion">
-    <summary>📤 How to submit</summary>
-    <div class="accordion-body">
-      <ol>
-        <li>Use the correct Word template. Do not rename sections or change the structure.</li>
-        <li>Submit your final, complete version before the deadline.</li>
-      </ol>
-      <div class="callout warn" style="margin-top:12px;">⚠️ <strong>No late submissions.</strong> The submission link closes at the deadline. Plan ahead.</div>
-    </div>
-  </details>
-
-  <details class="accordion">
-    <summary>⚠️ What is plagiarism?</summary>
-    <div class="accordion-body">
-      <p>Plagiarism is using someone else's words or ideas without saying where they come from. This includes copying text without a citation, paraphrasing too closely, or submitting AI-generated text as your own. Always write in your own words and cite your sources. If you are not sure, cite — it is better to cite too much than too little.</p>
-    </div>
-  </details>
+  </div>
 
   <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
 </div>
@@ -776,6 +763,28 @@ How to start: Wait for me to give you a passage to check.
 <!-- ══════════════ INSTRUCTIONS TAB ══════════════ -->
 <div class="tab-panel" id="tab-instructions">
 <div class="container">
+
+  <details class="accordion">
+    <summary>📄 Report structure</summary>
+    <div class="accordion-body">
+      <p>Use the official Word template. Do not change the section headings or numbering.</p>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Section</th><th>Title</th><th>Notes</th></tr>
+          <tr><td>Cover</td><td>Title page</td><td>Business name, course, instructor, your name and student ID</td></tr>
+          <tr><td>—</td><td>Summary</td><td><strong>Leave blank.</strong> You write this in the midterm exam.</td></tr>
+          <tr><td>1</td><td>Introduction</td><td>Two paragraphs, 60–75 words each. Overview of your business idea and report structure.</td></tr>
+          <tr><td>2</td><td>Term definitions</td><td>Define all 8 key business plan terms — one paragraph per subsection (2.1–2.8), 60–75 words each</td></tr>
+          <tr><td>3</td><td>Your business plan</td><td>8 subsections (value proposition, customer segments, channels, etc.)</td></tr>
+          <tr><td>4</td><td>Feedback</td><td>Peer feedback (4.1), AI feedback (4.2), comparison and reflection (4.3)</td></tr>
+          <tr><td>5</td><td>AI tool use</td><td>Describe all AI tools you used. Required even if use was minimal.</td></tr>
+          <tr><td>—</td><td>References</td><td>Full list — author, date, title, source, URL or DOI</td></tr>
+          <tr><td>—</td><td>Appendices</td><td>Peer team meeting minutes (both meetings), your job advertisement, your Business Fair PowerPoint slides</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
 
   <details class="accordion">
     <summary>📄 Cover page and author information</summary>
