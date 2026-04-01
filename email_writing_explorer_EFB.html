@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Professional Email Writing Explorer — English for Business</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue: #1a56db;
+  --blue-light: #e8f2fe;
+  --blue-mid: #d4eef4;
+  --blue-dark: #1a4a56;
+  --green: #057a55;
+  --green-light: #def7ec;
+  --yellow: #c27803;
+  --yellow-light: #fdf6b2;
+  --red: #c81e1e;
+  --red-light: #fde8e8;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --radius: 10px;
+  --teal-bg: #e8f6f9;
+  --teal-border: #b2dce8;
+  --teal-text: #1a4a56;
+}
+body { font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; color: var(--gray-800); background: var(--gray-50); min-height: 100vh; display: flex; flex-direction: column; }
+
+.site-header { background: white; border-bottom: 1px solid var(--gray-200); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.site-header .h1 { font-size: 20px; font-weight: 700; color: var(--gray-900); }
+.site-header .sub { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+.site-header a { color: var(--blue); text-decoration: none; }
+.site-header a:hover { text-decoration: underline; }
+nav { display: flex; gap: 8px; flex-wrap: wrap; }
+.nav-btn { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; display: flex; align-items: center; gap: 6px; }
+.nav-btn.active { background: var(--blue); color: white; }
+.nav-btn:not(.active) { background: var(--gray-100); color: var(--gray-700); }
+.nav-btn:not(.active):hover { background: var(--gray-200); }
+
+main { flex: 1; max-width: 1000px; margin: 0 auto; width: 100%; padding: 28px 20px 60px; }
+.view { display: none; }
+.view.active { display: block; }
+
+.info-strip { background: var(--teal-bg); border-left: 4px solid var(--blue); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 14px; font-size: 13.5px; color: var(--blue-dark); }
+
+/* EMAIL TYPE GRID */
+.email-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 14px; }
+@media (max-width: 600px) { .email-grid { grid-template-columns: 1fr; } }
+.phase-card { background: white; border: 2px solid var(--gray-200); border-radius: var(--radius); padding: 20px 18px; cursor: pointer; transition: border-color .15s, box-shadow .15s; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+.phase-card:hover { border-color: var(--blue); box-shadow: 0 4px 12px rgba(26,86,219,.1); }
+.phase-card .icon { font-size: 28px; }
+.phase-card .label { font-weight: 700; font-size: 14px; color: var(--gray-900); }
+.phase-card .hint { font-size: 12px; color: var(--gray-600); }
+
+/* ANNOTATED EMAIL */
+.annotated-email { background: white; border: 1px solid var(--gray-200); border-radius: 14px; padding: 0; overflow: hidden; margin-bottom: 20px; }
+.annotated-email .email-header-bar { background: var(--gray-100); border-bottom: 1px solid var(--gray-200); padding: 12px 20px; font-size: 13px; color: var(--gray-600); display: flex; gap: 20px; flex-wrap: wrap; }
+.annotated-email .email-header-bar span strong { color: var(--gray-800); }
+.email-body-parts { padding: 20px; display: flex; flex-direction: column; gap: 0; }
+.email-part { display: flex; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--gray-100); cursor: pointer; transition: background .1s; border-radius: 6px; padding: 10px 8px; }
+.email-part:last-child { border-bottom: none; }
+.email-part:hover { background: var(--teal-bg); }
+.email-part .part-label { min-width: 130px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--blue); padding-top: 2px; flex-shrink: 0; }
+.email-part .part-text { font-size: 14px; color: var(--gray-800); line-height: 1.6; flex: 1; }
+.email-part .part-note { font-size: 12px; color: var(--gray-600); margin-top: 4px; font-style: italic; }
+.annotation-panel { background: var(--teal-bg); border: 1px solid var(--teal-border); border-radius: 10px; padding: 16px; margin: 0 20px 20px; display: none; }
+.annotation-panel.show { display: block; }
+.annotation-panel h4 { font-size: 13px; font-weight: 700; color: var(--blue-dark); margin-bottom: 6px; }
+.annotation-panel p { font-size: 13.5px; color: var(--gray-700); line-height: 1.6; }
+.annotation-panel .alts { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.annotation-panel .alt-item { background: white; border-radius: 6px; padding: 7px 12px; font-size: 13px; color: var(--teal-text); font-style: italic; border: 1px solid var(--teal-border); }
+
+/* DOS/DONTS */
+.dos-donts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+@media (max-width: 600px) { .dos-donts { grid-template-columns: 1fr; } }
+.do-list, .dont-list { border-radius: var(--radius); padding: 16px; }
+.do-list { background: var(--green-light); border: 1px solid #6ee7b7; }
+.dont-list { background: var(--red-light); border: 1px solid #fca5a5; }
+.do-list h4 { color: #064e3b; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.dont-list h4 { color: #7f1d1d; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.do-list li, .dont-list li { font-size: 13px; margin-left: 16px; margin-bottom: 5px; line-height: 1.5; }
+.do-list li { color: #065f46; }
+.dont-list li { color: #991b1b; }
+
+/* VOCAB */
+.vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 32px; }
+@media (max-width: 640px) { .vocab-grid { grid-template-columns: 1fr; } }
+.vocab-item { border-bottom: 1px solid var(--gray-100); padding-bottom: 14px; cursor: pointer; }
+.vocab-item:hover .vocab-term { color: var(--blue); }
+.vocab-term { font-weight: 600; font-size: 14px; color: var(--gray-900); margin-bottom: 2px; transition: color .15s; }
+.vocab-def { font-size: 13px; color: var(--gray-600); display: none; margin-top: 4px; line-height: 1.5; }
+.vocab-example { font-size: 12px; color: var(--gray-600); font-style: italic; margin-top: 4px; border-left: 2px solid var(--blue-light); padding-left: 8px; display: none; }
+.vocab-item.open .vocab-def, .vocab-item.open .vocab-example { display: block; }
+
+/* QUIZ */
+.quiz-wrap { max-width: 640px; margin: 0 auto; }
+.quiz-info { background: var(--teal-bg); border-left: 4px solid var(--blue); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; font-size: 13.5px; color: var(--blue-dark); }
+.quiz-card { background: white; border: 1px solid var(--gray-200); border-radius: 14px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+.quiz-q { font-size: 16px; font-weight: 600; color: var(--gray-900); margin-bottom: 20px; line-height: 1.5; }
+.quiz-progress { font-size: 12px; color: var(--gray-600); margin-bottom: 14px; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.quiz-opt { background: var(--gray-50); border: 2px solid var(--gray-200); border-radius: 8px; padding: 12px 16px; font-size: 14px; cursor: pointer; text-align: left; transition: all .15s; }
+.quiz-opt:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-light); }
+.quiz-opt.correct { border-color: var(--green); background: var(--green-light); color: #064e3b; }
+.quiz-opt.incorrect { border-color: var(--red); background: var(--red-light); color: #7f1d1d; }
+.quiz-feedback { font-size: 13.5px; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; display: none; line-height: 1.5; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: var(--green-light); color: #064e3b; border-left: 3px solid var(--green); }
+.quiz-feedback.incorrect { background: var(--red-light); color: #7f1d1d; border-left: 3px solid var(--red); }
+.quiz-next { background: var(--blue); color: white; border: none; border-radius: 8px; padding: 10px 24px; font-weight: 600; font-size: 14px; cursor: pointer; display: none; }
+.quiz-next.show { display: inline-block; }
+.quiz-done { text-align: center; padding: 20px 0; }
+.quiz-done .score { font-size: 40px; font-weight: 700; color: var(--blue); }
+.quiz-done .score-label { font-size: 14px; color: var(--gray-600); margin-top: 4px; }
+.quiz-restart { background: var(--blue); color: white; border: none; border-radius: 8px; padding: 10px 24px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 16px; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 200; }
+.modal-overlay.open { display: flex; }
+.modal { background: white; border-radius: 16px; max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.2); animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.modal-header { padding: 20px 22px 16px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: white; z-index: 1; }
+.modal-title { font-size: 18px; font-weight: 700; color: var(--gray-900); display: flex; align-items: center; gap: 10px; }
+.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--gray-600); line-height: 1; padding: 4px; }
+.modal-close:hover { color: var(--gray-900); }
+.modal-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 20px; }
+.modal-section h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--blue); margin-bottom: 8px; }
+.modal-section p, .modal-section li { font-size: 14px; color: var(--gray-700); line-height: 1.65; }
+.modal-section ul { margin-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.modal-vocab-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.modal-example { background: var(--gray-50); border-left: 3px solid var(--blue); border-radius: 4px; padding: 12px 14px; font-size: 13.5px; color: var(--gray-700); }
+.modal-phrases { display: flex; flex-direction: column; gap: 6px; }
+.phrase-item { background: var(--teal-bg); border-radius: 6px; padding: 8px 12px; font-size: 13.5px; color: var(--teal-text); font-style: italic; }
+.modal-footer { padding: 14px 22px; border-top: 1px solid var(--gray-100); background: var(--gray-50); display: flex; justify-content: flex-end; border-radius: 0 0 16px 16px; }
+.modal-footer button { background: var(--blue); color: white; border: none; border-radius: 8px; padding: 9px 22px; font-weight: 600; font-size: 14px; cursor: pointer; }
+
+/* PILLS */
+.pill-wrap { position: relative; display: inline-block; }
+.modal-pill { background: var(--teal-bg); border: 1px solid var(--teal-border); color: var(--teal-text); border-radius: 999px; padding: 4px 12px; font-size: 12.5px; font-weight: 500; cursor: default; transition: background .15s, border-color .15s; }
+.pill-wrap:hover .modal-pill { background: var(--blue); border-color: var(--blue); color: white; }
+.pill-tooltip { display: none; position: fixed; background: var(--gray-900); color: white; border-radius: 8px; padding: 10px 14px; font-size: 13px; line-height: 1.5; width: 230px; z-index: 9999; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+.pill-tooltip strong { display: block; font-size: 13.5px; margin-bottom: 3px; color: white; }
+.pill-tooltip em { font-style: italic; color: #9ca3af; font-size: 12px; display: block; margin-top: 4px; }
+.pill-tooltip.visible { display: block; }
+
+/* REGISTER TABLE */
+.register-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 10px; }
+.register-table th { background: var(--blue); color: white; padding: 8px 14px; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.register-table td { padding: 9px 14px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+.register-table tr:nth-child(even) td { background: var(--gray-50); }
+.register-table .formal { color: #064e3b; font-weight: 500; }
+.register-table .informal { color: #7f1d1d; }
+
+footer { background: var(--gray-900); color: var(--gray-600); text-align: center; font-size: 12px; padding: 24px; margin-top: auto; }
+footer a { color: var(--gray-600); }
+footer a:hover { color: white; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="h1">Professional Email Writing Explorer</div>
+    <div class="sub">English for Business &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="switchView('types', this)">✉️ Email types</button>
+    <button class="nav-btn" onclick="switchView('annotated', this)">🔍 Annotated email</button>
+    <button class="nav-btn" onclick="switchView('register', this)">🎚️ Register</button>
+    <button class="nav-btn" onclick="switchView('vocabulary', this)">📖 Vocabulary</button>
+    <button class="nav-btn" onclick="switchView('quiz', this)">🎯 Practice quiz</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ── EMAIL TYPES VIEW ── -->
+<div class="view active" id="view-types">
+  <div class="info-strip"><strong>What is a professional email?</strong> A professional email is a written message you send in a work or study context. It has a clear structure, a formal or semi-formal tone, and a specific purpose. Click any email type below to learn when to use it, how to structure it, and what language to use.</div>
+  <div class="info-strip" style="background:var(--blue-light);border-color:var(--blue);margin-top:0;">💡 <strong>How to use:</strong> Click on any card to explore structure, key phrases, vocabulary, and a model example.</div>
+
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-600);margin:20px 0 10px;">Common email types in business English</div>
+  <div class="email-grid">
+    <div class="phase-card" onclick="openModal('Enquiry email')"><div class="icon">🔎</div><div class="label">Enquiry email</div><div class="hint">Asking for information or help</div></div>
+    <div class="phase-card" onclick="openModal('Cover letter email')"><div class="icon">📄</div><div class="label">Cover letter email</div><div class="hint">Applying for a job</div></div>
+    <div class="phase-card" onclick="openModal('Follow-up email')"><div class="icon">🔁</div><div class="label">Follow-up email</div><div class="hint">After a meeting, interview, or no reply</div></div>
+    <div class="phase-card" onclick="openModal('Complaint email')"><div class="icon">⚠️</div><div class="label">Complaint email</div><div class="hint">Reporting a problem professionally</div></div>
+    <div class="phase-card" onclick="openModal('Thank-you email')"><div class="icon">🙏</div><div class="label">Thank-you email</div><div class="hint">After an interview or meeting</div></div>
+    <div class="phase-card" onclick="openModal('Request email')"><div class="icon">📋</div><div class="label">Request email</div><div class="hint">Asking someone to do something</div></div>
+  </div>
+
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-600);margin:24px 0 10px;">Parts of every professional email</div>
+  <div class="email-grid">
+    <div class="phase-card" onclick="openModal('Subject line')"><div class="icon">📌</div><div class="label">Subject line</div><div class="hint">Clear, specific, and informative</div></div>
+    <div class="phase-card" onclick="openModal('Greeting')"><div class="icon">👋</div><div class="label">Greeting</div><div class="hint">How to open formally or semi-formally</div></div>
+    <div class="phase-card" onclick="openModal('Opening sentence')"><div class="icon">▶️</div><div class="label">Opening sentence</div><div class="hint">State your reason for writing</div></div>
+    <div class="phase-card" onclick="openModal('Closing')"><div class="icon">🤝</div><div class="label">Closing</div><div class="hint">Sign off professionally</div></div>
+  </div>
+</div>
+
+<!-- ── ANNOTATED EMAIL VIEW ── -->
+<div class="view" id="view-annotated">
+  <div class="info-strip"><strong>How to read this view:</strong> Below is a model cover letter email, broken into parts. Click any part to see an explanation, tips, and alternative phrases you can use.</div>
+
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-600);margin:0 0 12px;">Model email — Cover letter email (job application)</div>
+
+  <div class="annotated-email">
+    <div class="email-header-bar">
+      <span><strong>To:</strong> hiring@greenloop.fi</span>
+      <span><strong>From:</strong> sofia.makinen@student.lab.fi</span>
+    </div>
+    <div class="email-body-parts">
+      <div class="email-part" onclick="toggleAnnotation('ann-subject')">
+        <div class="part-label">Subject line</div>
+        <div class="part-text">Application for Sales Assistant position — Sofia Mäkinen
+          <div class="part-note">Click to see tips and alternatives →</div>
+        </div>
+      </div>
+      <div class="annotation-panel" id="ann-subject">
+        <h4>📌 Subject line</h4>
+        <p>A good subject line tells the reader exactly what the email is about before they open it. Include the job title and your name so it is easy to identify.</p>
+        <div class="alts">
+          <div class="alt-item">"Application — Marketing Trainee — Aleksi Virtanen"</div>
+          <div class="alt-item">"Job application: Customer Service role — Maria Korhonen"</div>
+          <div class="alt-item">"Re: Sales Assistant vacancy — cover letter enclosed"</div>
+        </div>
+      </div>
+
+      <div class="email-part" onclick="toggleAnnotation('ann-greeting')">
+        <div class="part-label">Greeting</div>
+        <div class="part-text">Dear Hiring Team,
+          <div class="part-note">Click to see tips and alternatives →</div>
+        </div>
+      </div>
+      <div class="annotation-panel" id="ann-greeting">
+        <h4>👋 Greeting</h4>
+        <p>Use <em>Dear</em> + a name or title. If you do not know the person's name, <em>Dear Hiring Team</em> or <em>Dear Hiring Manager</em> is correct. Avoid <em>To Whom It May Concern</em> — it sounds old-fashioned.</p>
+        <div class="alts">
+          <div class="alt-item">"Dear Ms Leinonen,"</div>
+          <div class="alt-item">"Dear Hiring Manager,"</div>
+          <div class="alt-item">"Dear GreenLoop Recruitment Team,"</div>
+        </div>
+      </div>
+
+      <div class="email-part" onclick="toggleAnnotation('ann-opening')">
+        <div class="part-label">Opening paragraph</div>
+        <div class="part-text">I am writing to apply for the Sales Assistant position at GreenLoop, advertised on your website. I am a first-year business student at LAB University of Applied Sciences with a strong interest in sustainable retail.
+          <div class="part-note">Click to see tips and alternatives →</div>
+        </div>
+      </div>
+      <div class="annotation-panel" id="ann-opening">
+        <h4>▶️ Opening paragraph</h4>
+        <p>Your first sentence should say who you are and why you are writing. Mention where you saw the job advertisement if possible. Keep it to 2–3 sentences.</p>
+        <div class="alts">
+          <div class="alt-item">"I am writing to express my interest in the Customer Service Trainee role at GreenLoop."</div>
+          <div class="alt-item">"I would like to apply for the position of Marketing Assistant, as advertised on LinkedIn."</div>
+        </div>
+      </div>
+
+      <div class="email-part" onclick="toggleAnnotation('ann-skills')">
+        <div class="part-label">Skills paragraph</div>
+        <div class="part-text">I have experience working in a customer-facing role at a local café, where I developed my communication and teamwork skills. In my studies, I have also practised professional writing in English and completed a business plan project that included market research and customer segmentation.
+          <div class="part-note">Click to see tips and alternatives →</div>
+        </div>
+      </div>
+      <div class="annotation-panel" id="ann-skills">
+        <h4>💼 Skills paragraph</h4>
+        <p>Describe 2–3 relevant skills. For each one, give a short example — do not just list skills. Use this structure: skill + example + result or learning.</p>
+        <div class="alts">
+          <div class="alt-item">"I am a reliable team player. During a group project, I coordinated communication and made sure we met our deadline."</div>
+          <div class="alt-item">"My written English skills are strong, and I have practised writing formal reports and emails during my Business English course."</div>
+        </div>
+      </div>
+
+      <div class="email-part" onclick="toggleAnnotation('ann-closing')">
+        <div class="part-label">Closing paragraph</div>
+        <div class="part-text">I would welcome the opportunity to discuss my application further. Please find my CV attached. I look forward to hearing from you.
+          <div class="part-note">Click to see tips and alternatives →</div>
+        </div>
+      </div>
+      <div class="annotation-panel" id="ann-closing">
+        <h4>🤝 Closing paragraph</h4>
+        <p>End by expressing interest in the next step. Mention any attachments. Keep it short — 2–3 sentences maximum.</p>
+        <div class="alts">
+          <div class="alt-item">"I am available for an interview at your convenience and look forward to hearing from you."</div>
+          <div class="alt-item">"Thank you for considering my application. I hope to have the opportunity to discuss it with you."</div>
+        </div>
+      </div>
+
+      <div class="email-part" onclick="toggleAnnotation('ann-signoff')">
+        <div class="part-label">Sign-off</div>
+        <div class="part-text">Kind regards,<br>Sofia Mäkinen<br>LAB University of Applied Sciences<br>sofia.makinen@student.lab.fi
+          <div class="part-note">Click to see tips and alternatives →</div>
+        </div>
+      </div>
+      <div class="annotation-panel" id="ann-signoff">
+        <h4>✍️ Sign-off</h4>
+        <p><strong>Kind regards</strong> and <strong>Best regards</strong> are the most common sign-offs in modern professional email — use them in almost all situations. <em>Yours sincerely</em> and <em>Yours faithfully</em> are still correct in very formal letters, but they are old-fashioned in everyday business email. Always include your full name and contact details below the sign-off.</p>
+        <div class="alts">
+          <div class="alt-item">"Kind regards, [Full name]" — most common in professional email</div>
+          <div class="alt-item">"Best regards, [Full name]" — equally common, slightly warmer</div>
+          <div class="alt-item">"Best wishes, [Full name]" — friendly and professional; good for ongoing relationships</div>
+          <div class="alt-item">"Yours sincerely, [Full name]" — very formal; correct but old-fashioned for email</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:white;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;">
+    <h3 style="font-size:15px;font-weight:700;margin-bottom:14px;color:var(--gray-900);">✅ Do and ❌ Don't</h3>
+    <div class="dos-donts">
+      <div class="do-list">
+        <h4>✅ Do</h4>
+        <ul>
+          <li>Use full sentences — no contractions (write <em>I am</em>, not <em>I'm</em>)</li>
+          <li>Keep the email between 100–200 words</li>
+          <li>Use a clear, specific subject line</li>
+          <li>Start by saying why you are writing</li>
+          <li>Give examples for your skills — not just claims</li>
+          <li>Proofread before sending</li>
+          <li>Match your sign-off to your greeting</li>
+        </ul>
+      </div>
+      <div class="dont-list">
+        <h4>❌ Don't</h4>
+        <ul>
+          <li>Use slang or informal language (<em>Hey, Thanks a lot, FYI</em>)</li>
+          <li>Use contractions (<em>I'm, I've, can't, don't</em>)</li>
+          <li>Write very long paragraphs — keep them short</li>
+          <li>Leave the subject line blank or vague (<em>Hello, Hi</em>)</li>
+          <li>Forget to include your name and contact details</li>
+          <li>Copy from AI without reading and checking carefully</li>
+          <li>Begin with <em>I hope this email finds you well</em> — overused and empty</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── REGISTER VIEW ── -->
+<div class="view" id="view-register">
+  <div class="info-strip"><strong>What is register?</strong> Register means the level of formality in your writing. Professional emails use a formal or semi-formal register. Informal language — like contractions and slang — is not appropriate. Use this page to learn the difference.</div>
+
+  <div style="background:white;border:1px solid var(--gray-200);border-radius:14px;padding:24px;margin-bottom:16px;">
+    <h2 style="font-size:17px;font-weight:700;margin-bottom:6px;color:var(--gray-900);">Formal vs. informal — key differences</h2>
+    <p style="font-size:13.5px;color:var(--gray-600);margin-bottom:16px;">The table below shows common informal phrases and the formal alternatives you should use in professional emails.</p>
+    <table class="register-table">
+      <thead><tr><th>Instead of (informal)</th><th>Use this (formal)</th></tr></thead>
+      <tbody>
+        <tr><td class="informal">Hey / Hi [first name]</td><td class="formal">Dear Mr/Ms [Last name] / Dear Hiring Team</td></tr>
+        <tr><td class="informal">I'm writing to...</td><td class="formal">I am writing to...</td></tr>
+        <tr><td class="informal">Can you...?</td><td class="formal">Could you please...? / I would be grateful if you could...</td></tr>
+        <tr><td class="informal">I want to apply for...</td><td class="formal">I would like to apply for... / I am writing to apply for...</td></tr>
+        <tr><td class="informal">Thanks a lot / Thanks!</td><td class="formal">Thank you for your time. / Thank you for your consideration.</td></tr>
+        <tr><td class="informal">I've got experience in...</td><td class="formal">I have experience in...</td></tr>
+        <tr><td class="informal">I think I'd be great for this job</td><td class="formal">I believe I have the skills required for this position.</td></tr>
+        <tr><td class="informal">Let me know if you need anything</td><td class="formal">Please do not hesitate to contact me if you require further information.</td></tr>
+        <tr><td class="informal">Cheers / Bye</td><td class="formal">Kind regards, / Best regards, / Best wishes,</td></tr>
+        <tr><td class="informal">ASAP / FYI / BTW</td><td class="formal">As soon as possible / I would like to inform you that / Regarding</td></tr>
+        <tr><td class="informal">Sorry for the late reply</td><td class="formal">I apologise for the delay in my response.</td></tr>
+        <tr><td class="informal">I saw your job ad online</td><td class="formal">I am writing in response to the position advertised on your website.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="background:white;border:1px solid var(--gray-200);border-radius:14px;padding:24px;">
+    <h2 style="font-size:17px;font-weight:700;margin-bottom:6px;color:var(--gray-900);">Contractions — never use them in formal emails</h2>
+    <p style="font-size:13.5px;color:var(--gray-600);margin-bottom:16px;">A contraction joins two words with an apostrophe. For example, <em>I'm = I am</em>. In professional emails, always write the full form.</p>
+    <div class="email-grid" style="gap:8px;">
+      <div style="background:var(--red-light);border-radius:var(--radius);padding:14px 16px;">
+        <div style="font-size:12px;font-weight:700;color:#7f1d1d;margin-bottom:8px;">❌ Do not use</div>
+        <div style="font-size:13.5px;color:#991b1b;line-height:1.9;">I'm · I've · I'd · I'll · can't · don't · won't · it's · there's · we're · you're · haven't · wouldn't · couldn't · didn't</div>
+      </div>
+      <div style="background:var(--green-light);border-radius:var(--radius);padding:14px 16px;">
+        <div style="font-size:12px;font-weight:700;color:#064e3b;margin-bottom:8px;">✅ Always write the full form</div>
+        <div style="font-size:13.5px;color:#065f46;line-height:1.9;">I am · I have · I would · I will · cannot · do not · will not · it is · there is · we are · you are · have not · would not · could not · did not</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── VOCABULARY VIEW ── -->
+<div class="view" id="view-vocabulary">
+  <div style="background:white;border:1px solid var(--gray-200);border-radius:14px;padding:28px;">
+    <h2 style="font-size:20px;font-weight:700;color:var(--gray-900);border-bottom:2px solid var(--blue);padding-bottom:12px;margin-bottom:6px;">Professional Email Vocabulary</h2>
+    <p style="font-size:13px;color:var(--gray-600);margin-bottom:24px;">Click any term to see its definition and an example sentence.</p>
+    <div id="vocab-container"></div>
+  </div>
+</div>
+
+<!-- ── QUIZ VIEW ── -->
+<div class="view" id="view-quiz">
+  <div class="quiz-wrap">
+    <div class="quiz-info"><strong>How to use:</strong> Choose an answer, read the explanation, then click <strong>Next</strong> to continue.</div>
+    <div class="quiz-card" id="quiz-card"></div>
+  </div>
+</div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title"><span id="modal-icon"></span><span id="modal-title-text"></span></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer"><button onclick="closeModal()">Close</button></div>
+  </div>
+</div>
+
+<footer>
+  <p>Generated with Claude Sonnet 4.6 &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp; LAB University of Applied Sciences</p>
+</footer>
+
+<script>
+// ── MODAL DATA ──
+const emailTypeData = {
+  'Enquiry email': {
+    icon: '🔎',
+    description: 'An enquiry email asks for information, help, or clarification. It should be polite, clear, and specific. Say why you need the information and give any relevant context.',
+    when: ['You want to know more about a product, service, or job opportunity', 'You need to confirm details before a meeting or event', 'You are asking for advice or guidance from a professional'],
+    vocab: ['to enquire about', 'to request information', 'to clarify', 'to confirm', 'availability', 'at your earliest convenience'],
+    phrases: [
+      '"I am writing to enquire about…"',
+      '"Could you please provide me with information about…?"',
+      '"I would be grateful if you could clarify…"',
+      '"I look forward to your response."',
+      '"Please do not hesitate to contact me if you need further details."',
+    ],
+    example: 'Subject: Enquiry about internship opportunities — Aleksi Virtanen\n\nDear Ms Korhonen,\n\nI am writing to enquire about possible internship opportunities at your company this summer. I am a second-year business student at LAB University of Applied Sciences and I am particularly interested in the field of digital marketing.\n\nCould you please let me know whether you are currently accepting applications?\n\nKind regards,\nAleksi Virtanen',
+  },
+  'Cover letter email': {
+    icon: '📄',
+    description: 'A cover letter email accompanies your job application. It introduces you, explains why you want the job, and describes 2–3 relevant skills with short examples. It is formal and should be 100–150 words.',
+    when: ['You are applying for a job you saw advertised', 'You are sending your CV to a company', 'You are responding to a job advertisement after the Business Fair'],
+    vocab: ['to apply for', 'position', 'vacancy', 'relevant experience', 'to enclose', 'I look forward to hearing from you', 'at your convenience'],
+    phrases: [
+      '"I am writing to apply for the position of…"',
+      '"I am currently studying… at LAB University of Applied Sciences."',
+      '"I have experience in… which has helped me develop…"',
+      '"Please find my CV attached."',
+      '"I would welcome the opportunity to discuss my application further."',
+    ],
+    example: 'Subject: Application for Customer Service Assistant — Maria Lehtinen\n\nDear Hiring Manager,\n\nI am writing to apply for the Customer Service Assistant position at your company. I am a first-year business student at LAB University of Applied Sciences.\n\nI have experience working in a team environment from a summer job in retail, where I developed my communication and problem-solving skills. I have also practised professional writing in English during my Business English course.\n\nI look forward to hearing from you. Please find my CV attached.\n\nKind regards,\nMaria Lehtinen',
+  },
+  'Follow-up email': {
+    icon: '🔁',
+    description: 'A follow-up email is sent after an event (such as an interview or meeting) or when you have not received a reply. It shows professionalism and genuine interest.',
+    when: ['You want to thank someone after a job interview', 'You sent an application and have not heard back after one week', 'You met someone at an event and want to continue the conversation'],
+    vocab: ['to follow up', 'to reiterate interest', 'I wanted to check', 'as discussed', 'further to our conversation', 'to confirm'],
+    phrases: [
+      '"I am writing to follow up on my application submitted on [date]."',
+      '"I wanted to take the opportunity to thank you for the interview on [date]."',
+      '"As discussed in our meeting, I am sending…"',
+      '"I remain very interested in the position and would be happy to provide any further information."',
+      '"Could you please let me know if there are any updates regarding my application?"',
+    ],
+    example: 'Subject: Follow-up — Sales Assistant application — Pekka Mäkinen\n\nDear Ms Virtanen,\n\nI am writing to follow up on my application for the Sales Assistant position, which I submitted on 15 March. I remain very interested in the role and would be happy to provide any further information you may need.\n\nThank you for your time and consideration.\n\nKind regards,\nPekka Mäkinen',
+  },
+  'Complaint email': {
+    icon: '⚠️',
+    description: 'A complaint email reports a problem and asks for it to be resolved. Even when you are unhappy, your tone must remain professional and polite. Describe the problem clearly, explain the impact, and say what you would like to happen.',
+    when: ['A product or service has not met your expectations', 'Something was promised but not delivered', 'You received incorrect or poor-quality work'],
+    vocab: ['I am writing to express my concern about', 'I would like to bring to your attention', 'to resolve', 'compensation', 'I would appreciate', 'at the earliest opportunity'],
+    phrases: [
+      '"I am writing to express my concern about…"',
+      '"I would like to bring to your attention that…"',
+      '"I ordered [product/service] on [date], but unfortunately…"',
+      '"This has caused significant inconvenience because…"',
+      '"I would appreciate it if you could resolve this matter by [date]."',
+    ],
+    example: 'Subject: Complaint regarding order #45892 — Incorrect item received\n\nDear Customer Service Team,\n\nI am writing to express my concern about an order I received on 20 March. I ordered a blue jacket (size M), but I received a red one in the wrong size. This has caused inconvenience as I need the item for an event next week.\n\nI would appreciate it if you could arrange an exchange at the earliest opportunity.\n\nKind regards,\nJoanna Kowalski',
+  },
+  'Thank-you email': {
+    icon: '🙏',
+    description: 'A thank-you email is sent after an interview, meeting, or when someone has helped you. It should be short, specific, and genuine. Send it within 24 hours.',
+    when: ['After a job interview', 'After someone helped you or gave you advice', 'After a meeting or presentation'],
+    vocab: ['to express gratitude', 'I appreciate', 'I am grateful for', 'valuable', 'it was a pleasure', 'I look forward to'],
+    phrases: [
+      '"Thank you very much for taking the time to meet with me."',
+      '"I really appreciated the opportunity to discuss…"',
+      '"Our conversation confirmed my interest in the role."',
+      '"I found it particularly interesting when you mentioned…"',
+      '"I look forward to the next steps in the process."',
+    ],
+    example: 'Subject: Thank you — Interview on 22 March — Erika Salo\n\nDear Mr Laine,\n\nThank you very much for the opportunity to interview for the Marketing Trainee position yesterday. I really enjoyed our conversation and found it particularly interesting when you discussed your company\'s approach to sustainable packaging.\n\nThe interview confirmed my strong interest in the role, and I look forward to hearing from you regarding the next steps.\n\nKind regards,\nErika Salo',
+  },
+  'Request email': {
+    icon: '📋',
+    description: 'A request email politely asks someone to do something — provide a document, arrange a meeting, or take an action. Always explain why you need it and give a clear deadline if relevant.',
+    when: ['You need a document, reference, or piece of information from someone', 'You would like to arrange a meeting', 'You are asking a colleague or instructor for something'],
+    vocab: ['I would be grateful if', 'could you please', 'at your earliest convenience', 'by [date]', 'I would appreciate', 'to arrange'],
+    phrases: [
+      '"I am writing to request…"',
+      '"Could you please send me…?"',
+      '"I would be grateful if you could…"',
+      '"If possible, I would need this by [date]."',
+      '"Please let me know if you need any further information from me."',
+    ],
+    example: 'Subject: Request for reference letter — Tuomas Heikkinen\n\nDear Professor Järvinen,\n\nI am writing to request a reference letter for a summer internship application. The deadline for the application is 10 April.\n\nI would be very grateful if you could confirm whether you would be willing to write a reference. I am happy to provide any additional information you may need.\n\nThank you very much for your time.\n\nKind regards,\nTuomas Heikkinen',
+  },
+  'Subject line': {
+    icon: '📌',
+    description: 'The subject line is the first thing the reader sees. A good subject line is clear, specific, and informative. It tells the reader what the email is about before they open it.',
+    when: ['Every professional email must have a subject line', 'A clear subject line helps the reader prioritise and find your email', 'A vague or missing subject line looks unprofessional'],
+    vocab: ['Re:', 'Application for', 'Enquiry about', 'Follow-up', 'Request for', 'Regarding'],
+    phrases: [
+      '"Application for [job title] — [Your name]"',
+      '"Enquiry about internship opportunities"',
+      '"Follow-up: meeting on [date]"',
+      '"Request for reference — [Your name]"',
+      '"Re: [previous email subject]" (when replying)',
+    ],
+    example: 'Good: "Application for Sales Assistant — Sofia Mäkinen"\nGood: "Enquiry about summer internship 2026"\nGood: "Follow-up: interview on 15 March"\n\nPoor: "Hello" / "Hi" / "Job" / "Question" — these are too vague.',
+  },
+  'Greeting': {
+    icon: '👋',
+    description: 'The greeting opens the email. In formal emails, always use "Dear" followed by a title and surname, or a general title if you do not know the person\'s name.',
+    when: ['Use a formal greeting in all professional and business emails', 'Use a semi-formal greeting (e.g. "Dear [first name]") only when you know the person well', 'Never use "Hey" or "Hi" in a formal email'],
+    vocab: ['Dear', 'Mr', 'Ms', 'Dr', 'Hiring Manager', 'Hiring Team', 'To Whom It May Concern (avoid this)'],
+    phrases: [
+      '"Dear Ms Korhonen," (you know her name)',
+      '"Dear Mr Virtanen," (you know his name)',
+      '"Dear Hiring Manager," (you do not know the name)',
+      '"Dear Hiring Team," (addressing a team)',
+      '"Dear Dr Laine," (when writing to someone with a doctorate)',
+    ],
+    example: 'Use "Dear Ms / Mr [Last name]" when you know who you are writing to.\nUse "Dear Hiring Team" or "Dear Hiring Manager" when you do not know.\nAvoid: "To Whom It May Concern" — this is very old-fashioned and impersonal.',
+  },
+  'Opening sentence': {
+    icon: '▶️',
+    description: 'The opening sentence tells the reader immediately why you are writing. It should be direct and clear. Do not waste the reader\'s time with empty phrases.',
+    when: ['Always start with a clear statement of purpose', 'The opening sentence is the most important sentence in the email', 'Avoid opening with "I hope this email finds you well" — it is overused'],
+    vocab: ['I am writing to', 'I would like to', 'I am contacting you regarding', 'Further to', 'I am writing in response to'],
+    phrases: [
+      '"I am writing to apply for the position of…"',
+      '"I am writing to enquire about…"',
+      '"I am writing to follow up on my application submitted on [date]."',
+      '"I am writing in response to your advertisement for…"',
+      '"I would like to request…"',
+    ],
+    example: 'Good: "I am writing to apply for the Sales Assistant position at GreenLoop."\n\nAvoid: "I hope this email finds you well." — it adds nothing and is overused.\nAvoid: "My name is Sofia and I would like to tell you about myself." — start with your purpose, not your name.',
+  },
+  'Closing': {
+    icon: '🤝',
+    description: 'The closing ends the email professionally. It includes a forward-looking sentence, a sign-off phrase, and your name and contact information. In modern business email, Kind regards, Best regards, and Best wishes are the standard sign-offs in almost all situations.',
+    when: ['Every professional email needs a clear and polite closing', 'Use Kind regards, Best regards, or Best wishes in almost all professional emails', 'Always include your full name below the sign-off'],
+    vocab: ['Kind regards', 'Best regards', 'Yours sincerely', 'Yours faithfully', 'I look forward to', 'Please do not hesitate to contact me'],
+    phrases: [
+      '"I look forward to hearing from you."',
+      '"Thank you for your time and consideration."',
+      '"Please do not hesitate to contact me if you need further information."',
+      '"Kind regards, [Full name]" — standard in modern professional email',
+      '"Best regards, [Full name]" — equally common and appropriate',
+      '"Best wishes, [Full name]" — friendly and professional; good for ongoing relationships',
+      '"Yours sincerely, [Full name]" — very formal; still correct but old-fashioned for email',
+    ],
+    example: 'Modern practice: Use Kind regards, Best regards, or Best wishes in almost all professional emails.\n\nBest wishes is slightly warmer — suitable when you have an existing relationship or want a friendly but professional tone.\n\nYours sincerely and Yours faithfully are still technically correct but most professionals use the options above.',
+  },
+};
+
+const vocabLookup = {};
+const vocabData = [
+  { term: 'to enquire about', def: 'To ask formally for information about something.', example: '"I am writing to enquire about the internship positions available at your company."' },
+  { term: 'to apply for', def: 'To make a formal request for a job, course, or opportunity.', example: '"I would like to apply for the Sales Assistant position advertised on your website."' },
+  { term: 'to follow up', def: 'To take further action after an event or a previous message.', example: '"I am writing to follow up on my job application submitted two weeks ago."' },
+  { term: 'to confirm', def: 'To state clearly that something is certain or correct.', example: '"Could you please confirm the date and time of our meeting?"' },
+  { term: 'to clarify', def: 'To explain something more clearly to remove confusion.', example: '"I am writing to clarify the requirements for the assignment."' },
+  { term: 'to request', def: 'To politely ask for something formally.', example: '"I would like to request a reference letter for my job application."' },
+  { term: 'to attach', def: 'To add a file or document to an email.', example: '"Please find my CV attached to this email."' },
+  { term: 'to resolve', def: 'To find a solution to a problem.', example: '"I would appreciate it if you could resolve this issue by Friday."' },
+  { term: 'to express interest', def: 'To show clearly that you want something or care about it.', example: '"I would like to express my interest in the trainee position at your company."' },
+  { term: 'to reiterate', def: 'To say something again to make sure it is noticed or remembered.', example: '"I would like to reiterate my strong interest in this role."' },
+  { term: 'position', def: 'A job or role in a company.', example: '"I am writing to apply for the position of Customer Service Assistant."' },
+  { term: 'vacancy', def: 'An available job that a company wants to fill.', example: '"I saw your vacancy for a Marketing Trainee on your website."' },
+  { term: 'subject line', def: 'The title of an email that the reader sees before opening it.', example: '"Use a clear subject line such as: Application for Sales Assistant — Your Name."' },
+  { term: 'formal register', def: 'A style of language that is professional, polite, and correct — used in business communication.', example: '"A formal register means using full words, no contractions, and professional vocabulary."' },
+  { term: 'contraction', def: 'A shortened word form that combines two words with an apostrophe, e.g. I\'m, can\'t.', example: '"Contractions like I\'m and don\'t are not suitable for formal emails. Write I am and do not instead."' },
+  { term: 'greeting', def: 'The opening line of an email that addresses the reader, e.g. Dear Ms Korhonen.', example: '"Always begin a professional email with Dear followed by a name or title."' },
+  { term: 'sign-off', def: 'The closing phrase before your name. In modern professional email, Kind regards, Best regards, and Best wishes are all standard.', example: '"Kind regards", "Best regards", and "Best wishes" are the most common sign-offs in business email today.' },
+  { term: 'Yours sincerely', def: 'A very formal closing phrase, traditionally used in letters when you know the person\'s name. Still correct but old-fashioned in modern business email — Kind regards is more common.', example: '"Yours sincerely" is correct in formal letters but most professionals now use "Kind regards" in email.' },
+  { term: 'Yours faithfully', def: 'A very formal closing phrase, traditionally used in letters when you do not know the person\'s name. Rarely used in modern business email — Kind regards or Best regards is preferred.', example: '"Yours faithfully" is old-fashioned in email. Use "Kind regards" or "Best regards" instead.' },
+  { term: 'Kind regards', def: 'A semi-formal closing phrase, suitable for professional but less strictly formal emails.', example: '"Kind regards is appropriate when you already have a working relationship with the reader."' },
+  { term: 'at your earliest convenience', def: 'A polite phrase meaning as soon as you are able to.', example: '"Could you please reply at your earliest convenience?"' },
+  { term: 'I look forward to hearing from you', def: 'A standard closing phrase that expresses expectation of a reply.', example: '"I look forward to hearing from you is a common and professional way to end an email."' },
+  { term: 'Please do not hesitate to contact me', def: 'A polite phrase inviting the reader to ask questions or get in touch.', example: '"Please do not hesitate to contact me if you require any further information."' },
+  { term: 'I am writing to', def: 'The standard phrase used to begin a professional email and state its purpose.', example: '"I am writing to enquire about the internship programme at your company."' },
+  { term: 'I would be grateful if', def: 'A polite, formal way of making a request.', example: '"I would be grateful if you could send me the relevant documents by Friday."' },
+  { term: 'I would like to', def: 'A polite way to express a wish or intention in formal writing.', example: '"I would like to apply for the position advertised on your website."' },
+  { term: 'cover letter', def: 'A letter or email that accompanies a job application and introduces the candidate.', example: '"A cover letter email should be 100–150 words and include your skills with examples."' },
+  { term: 'relevant experience', def: 'Past experience that is directly useful for the job or task in question.', example: '"I have relevant experience from my part-time job in customer service."' },
+  { term: 'to proofread', def: 'To carefully read a text to find and correct errors before sending or submitting.', example: '"Always proofread your email before sending to avoid spelling and grammar mistakes."' },
+  { term: 'tone', def: 'The overall feeling or attitude in a piece of writing — can be formal, polite, friendly, or firm.', example: '"Even in a complaint email, maintain a professional and polite tone."' },
+  { term: 'at your convenience', def: 'A polite phrase meaning when it is easy or suitable for you.', example: '"I am available for an interview at your convenience."' },
+  { term: 'to express concern', def: 'To communicate politely that something is a problem or has not met expectations.', example: '"I am writing to express my concern about the quality of the product I received."' },
+  { term: 'further to', def: 'A formal phrase that refers back to a previous email, meeting, or conversation.', example: '"Further to our telephone conversation on Monday, I am writing to confirm the details."' },
+  { term: 'as per', def: 'A formal phrase meaning according to or as stated in.', example: '"As per your request, I have attached the completed form."' },
+  { term: 'I remain', def: 'A formal phrase used before a sign-off to maintain a professional tone.', example: '"I remain available for any further questions you may have."' },
+];
+vocabData.forEach(v => { vocabLookup[v.term] = v; });
+
+// Additional entries for modal pill tooltips
+[
+  { term: 'availability', def: 'Whether someone is free or able to do something at a particular time.', example: '"Could you please confirm your availability for a meeting next week?"' },
+  { term: 'compensation', def: 'Money or something else given to make up for a loss, problem, or mistake.', example: '"I would appreciate some form of compensation for the inconvenience caused."' },
+  { term: 'to enclose', def: 'To include something with an email or letter, such as a document or file.', example: '"Please find my CV enclosed." (used in formal letters; in emails, use "attached")'  },
+  { term: 'to request information', def: 'To formally ask for details or data about something.', example: '"I am writing to request information about your summer internship programme."' },
+  { term: 'to express gratitude', def: 'To formally show that you are thankful for something.', example: '"I would like to express my gratitude for the opportunity to interview yesterday."' },
+  { term: 'to reiterate interest', def: 'To say again, clearly, that you want or are interested in something.', example: '"I would like to reiterate my strong interest in the Sales Assistant position."' },
+  { term: 'I am writing in response to', def: 'A formal phrase used to open an email that replies to something, such as a job advertisement.', example: '"I am writing in response to the vacancy advertised on your website on 15 March."' },
+  { term: 'I am writing to express my concern about', def: 'A formal phrase used to open a complaint email politely.', example: '"I am writing to express my concern about the quality of the product I received."' },
+  { term: 'I am contacting you regarding', def: 'A formal phrase used to state the subject of an email.', example: '"I am contacting you regarding the internship position advertised on LinkedIn."' },
+  { term: 'I would appreciate', def: 'A polite phrase used to make a request or express what you would like to happen.', example: '"I would appreciate a response at your earliest convenience."' },
+  { term: 'I would like to bring to your attention', def: 'A formal phrase used to politely point out a problem or important fact.', example: '"I would like to bring to your attention that the order I received was incorrect."' },
+  { term: 'I am grateful for', def: 'A formal way of expressing thanks for something someone has done.', example: '"I am grateful for the time you took to meet with me last Tuesday."' },
+  { term: 'I appreciate', def: 'A phrase used to express thanks or to value something someone has done.', example: '"I appreciate your quick response to my enquiry."' },
+  { term: 'I look forward to', def: 'A formal phrase expressing expectation of something positive in the future.', example: '"I look forward to meeting you at the interview."' },
+  { term: 'I wanted to check', def: 'A semi-formal phrase used to follow up or verify something politely.', example: '"I wanted to check whether you have had a chance to review my application."' },
+  { term: 'it was a pleasure', def: 'A polite phrase used to say that a meeting or experience was enjoyable and valued.', example: '"It was a pleasure meeting you and learning more about the role."' },
+  { term: 'as discussed', def: 'A formal phrase referring to something that was agreed or mentioned in a previous conversation.', example: '"As discussed in our meeting on Monday, I am sending the completed form."' },
+  { term: 'further to our conversation', def: 'A formal phrase that refers back to a previous discussion, meeting, or phone call.', example: '"Further to our conversation last week, I am writing to confirm the details."' },
+  { term: 'at the earliest opportunity', def: 'As soon as possible; a polite way to request a prompt response or action.', example: '"I would appreciate it if you could resolve this matter at the earliest opportunity."' },
+  { term: 'could you please', def: 'A polite, formal way to make a request.', example: '"Could you please confirm whether the position is still available?"' },
+  { term: 'Dear', def: 'The standard opening word in a formal email or letter, followed by a name or title.', example: '"Dear Ms Korhonen," or "Dear Hiring Manager," — always use Dear in professional emails.' },
+  { term: 'Mr', def: 'A title used before the surname of a man in formal writing.', example: '"Dear Mr Virtanen," — use Mr when writing to a man whose name you know.' },
+  { term: 'Ms', def: 'A title used before the surname of a woman in formal writing, regardless of marital status.', example: '"Dear Ms Korhonen," — Ms is the standard professional title for women.' },
+  { term: 'Dr', def: 'A title used before the name of someone with a doctorate or a medical doctor.', example: '"Dear Dr Laine," — use Dr when writing to someone who holds a doctoral degree.' },
+  { term: 'Hiring Manager', def: 'The person responsible for reviewing job applications and making hiring decisions.', example: '"Dear Hiring Manager," — use this when you do not know the name of the recruiter.' },
+  { term: 'Hiring Team', def: 'The group of people at a company who are responsible for recruiting new staff.', example: '"Dear Hiring Team," — use this when writing to a team rather than a specific person.' },
+  { term: 'To Whom It May Concern (avoid this)', def: 'An old-fashioned greeting used when the recipient is unknown. It is impersonal and best avoided.', example: '"Dear Hiring Manager" is always preferable to "To Whom It May Concern".' },
+  { term: 'Best regards', def: 'A common, professional sign-off in modern business email. Equally common as Kind regards and appropriate in almost all situations.', example: '"Best regards, Aleksi Virtanen" — suitable for all professional emails.' },
+  { term: 'Best wishes', def: 'A friendly and professional sign-off for business email. Slightly warmer than Kind regards or Best regards — good for ongoing professional relationships.', example: '"Best wishes, Sofia" — appropriate when you have an existing relationship with the reader.' },
+  { term: 'Re:', def: 'Short for "regarding". Used in subject lines to show that an email is a reply or refers to a specific topic.', example: '"Re: Sales Assistant vacancy — cover letter enclosed"' },
+  { term: 'Regarding', def: 'A formal word meaning about or concerning, used to introduce the topic of an email.', example: '"I am writing regarding the internship opportunity advertised on your website."' },
+  { term: 'Application for', def: 'A phrase used at the start of a subject line when applying for a job.', example: '"Application for Marketing Trainee — Aleksi Virtanen"' },
+  { term: 'Enquiry about', def: 'A phrase used at the start of a subject line when asking for information.', example: '"Enquiry about internship opportunities — Summer 2026"' },
+  { term: 'Follow-up', def: 'A phrase used in a subject line to indicate that the email refers back to a previous message or event.', example: '"Follow-up: interview on 22 March — Erika Salo"' },
+  { term: 'Request for', def: 'A phrase used in a subject line to indicate that you are asking for something specific.', example: '"Request for reference letter — Tuomas Heikkinen"' },
+  { term: 'Further to', def: 'A formal phrase that refers back to a previous email, meeting, or conversation.', example: '"Further to our telephone conversation on Monday, I am writing to confirm the details."' },
+  { term: 'valuable', def: 'Very useful or important; worth a lot in terms of quality or usefulness.', example: '"Thank you for the valuable feedback you gave me during our meeting."' },
+].forEach(v => { if (!vocabLookup[v.term]) vocabLookup[v.term] = v; });
+
+const vocabCategories = [
+  {
+    label: 'Verbs and verb phrases',
+    icon: '🔵',
+    terms: ['to enquire about','to apply for','to follow up','to confirm','to clarify','to request','to attach','to resolve','to express interest','to reiterate','to proofread','to express concern','I am writing to','I would be grateful if','I would like to'],
+  },
+  {
+    label: 'Nouns and expressions',
+    icon: '🟡',
+    terms: ['position','vacancy','subject line','formal register','contraction','greeting','sign-off','cover letter','relevant experience','tone'],
+  },
+  {
+    label: 'Formal phrases and sign-offs',
+    icon: '🟢',
+    terms: ['Yours sincerely','Yours faithfully','Kind regards','Best regards','Best wishes','at your earliest convenience','I look forward to hearing from you','Please do not hesitate to contact me','at your convenience','further to','as per','I remain'],
+  },
+];
+
+const quizData = [
+  { q: 'You are writing a job application email. You do not know the name of the person. Which greeting is correct?', opts: ['Hey there,', 'Dear Hiring Manager,', 'Hi,', 'To Whom It May Concern,'], correct: 1, explanation: '"Dear Hiring Manager" is the correct formal greeting when you do not know the name. "To Whom It May Concern" is old-fashioned and impersonal.' },
+  { q: 'Which subject line is the most professional for a job application?', opts: ['"Hello"', '"Job"', '"Application for Sales Assistant — Maria Lehtinen"', '"I want to apply"'], correct: 2, explanation: 'A good subject line is specific and includes the job title and your name so the reader knows exactly what the email is about.' },
+  { q: 'You are writing a professional job application email. Which sign-off is the most appropriate in modern business email?', opts: ['"Yours faithfully"', '"Cheers"', '"Kind regards"', '"Thanks"'], correct: 2, explanation: '"Kind regards" and "Best regards" are the standard sign-offs in modern professional email. "Yours sincerely" and "Yours faithfully" are still correct but old-fashioned — most professionals use "Kind regards" in all cases.' },
+  { q: 'Which of these sentences is appropriate in a formal email?', opts: ['"I\'m really excited about this job!"', '"I am writing to apply for the position of Sales Assistant."', '"Hey, I saw your ad and I want to apply."', '"FYI, I sent my CV already."'], correct: 1, explanation: '"I am writing to apply for..." is formal, uses no contractions, and states the purpose clearly. The others are informal or inappropriate.' },
+  { q: 'Which is NOT appropriate in a professional email?', opts: ['"I look forward to hearing from you."', '"Please find my CV attached."', '"I\'m happy to provide more info ASAP."', '"I would be grateful if you could confirm the date."'], correct: 2, explanation: '"I\'m" is a contraction — not acceptable in formal writing. "ASAP" is an abbreviation that sounds too informal. Always write "I am" and "as soon as possible".' },
+  { q: 'What is the purpose of the opening sentence in a professional email?', opts: ['To say hello and introduce yourself by name', 'To explain clearly why you are writing', 'To describe your hobbies and interests', 'To thank the reader for their time'], correct: 1, explanation: 'The opening sentence should immediately state the reason for the email. Avoid empty phrases like "I hope this email finds you well."' },
+  { q: 'Which phrase is the correct formal version of "Can you send me the documents?"', opts: ['"Send the documents."', '"Could you please send me the documents?"', '"I really need the documents as soon as possible."', '"Can you send it ASAP?"'], correct: 1, explanation: '"Could you please..." is polite and formal. Direct commands are rude, and "ASAP" is too informal for professional writing.' },
+  { q: 'A student writes: "I\'m writing to tell you about myself and my experience." What is wrong with this sentence?', opts: ['It uses a contraction (I\'m)', 'The purpose is too vague', 'It does not state the type of email', 'All of the above'], correct: 3, explanation: 'All three problems are present: "I\'m" is a contraction (not formal), the purpose is vague, and a professional email should state its specific purpose in the opening.' },
+  { q: 'When should you send a follow-up email after a job application?', opts: ['Two hours after applying', 'About one week after applying, if you have heard nothing', 'Only if you are rejected', 'Never — wait for them to contact you'], correct: 1, explanation: 'A follow-up after one week is professional and shows genuine interest. Waiting two hours is too soon; never following up means a missed opportunity.' },
+  { q: 'What should a cover letter email include?', opts: ['Your full work history and all qualifications', 'An opening saying why you are writing, 2–3 skills with examples, and a professional closing', 'A long description of your personal life and hobbies', 'Just your name and CV attachment'], correct: 1, explanation: 'A cover letter email is 100–150 words: why you are writing, 2–3 relevant skills with short examples, and a professional closing. It is not a full CV.' },
+  { q: 'Which opening sentence is the most effective for a cover letter email?', opts: ['"I hope this email finds you well."', '"My name is Pekka and I am a student."', '"I am writing to apply for the Customer Service position advertised on your website."', '"I think I would be great for this job because I am very hard-working."'], correct: 2, explanation: '"I am writing to apply for..." states the purpose immediately and is specific. The others are vague, informal, or simply not appropriate as opening sentences.' },
+  { q: 'What does "register" mean in the context of writing?', opts: ['The list of students in a class', 'The level of formality in your language', 'The number of words in your email', 'The font you use in your email'], correct: 1, explanation: 'Register refers to the level of formality. Professional emails use a formal or semi-formal register — no slang, no contractions, and polite vocabulary.' },
+  { q: 'A student ends their email with "Cheers, Mikko". What should they write instead?', opts: ['"Thanks a lot, Mikko"', '"Kind regards, Mikko Virtanen"', '"Bye for now, Mikko"', '"Later, Mikko"'], correct: 1, explanation: '"Cheers", "Thanks a lot", and "Later" are all informal. In a professional email, use "Kind regards", "Best regards", or "Best wishes" followed by your full name.' },
+  { q: 'Which of the following is a contraction?', opts: ['"I would"', '"do not"', '"I\'ve"', '"could not"'], correct: 2, explanation: '"I\'ve" is a contraction of "I have" — not appropriate in formal writing. "I would", "do not", and "could not" are already the full forms.' },
+  { q: 'You want to ask your professor for a reference letter. Which email is the most appropriate?', opts: ['"Hey, can you write me a reference? I need it soon."', '"I am writing to request a reference letter for my job application. The deadline is 10 April."', '"Reference letter needed — please write one for me."', '"Could you do me a favour and write a reference?"'], correct: 1, explanation: 'A formal request states the purpose clearly, gives the relevant deadline, and is polite. "Hey" and "do me a favour" are too informal for a professional email.' },
+];
+
+// ── TOOLTIP PILLS ──
+function makePill(term) {
+  const v = vocabLookup[term];
+  if (v) {
+    const id = 'tt-' + term.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+    return `<span class="pill-wrap" onmouseenter="showTip('${id}',this)" onmouseleave="hideTip('${id}')">
+      <span class="modal-pill">${term}</span>
+      <span class="pill-tooltip" id="${id}"><strong>${term}</strong>${v.def}<em>${v.example}</em></span>
+    </span>`;
+  }
+  return `<span class="pill-wrap"><span class="modal-pill">${term}</span></span>`;
+}
+
+function showTip(id, el) {
+  const tip = document.getElementById(id); if (!tip) return;
+  const rect = el.getBoundingClientRect();
+  tip.classList.add('visible');
+  let top = rect.top - tip.offsetHeight - 10;
+  let left = rect.left + rect.width / 2 - 115;
+  if (left < 8) left = 8;
+  if (left + 230 > window.innerWidth - 8) left = window.innerWidth - 238;
+  if (top < 8) top = rect.bottom + 10;
+  tip.style.top = top + 'px';
+  tip.style.left = left + 'px';
+}
+function hideTip(id) { const tip = document.getElementById(id); if (tip) tip.classList.remove('visible'); }
+
+// ── MODAL ──
+function openModal(key) {
+  const d = emailTypeData[key]; if (!d) return;
+  document.getElementById('modal-icon').textContent = d.icon + ' ';
+  document.getElementById('modal-title-text').textContent = key;
+  const body = document.getElementById('modal-body');
+  const whenLabel = d.when ? '<div class="modal-section"><h3>When to use this</h3><ul>' + d.when.map(w => `<li>${w}</li>`).join('') + '</ul></div>' : '';
+  const exampleFormatted = d.example.replace(/\n/g, '<br>');
+  body.innerHTML = `
+    <div class="modal-section"><h3>What is this?</h3><p>${d.description}</p></div>
+    ${whenLabel}
+    <div class="modal-section">
+      <h3>Useful vocabulary <span style="font-size:11px;font-weight:400;color:var(--gray-600);font-style:italic;">— hover for definitions</span></h3>
+      <div class="modal-vocab-pills">${d.vocab.map(v => makePill(v)).join('')}</div>
+    </div>
+    <div class="modal-section">
+      <h3>Useful phrases</h3>
+      <div class="modal-phrases">${d.phrases.map(p => `<div class="phrase-item">${p}</div>`).join('')}</div>
+    </div>
+    <div class="modal-section">
+      <h3>Example</h3>
+      <div class="modal-example" style="font-style:normal;">${exampleFormatted}</div>
+    </div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+
+// ── ANNOTATED EMAIL ──
+function toggleAnnotation(id) {
+  const panel = document.getElementById(id);
+  const allPanels = document.querySelectorAll('.annotation-panel');
+  allPanels.forEach(p => { if (p.id !== id) p.classList.remove('show'); });
+  panel.classList.toggle('show');
+}
+
+// ── NAV ──
+function switchView(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'vocabulary') buildVocab();
+  if (id === 'quiz') initQuiz();
+}
+
+// ── VOCABULARY ──
+function buildVocab() {
+  const container = document.getElementById('vocab-container');
+  if (container.children.length > 0) return;
+  container.innerHTML = vocabCategories.map(cat => {
+    const sorted = [...cat.terms].sort((a, b) => a.replace(/^to /, '').localeCompare(b.replace(/^to /, '')));
+    const items = sorted.map(term => {
+      const v = vocabLookup[term]; if (!v) return '';
+      return `<div class="vocab-item" onclick="this.classList.toggle('open')">
+        <div class="vocab-term">${v.term}</div>
+        <div class="vocab-def">${v.def}</div>
+        <div class="vocab-example">${v.example}</div>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:28px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-600);padding:6px 0 10px;border-bottom:2px solid var(--teal-border);margin-bottom:14px;">${cat.icon} ${cat.label}</div>
+      <div class="vocab-grid">${items}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── QUIZ ──
+let quizIndex = 0, quizScore = 0, quizAnswered = false;
+let shuffled = [...quizData].sort(() => Math.random() - .5);
+
+function initQuiz() {
+  quizIndex = 0; quizScore = 0; quizAnswered = false;
+  shuffled = [...quizData].sort(() => Math.random() - .5);
+  renderQuiz();
+}
+
+function renderQuiz() {
+  const card = document.getElementById('quiz-card');
+  if (quizIndex >= shuffled.length) {
+    card.innerHTML = `<div class="quiz-done">
+      <div class="score">${quizScore}/${shuffled.length}</div>
+      <div class="score-label">Questions correct</div>
+      <p style="font-size:14px;color:var(--gray-600);margin-top:12px;">${quizScore === shuffled.length ? 'Perfect score! Your email writing is ready.' : quizScore >= Math.ceil(shuffled.length * .7) ? 'Good work! Review the ones you missed.' : 'Keep practising — you will get there!'}</p>
+      <button class="quiz-restart" onclick="initQuiz()">Try again</button>
+    </div>`;
+    return;
+  }
+  const q = shuffled[quizIndex];
+  quizAnswered = false;
+  card.innerHTML = `
+    <div class="quiz-progress">Question ${quizIndex + 1} of ${shuffled.length}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-options">${q.opts.map((o, i) => `<button class="quiz-opt" onclick="answerQuiz(${i})" id="qopt-${i}">${o}</button>`).join('')}</div>
+    <div class="quiz-feedback" id="quiz-feedback"></div>
+    <button class="quiz-next" id="quiz-next" onclick="nextQuiz()">Next →</button>`;
+}
+
+function answerQuiz(i) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q = shuffled[quizIndex];
+  const fb = document.getElementById('quiz-feedback');
+  document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+  document.getElementById('qopt-' + q.correct).classList.add('correct');
+  if (i === q.correct) {
+    quizScore++;
+    fb.textContent = '✅ Correct! ' + q.explanation;
+    fb.className = 'quiz-feedback show correct';
+  } else {
+    document.getElementById('qopt-' + i).classList.add('incorrect');
+    fb.textContent = '❌ Not quite. ' + q.explanation;
+    fb.className = 'quiz-feedback show incorrect';
+  }
+  document.getElementById('quiz-next').classList.add('show');
+}
+
+function nextQuiz() { quizIndex++; renderQuiz(); }
+</script>
+</body>
+</html>
