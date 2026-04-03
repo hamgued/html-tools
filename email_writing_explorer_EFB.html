@@ -241,10 +241,12 @@ footer a:hover { color: white; }
       <div class="annotation-panel" id="ann-greeting">
         <h4>👋 Greeting</h4>
         <p>Use <em>Dear</em> + a name or title. If you do not know the person's name, <em>Dear Hiring Team</em> or <em>Dear Hiring Manager</em> is correct. Avoid <em>To Whom It May Concern</em> — it sounds old-fashioned.</p>
+        <p style="margin-top:8px;"><strong>Not sure of the person's gender?</strong> If the name is unfamiliar or from another culture and you cannot tell whether the person uses Mr or Ms, avoid guessing. Use their full name instead — <em>Dear Alex Kim,</em> — or use a neutral title such as <em>Dear Hiring Manager</em>. This is always safe and professional.</p>
         <div class="alts">
-          <div class="alt-item">"Dear Ms Leinonen,"</div>
-          <div class="alt-item">"Dear Hiring Manager,"</div>
-          <div class="alt-item">"Dear GreenLoop Recruitment Team,"</div>
+          <div class="alt-item">"Dear Ms Leinonen," (you know she uses Ms)</div>
+          <div class="alt-item">"Dear Alex Kim," (full name — safe when gender is unclear)</div>
+          <div class="alt-item">"Dear Hiring Manager," (no name known)</div>
+          <div class="alt-item">"Dear GreenLoop Recruitment Team," (addressing a team)</div>
         </div>
       </div>
 
@@ -319,12 +321,11 @@ footer a:hover { color: white; }
         <h4>✅ Do</h4>
         <ul>
           <li>Use full sentences — no contractions (write <em>I am</em>, not <em>I'm</em>)</li>
-          <li>Keep the email between 100–200 words</li>
+          <li>Keep the email between 100–150 words for a cover letter; other emails can be longer</li>
           <li>Use a clear, specific subject line</li>
           <li>Start by saying why you are writing</li>
           <li>Give examples for your skills — not just claims</li>
           <li>Proofread before sending</li>
-          <li>Match your sign-off to your greeting</li>
         </ul>
       </div>
       <div class="dont-list">
@@ -523,17 +524,18 @@ const emailTypeData = {
   },
   'Greeting': {
     icon: '👋',
-    description: 'The greeting opens the email. In formal emails, always use "Dear" followed by a title and surname, or a general title if you do not know the person\'s name.',
-    when: ['Use a formal greeting in all professional and business emails', 'Use a semi-formal greeting (e.g. "Dear [first name]") only when you know the person well', 'Never use "Hey" or "Hi" in a formal email'],
-    vocab: ['Dear', 'Mr', 'Ms', 'Dr', 'Hiring Manager', 'Hiring Team', 'To Whom It May Concern (avoid this)'],
+    description: 'The greeting opens the email. In formal emails, always use "Dear" followed by a title and surname, or a general title if you do not know the person\'s name. If you know the name but are unsure of the person\'s gender — for example because the name is unfamiliar or from another culture — simply use their full name. Never guess the title.',
+    when: ['Use a formal greeting in all professional and business emails', 'Use the full name (e.g. Dear Alex Kim) when you know the name but are unsure of the title', 'Use Dear Hiring Manager or Dear Hiring Team when you do not know the name at all', 'Never use "Hey" or "Hi" in a formal email'],
+    vocab: ['Dear', 'Mr', 'Ms', 'Mx', 'Dr', 'Hiring Manager', 'Hiring Team', 'To Whom It May Concern (avoid this)'],
     phrases: [
-      '"Dear Ms Korhonen," (you know her name)',
-      '"Dear Mr Virtanen," (you know his name)',
+      '"Dear Ms Korhonen," (you know she uses Ms)',
+      '"Dear Mr Virtanen," (you know he uses Mr)',
+      '"Dear Alex Kim," (full name — when title is unclear)',
       '"Dear Hiring Manager," (you do not know the name)',
       '"Dear Hiring Team," (addressing a team)',
       '"Dear Dr Laine," (when writing to someone with a doctorate)',
     ],
-    example: 'Use "Dear Ms / Mr [Last name]" when you know who you are writing to.\nUse "Dear Hiring Team" or "Dear Hiring Manager" when you do not know.\nAvoid: "To Whom It May Concern" — this is very old-fashioned and impersonal.',
+    example: 'Use "Dear Ms / Mr [Last name]" when you know the person\'s name and title.\nNot sure about the title? Use the full name — Dear Jordan Lee or Dear Priya Sharma. This is always safe and professional.\nUse "Dear Hiring Team" or "Dear Hiring Manager" when you do not know the name.\nAvoid: "To Whom It May Concern" — old-fashioned and impersonal.',
   },
   'Opening sentence': {
     icon: '▶️',
@@ -611,7 +613,7 @@ vocabData.forEach(v => { vocabLookup[v.term] = v; });
 [
   { term: 'availability', def: 'Whether someone is free or able to do something at a particular time.', example: '"Could you please confirm your availability for a meeting next week?"' },
   { term: 'compensation', def: 'Money or something else given to make up for a loss, problem, or mistake.', example: '"I would appreciate some form of compensation for the inconvenience caused."' },
-  { term: 'to enclose', def: 'To include something with an email or letter, such as a document or file.', example: '"Please find my CV enclosed." (used in formal letters; in emails, use "attached")'  },
+  { term: 'to enclose', def: 'To include a document with a letter. In emails, use "attach" instead — "Please find my CV attached." The word "enclose" belongs to formal letters, not email.', example: '"Please find my CV attached." (email) vs "Please find my CV enclosed." (formal letter)' },
   { term: 'to request information', def: 'To formally ask for details or data about something.', example: '"I am writing to request information about your summer internship programme."' },
   { term: 'to express gratitude', def: 'To formally show that you are thankful for something.', example: '"I would like to express my gratitude for the opportunity to interview yesterday."' },
   { term: 'to reiterate interest', def: 'To say again, clearly, that you want or are interested in something.', example: '"I would like to reiterate my strong interest in the Sales Assistant position."' },
@@ -629,9 +631,10 @@ vocabData.forEach(v => { vocabLookup[v.term] = v; });
   { term: 'further to our conversation', def: 'A formal phrase that refers back to a previous discussion, meeting, or phone call.', example: '"Further to our conversation last week, I am writing to confirm the details."' },
   { term: 'at the earliest opportunity', def: 'As soon as possible; a polite way to request a prompt response or action.', example: '"I would appreciate it if you could resolve this matter at the earliest opportunity."' },
   { term: 'could you please', def: 'A polite, formal way to make a request.', example: '"Could you please confirm whether the position is still available?"' },
-  { term: 'Dear', def: 'The standard opening word in a formal email or letter, followed by a name or title.', example: '"Dear Ms Korhonen," or "Dear Hiring Manager," — always use Dear in professional emails.' },
-  { term: 'Mr', def: 'A title used before the surname of a man in formal writing.', example: '"Dear Mr Virtanen," — use Mr when writing to a man whose name you know.' },
-  { term: 'Ms', def: 'A title used before the surname of a woman in formal writing, regardless of marital status.', example: '"Dear Ms Korhonen," — Ms is the standard professional title for women.' },
+  { term: 'Dear', def: 'The standard opening word in a formal email or letter, followed by a title and surname, a full name, or a role. Use the full name when the title is unclear.', example: '"Dear Ms Korhonen,", "Dear Hiring Manager,", or "Dear Jordan Lee," (full name when title is uncertain).' },
+  { term: 'Mr', def: 'A title used before the surname of a man in formal writing. Only use it when you are certain the person uses this title.', example: '"Dear Mr Virtanen," — use Mr only when you know the person uses this title.' },
+  { term: 'Ms', def: 'A title used before the surname of a woman in formal writing, regardless of marital status. Only use when you are certain the person uses this title.', example: '"Dear Ms Korhonen," — Ms is the standard professional title for women.' },
+  { term: 'Mx', def: 'A gender-neutral title (pronounced "mix") that some people use as their preferred title instead of Mr or Ms. Use it only when you know the person uses it — do not use it as a default when someone\'s gender is unknown.', example: '"Dear Mx Kim," — only use this if you know the person prefers it. If the title is simply unknown, use their full name instead.' },
   { term: 'Dr', def: 'A title used before the name of someone with a doctorate or a medical doctor.', example: '"Dear Dr Laine," — use Dr when writing to someone who holds a doctoral degree.' },
   { term: 'Hiring Manager', def: 'The person responsible for reviewing job applications and making hiring decisions.', example: '"Dear Hiring Manager," — use this when you do not know the name of the recruiter.' },
   { term: 'Hiring Team', def: 'The group of people at a company who are responsible for recruiting new staff.', example: '"Dear Hiring Team," — use this when writing to a team rather than a specific person.' },
@@ -657,7 +660,7 @@ const vocabCategories = [
   {
     label: 'Nouns and expressions',
     icon: '🟡',
-    terms: ['position','vacancy','subject line','formal register','contraction','greeting','sign-off','cover letter','relevant experience','tone'],
+    terms: ['position','vacancy','subject line','formal register','contraction','greeting','sign-off','cover letter','relevant experience','tone','Mx'],
   },
   {
     label: 'Formal phrases and sign-offs',
