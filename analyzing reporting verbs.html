@@ -1,434 +1,649 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyzing Reporting Verbs in Business & IT</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
-        .option-card { transition: all 0.2s ease; cursor: pointer; border: 2px solid #e5e7eb; }
-        .option-card:hover { border-color: #3b82f6; background-color: #eff6ff; }
-        .option-selected { border-color: #3b82f6; background-color: #eff6ff; }
-        .option-correct { border-color: #10b981 !important; background-color: #f0fdf4 !important; }
-        .option-incorrect { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
-        .input-correct { border-color: #10b981 !important; background-color: #f0fdf4 !important; }
-        .input-incorrect { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
-        
-        .word-token {
-            display: inline-block;
-            padding: 2px 6px;
-            margin: 2px;
-            border-radius: 6px;
-            cursor: grab;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            user-select: none;
-            transition: all 0.2s;
-        }
-        .word-token:active { cursor: grabbing; }
-        .word-token:hover { background: #f1f5f9; border-color: #cbd5e1; }
-        
-        .drop-zone {
-            min-height: 56px;
-            border: 2px dashed #cbd5e1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            transition: all 0.3s;
-            background: #fcfcfc;
-        }
-        .drop-zone.drag-over {
-            border-color: #6366f1;
-            background: #eef2ff;
-        }
-        .dropped-word {
-            padding: 4px 12px;
-            background: #6366f1;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            animation: popIn 0.2s ease-out;
-        }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Analyzing Reporting Verbs — Business &amp; IT</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:        #1a56db;
+  --blue-light:  #e8f0fe;
+  --blue-dark:   #1e3a8a;
+  --green:       #057a55;
+  --green-light: #def7ec;
+  --yellow:      #c27803;
+  --yellow-light:#fdf6b2;
+  --orange:      #c2500a;
+  --purple:      #7c3aed;
+  --purple-light:#ede9fe;
+  --red:         #dc2626;
+  --red-light:   #fee2e2;
+  --gray-50:     #f9fafb;
+  --gray-100:    #f3f4f6;
+  --gray-200:    #e5e7eb;
+  --gray-400:    #9ca3af;
+  --gray-600:    #4b5563;
+  --gray-700:    #374151;
+  --gray-800:    #1f2937;
+  --gray-900:    #111827;
+  --radius:      8px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--gray-800);
+  background: var(--gray-50);
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.site-header .course-name { font-size: 13px; font-weight: 600; color: var(--gray-600); }
+.site-header a { color: var(--blue); text-decoration: none; }
+.site-header a:hover { text-decoration: underline; }
+.site-header .inst { font-size: 12px; color: var(--gray-400); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1a56db 60%, #2563eb 100%);
+  color: white;
+  padding: 48px 24px 40px;
+  text-align: center;
+}
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 700; margin-bottom: 10px; line-height: 1.25; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+.badge { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 500; }
+.credit { font-size: 12px; opacity: .6; margin-top: 4px; }
+.credit a { color: white; }
+
+/* ── TABS ── */
+.tabs-bar {
+  background: white;
+  border-bottom: 2px solid var(--gray-200);
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 57px;
+  z-index: 99;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 14px 18px; font-size: 13px; font-weight: 600; color: var(--gray-600);
+  border: none; background: none; cursor: pointer; white-space: nowrap;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: color .15s, border-color .15s; font-family: 'Inter', sans-serif;
+}
+.tab-btn:hover { color: var(--blue); }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* ── PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.container { max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; }
+.section-intro { font-size: 14px; color: var(--gray-600); margin-bottom: 24px; line-height: 1.7; }
+.section-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); margin: 28px 0 10px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-200); }
+
+/* ── ACCORDION ── */
+.accordion { border: 1px solid #b2dce8; border-radius: var(--radius); margin-bottom: 10px; background: white; overflow: hidden; }
+.accordion summary {
+  padding: 14px 18px; font-weight: 600; font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; list-style: none;
+  user-select: none; background: #e8f6f9; color: #1a4a56;
+}
+.accordion summary::-webkit-details-marker { display: none; }
+.accordion summary::after { content: '▾'; margin-left: auto; font-size: 12px; color: #4a8fa0; transition: transform .2s; }
+.accordion[open] summary::after { transform: rotate(180deg); }
+.accordion summary:hover { background: #d4eef4; }
+.accordion-body { padding: 0 18px 18px; border-top: 1px solid #b2dce8; font-size: 14px; color: var(--gray-700); }
+.accordion-body p { margin-top: 10px; }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: var(--radius); padding: 12px 16px; margin: 14px 0 4px; font-size: 13.5px; display: flex; gap: 10px; }
+.callout.info    { background: var(--blue-light);    border-left: 3px solid var(--blue);   color: #1e3a8a; }
+.callout.warn    { background: var(--yellow-light);  border-left: 3px solid var(--yellow); color: #78350f; }
+.callout.success { background: var(--green-light);   border-left: 3px solid var(--green);  color: #064e3b; }
+.callout.tip     { background: #e8f6f9; border-left: 3px solid #4a8fa0; color: #1a4a56; }
+
+/* ── BACK TO TOP ── */
+.back-top { display: inline-block; margin-top: 24px; font-size: 13px; color: var(--blue); cursor: pointer; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap { margin-bottom: 28px; }
+.progress-track { background: var(--gray-200); height: 6px; border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
+.progress-fill { background: var(--blue); height: 100%; border-radius: 999px; transition: width .4s ease; }
+.progress-meta { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: .05em; }
+
+/* ── EXERCISE CARD ── */
+.exercise-card {
+  background: white; border: 1px solid var(--gray-200); border-radius: var(--radius);
+  overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; background: var(--blue-light); color: var(--blue);
+  border-radius: 999px; padding: 3px 12px; margin-bottom: 16px;
+}
+.card-body { padding: 28px; }
+
+/* ── SENTENCE / WORD TOKENS ── */
+.step-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-600); margin-bottom: 10px; }
+.sentence-box {
+  background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: var(--radius);
+  padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  line-height: 1.9; margin-bottom: 24px;
+}
+.word-token {
+  display: inline-block; padding: 2px 7px; margin: 2px; border-radius: 5px;
+  cursor: grab; background: white; border: 1px solid var(--gray-200);
+  user-select: none; transition: all .15s; font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+.word-token:active { cursor: grabbing; transform: scale(1.05); }
+.word-token:hover  { background: var(--blue-light); border-color: var(--blue); color: var(--blue); }
+
+/* ── TWO-COL GRID ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media (max-width: 560px) { .two-col { grid-template-columns: 1fr; } }
+
+.field-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-600); margin-bottom: 8px; }
+
+/* ── DROP ZONE ── */
+.drop-zone {
+  min-height: 52px; border: 2px dashed var(--gray-200); border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--gray-50); transition: all .2s;
+  font-size: 13px; color: var(--gray-400); font-weight: 500;
+}
+.drop-zone.drag-over { border-color: var(--blue); background: var(--blue-light); }
+.drop-zone.state-correct { border-color: var(--green); background: var(--green-light); }
+.drop-zone.state-incorrect { border-color: var(--red); background: var(--red-light); }
+.dropped-word {
+  padding: 5px 14px; background: var(--blue); color: white;
+  border-radius: var(--radius); font-weight: 700; font-size: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  animation: popIn .2s ease-out;
+}
+@keyframes popIn { from { transform: scale(.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* ── SELECT ── */
+.cat-select {
+  width: 100%; border: 2px solid var(--gray-200); border-radius: var(--radius);
+  padding: 0 14px; height: 52px; font-family: 'Inter', sans-serif; font-size: 14px;
+  background: white; color: var(--gray-800); outline: none; cursor: pointer;
+  transition: border-color .15s; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234b5563' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.cat-select:focus { border-color: var(--blue); }
+.cat-select.state-correct   { border-color: var(--green); background-color: var(--green-light); }
+.cat-select.state-incorrect { border-color: var(--red);   background-color: var(--red-light); }
+
+/* ── OPTIONS ── */
+.options-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.option-card {
+  padding: 14px 16px; border: 2px solid var(--gray-200); border-radius: var(--radius);
+  background: white; font-size: 14px; color: var(--gray-700); cursor: pointer;
+  transition: all .15s; text-align: left; font-family: 'Inter', sans-serif; line-height: 1.5;
+}
+.option-card:hover         { border-color: var(--blue); background: var(--blue-light); color: var(--blue-dark); }
+.option-card.state-selected  { border-color: var(--blue); background: var(--blue-light); color: var(--blue-dark); }
+.option-card.state-correct   { border-color: var(--green) !important; background: var(--green-light) !important; color: #064e3b !important; }
+.option-card.state-incorrect { border-color: var(--red)   !important; background: var(--red-light)   !important; color: #7f1d1d !important; }
+.option-card:disabled, .option-card[disabled] { pointer-events: none; opacity: .45; }
+
+/* ── FEEDBACK ── */
+.feedback-box { border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; font-size: 14px; display: flex; gap: 10px; }
+.feedback-box.success { background: var(--green-light); border: 1px solid #a7f3d0; color: #064e3b; }
+.feedback-box.warn    { background: var(--yellow-light); border: 1px solid #fde68a; color: #78350f; }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  width: 100%; padding: 14px; background: var(--blue); color: white; border: none;
+  border-radius: var(--radius); font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: background .15s; letter-spacing: .04em; margin-bottom: 12px;
+}
+.btn-primary:hover { background: var(--blue-dark); }
+
+.nav-row { display: flex; gap: 10px; }
+.btn-secondary {
+  flex: 1; padding: 12px; background: white; border: 2px solid var(--gray-200);
+  border-radius: var(--radius); font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: 'Inter', sans-serif; color: var(--gray-700); transition: all .15s;
+}
+.btn-secondary:hover  { border-color: var(--blue); color: var(--blue); }
+.btn-secondary.hidden { visibility: hidden; }
+
+/* ── FADE-IN ── */
+@keyframes fadeIn { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
+.fade-in { animation: fadeIn .3s ease-out; }
+
+/* ── COMPLETION VIEW ── */
+.completion-card {
+  background: white; border: 1px solid var(--gray-200); border-radius: var(--radius);
+  padding: 48px 32px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.completion-icon {
+  width: 72px; height: 72px; background: var(--green-light); border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 36px; margin-bottom: 20px;
+}
+.completion-card h2 { font-size: 24px; font-weight: 700; margin-bottom: 12px; color: var(--gray-800); }
+.completion-card p  { font-size: 14px; color: var(--gray-600); max-width: 440px; margin: 0 auto 28px; line-height: 1.7; }
+.btn-restart {
+  padding: 12px 32px; background: var(--blue); color: white; border: none;
+  border-radius: var(--radius); font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: background .15s;
+}
+.btn-restart:hover { background: var(--blue-dark); }
+
+/* ── SOURCE LINK ── */
+.source-link { display: inline-block; margin: 10px 0 4px; font-weight: 600; }
+</style>
 </head>
-<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans">
+<body>
 
-    <div class="max-w-3xl mx-auto">
-        <!-- Header -->
-        <header class="mb-8">
-            <h1 class="text-2xl md:text-3xl font-bold text-slate-800 text-center uppercase tracking-tight">Analyzing Reporting Verbs</h1>
-            <p class="text-slate-500 italic text-center mt-1">Business & IT Contexts</p>
-            <p class="text-slate-400 text-xs text-center mt-2 font-semibold">(Created with Gemini Pro by Hamid Guedra)</p>
-            
-            <!-- Progress Bar -->
-            <div class="mt-8 bg-slate-200 h-2 w-full rounded-full overflow-hidden">
-                <div id="progress-bar" class="bg-indigo-600 h-full transition-all duration-500" style="width: 12.5%;"></div>
-            </div>
-            <div class="flex justify-between mt-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                <span id="progress-text">Step 1 of 8</span>
-                <span id="score-text">Completed: 0/8</span>
-            </div>
-        </header>
+<!-- HEADER -->
+<header class="site-header">
+  <div>
+    <div class="course-name">Academic English Writing &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    <div class="inst"><a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a></div>
+  </div>
+</header>
 
-        <!-- Main Exercise Area -->
-        <main id="exercise-viewport" class="relative overflow-hidden">
-            <div id="exercise-card" class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden fade-in">
-                <!-- Content will be injected here -->
-            </div>
-        </main>
+<!-- HERO -->
+<div class="hero">
+  <h1>Analyzing Reporting Verbs</h1>
+  <div class="badges">
+    <span class="badge">Business &amp; IT Contexts</span>
+    <span class="badge">8 Case Analyses</span>
+  </div>
+  <div class="credit">
+    Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp;
+    <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences, Language Centre</a> &nbsp;·&nbsp;
+    Generated with Claude 4.6
+  </div>
+</div>
 
-        <!-- Final Success View (Hidden by default) -->
-        <div id="completion-view" class="hidden bg-white rounded-2xl shadow-xl border border-slate-200 p-10 text-center fade-in">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 text-green-600 rounded-full mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-                </svg>
-            </div>
-            <h2 class="text-3xl font-bold text-slate-800 mb-4">Module Complete!</h2>
-            <p class="text-slate-600 mb-8 max-w-md mx-auto">You have successfully analyzed all reporting verbs in this set. You can now correctly identify, categorize, and interpret reporting language in academic business writing.</p>
-            <button onclick="restartActivity()" class="px-8 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-bold shadow-lg shadow-indigo-200">
-                Restart Module
-            </button>
-        </div>
+<!-- TABS -->
+<nav class="tabs-bar">
+  <button class="tab-btn active" data-tab="exercise">🔬 Case Analysis</button>
+  <button class="tab-btn" data-tab="sources">📚 Sources</button>
+</nav>
 
-        <footer class="mt-12 text-center text-slate-400 text-sm">
-            &copy; Business & IT Academic Writing Module
-        </footer>
+<!-- ══════════ EXERCISE TAB ══════════ -->
+<div class="tab-panel active" id="tab-exercise">
+<div class="container">
+
+  <p class="section-intro">Each exercise presents a real academic sentence from a Business or IT context. For each one: <strong>(1)</strong> drag the reporting verb into the box, <strong>(2)</strong> choose its category, and <strong>(3)</strong> select the correct interpretation of its effect.</p>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progress-bar" style="width:12.5%"></div></div>
+    <div class="progress-meta">
+      <span id="progress-text">Step 1 of 8</span>
+      <span id="score-text">Completed: 0 / 8</span>
     </div>
+  </div>
 
-    <script>
-        const exercises = [
-            {
-                id: 1,
-                sentence: "Chen and Rodriguez (2023, 45) suggest that employee satisfaction may have significant impacts on customer retention rates.",
-                verb: "suggest",
-                category: "tentative",
-                options: [
-                    { text: "It presents the findings as a confirmed law of business that requires no further evidence.", correct: false },
-                    { text: "It indicates that while there is evidence, the authors are presenting the finding cautiously rather than as absolute certainty.", correct: true },
-                    { text: "It implies that the researchers are doubting their own data and expect the findings to be proven wrong.", correct: false }
-                ]
-            },
-            {
-                id: 2,
-                sentence: "Thompson (2023, 76) argues that sustainable business practices will fundamentally transform consumer purchasing decisions within five years.",
-                verb: "argues",
-                category: "strong",
-                options: [
-                    { text: "It signals that the author is taking a firm, persuasive stance on a debatable or central thesis.", correct: true },
-                    { text: "It suggests the author is neutrally describing a process without any personal conviction.", correct: false },
-                    { text: "It indicates that the author is angry with the current state of consumer purchasing.", correct: false }
-                ]
-            },
-            {
-                id: 3,
-                sentence: "Patel and Martinez (2024, 29) observe that 78% of executives prioritize workplace flexibility when considering new positions.",
-                verb: "observe",
-                category: "neutral",
-                options: [
-                    { text: "It suggests that the authors find the 78% figure surprisingly high and are questioning its validity.", correct: false },
-                    { text: "It implies that the researchers are taking a strong side in the flexible work debate.", correct: false },
-                    { text: "It presents the finding as a factual, direct outcome of data collection with minimal subjective interpretation.", correct: true }
-                ]
-            },
-            {
-                id: 4,
-                sentence: "The research team speculates that international market expansion could increase revenue by 30% for mid-sized companies (Wilson, 2023, 156).",
-                verb: "speculates",
-                category: "tentative",
-                options: [
-                    { text: "It conveys a high degree of uncertainty, signaling that the 30% figure is an educated guess based on limited data.", correct: true },
-                    { text: "It confirms that the 30% revenue increase is a guaranteed outcome of the expansion strategy.", correct: false },
-                    { text: "It suggests that the research team is criticizing companies that do not expand internationally.", correct: false }
-                ]
-            },
-            {
-                id: 5,
-                sentence: "Several industry experts question the effectiveness of traditional performance reviews for motivating millennial employees (Harris & Nguyen, 2024, 33-35).",
-                verb: "question",
-                category: "critical",
-                options: [
-                    { text: "It indicates that the experts are confused about how performance reviews work and need more information.", correct: false },
-                    { text: "It signals doubt or a challenge to existing norms, positioning the cited work as a critique of current practices.", correct: true },
-                    { text: "It shows that the experts are supportive of traditional reviews and want to keep them.", correct: false }
-                ]
-            },
-            {
-                id: 6,
-                sentence: "Garcia (2023, 112) emphasizes the critical role of data privacy in building customer trust for fintech startups.",
-                verb: "emphasizes",
-                category: "strong",
-                options: [
-                    { text: "It suggests the researcher is unsure if data privacy is actually important for trust.", correct: false },
-                    { text: "It highlights that the researcher places significant weight on this specific factor as a key finding of the study.", correct: true },
-                    { text: "It indicates that the researcher is neutrally listing data privacy as one of many minor factors.", correct: false }
-                ]
-            },
-            {
-                id: 7,
-                sentence: "Lee and Kim (2024, 58) claim that AI-driven automation will replace 40% of entry-level accounting tasks by 2030.",
-                verb: "claim",
-                category: "strong",
-                options: [
-                    { text: "It signals that this is the authors' specific position, which the writer may view with some skepticism or as a point requiring further proof.", correct: true },
-                    { text: "It presents the 40% figure as an absolute, proven fact that the writer fully endorses.", correct: false },
-                    { text: "It suggests that the authors are making a tentative suggestion they don't really believe in.", correct: false }
-                ]
-            },
-            {
-                id: 8,
-                sentence: "The survey notes that most IT managers prefer hybrid cloud architectures for scalable infrastructure (Tan, 2023, 201).",
-                verb: "notes",
-                category: "neutral",
-                options: [
-                    { text: "It implies that the writer strongly disagrees with the IT managers' preference.", correct: false },
-                    { text: "It suggests that the findings are purely speculative and based on guesswork.", correct: false },
-                    { text: "It presents the preference as a direct, observed point from the data without adding an evaluative or persuasive tone.", correct: true }
-                ]
-            }
-        ];
+  <!-- EXERCISE CARD -->
+  <div id="exercise-viewport">
+    <div class="exercise-card fade-in" id="exercise-card"></div>
+  </div>
 
-        let currentIndex = 0;
-        let selectedOption = null;
-        let droppedVerb = null;
-        let completedIds = new Set();
+  <!-- COMPLETION VIEW -->
+  <div id="completion-view" style="display:none;">
+    <div class="completion-card fade-in">
+      <div class="completion-icon">✅</div>
+      <h2>Module Complete!</h2>
+      <p>You have successfully analyzed all eight reporting verbs. You can now correctly identify, categorize, and interpret reporting language in academic Business and IT writing.</p>
+      <button class="btn-restart" onclick="restartActivity()">Restart Module</button>
+    </div>
+  </div>
 
-        function renderCurrentStep() {
-            const ex = exercises[currentIndex];
-            const card = document.getElementById('exercise-card');
-            
-            // Update UI progress
-            document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / exercises.length) * 100}%`;
-            document.getElementById('progress-text').innerText = `Step ${currentIndex + 1} of ${exercises.length}`;
-            document.getElementById('score-text').innerText = `Completed: ${completedIds.size}/${exercises.length}`;
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
 
-            selectedOption = null;
-            droppedVerb = null;
+<!-- ══════════ SOURCES TAB ══════════ -->
+<div class="tab-panel" id="tab-sources">
+<div class="container">
+  <p class="section-intro">The content of this module draws on the following academic and institutional sources.</p>
 
-            // Split sentence into words for dragging
-            const words = ex.sentence.split(/\s+/);
-            const sentenceHtml = words.map((w, i) => 
-                `<span class="word-token" draggable="true" ondragstart="handleDragStart(event, '${w.replace(/[()]/g, '')}')">${w}</span>`
-            ).join(' ');
+  <details class="accordion" open>
+    <summary>📚 Reporting Verbs — University of Warwick</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://warwick.ac.uk/fac/soc/al/globalpad-rip/openhouse/academicenglishskills/grammar/reportingverbs/" target="_blank">Reporting Verbs — University of Warwick, Global Pad Open House</a>
+      <p>The primary reference for classifying reporting verbs into strong, neutral, tentative, and critical categories used throughout this module.</p>
+    </div>
+  </details>
 
-            let optionsHtml = ex.options.map((opt, optIndex) => `
-                <div onclick="selectOption(${optIndex})" id="opt-${optIndex}" 
-                    class="option-card p-4 rounded-xl text-sm text-slate-700 bg-white">
-                    ${opt.text}
-                </div>
-            `).join('');
+  <details class="accordion">
+    <summary>📚 Academic Phrasebank — University of Manchester</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://www.phrasebank.manchester.ac.uk/referring-to-sources/" target="_blank">Referring to Sources — Academic Phrasebank, University of Manchester</a>
+      <p>A comprehensive reference for academic language patterns, including how reporting verbs signal the writer's stance towards cited sources.</p>
+    </div>
+  </details>
 
-            card.innerHTML = `
-                <div class="p-8">
-                    <div class="mb-8">
-                        <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-wider mb-4">Case Analysis</span>
-                        <p class="text-sm font-bold text-slate-500 mb-3 uppercase tracking-tight">Drag the reporting verb from the sentence above and drop it into the box below (1. REPORTING VERB).</p>
-                        <div class="text-xl text-slate-800 leading-relaxed font-medium bg-slate-50 p-6 rounded-xl border border-slate-100">
-                            ${sentenceHtml}
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div>
-                            <label class="block text-sm font-bold text-slate-500 mb-2 uppercase tracking-tight">1. Reporting Verb</label>
-                            <div id="verb-drop-zone" 
-                                class="drop-zone" 
-                                ondragover="handleDragOver(event)" 
-                                ondragleave="handleDragLeave(event)"
-                                ondrop="handleDrop(event)">
-                                <span class="text-slate-400 text-sm font-medium" id="drop-placeholder">Drop verb here...</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-slate-500 mb-2 uppercase tracking-tight">2. Verb Category</label>
-                            <select id="cat-select" class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 h-[56px] focus:border-indigo-500 outline-none transition bg-white">
-                                <option value="">-- Choose Category --</option>
-                                <option value="neutral">Neutral</option>
-                                <option value="strong">Strong</option>
-                                <option value="tentative">Tentative</option>
-                                <option value="critical">Critical</option>
-                                <option value="supportive">Supportive</option>
-                            </select>
-                        </div>
-                    </div>
+  <details class="accordion">
+    <summary>📚 LAB University — Thesis Guidelines</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://elab.lab.fi/en/completing-studies/theses/thesis-bachelors-degree" target="_blank">LAB University of Applied Sciences — Bachelor's Thesis Guidelines</a>
+      <p>The official LAB guidelines for source citation and academic writing conventions. Reporting verb choice is directly relevant to stance-marking in LAB theses and reports.</p>
+    </div>
+  </details>
 
-                    <div class="mb-8">
-                        <label class="block text-sm font-bold text-slate-500 mb-4 uppercase tracking-tight">3. Interpretation (The Effect)</label>
-                        <div class="space-y-3">
-                            ${optionsHtml}
-                        </div>
-                    </div>
+  <div class="callout tip">
+    <span>💡</span>
+    <span>All example sentences in this module use fictional author names and invented data for pedagogical purposes. They are modelled on real academic writing conventions in Business and IT fields.</span>
+  </div>
 
-                    <div id="feedback" class="mb-6 hidden p-4 rounded-xl text-sm font-semibold border-2"></div>
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
 
-                    <div class="flex flex-col gap-4">
-                        <button onclick="validate()" id="btn-validate"
-                            class="w-full bg-indigo-600 text-white px-6 py-4 rounded-xl hover:bg-indigo-700 transition font-bold shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
-                            <span>Validate Analysis</span>
-                        </button>
-                        
-                        <div class="flex items-center gap-4">
-                            <button onclick="prevStep()" id="nav-prev" 
-                                class="${currentIndex === 0 ? 'invisible' : ''} flex-1 bg-white border-2 border-slate-200 text-slate-600 px-6 py-3 rounded-xl hover:bg-slate-50 transition font-bold flex items-center justify-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                </svg>
-                                Back
-                            </button>
-                            <button onclick="nextStep()" id="nav-next" 
-                                class="flex-1 bg-white border-2 border-slate-200 text-slate-600 px-6 py-3 rounded-xl hover:bg-slate-50 transition font-bold flex items-center justify-center gap-2">
-                                ${currentIndex === exercises.length - 1 ? 'Finish' : 'Next'}
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            card.classList.remove('fade-in');
-            void card.offsetWidth; // Trigger reflow
-            card.classList.add('fade-in');
-        }
+<script>
+// ── TAB SWITCHING ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
 
-        // Drag and Drop Handlers
-        function handleDragStart(e, word) {
-            e.dataTransfer.setData("text/plain", word);
-            e.dataTransfer.effectAllowed = "move";
-        }
+// ── DATA ──
+const exercises = [
+  {
+    id: 1,
+    sentence: "Chen and Rodriguez (2023, 45) suggest that employee satisfaction may have significant impacts on customer retention rates.",
+    verb: "suggest",
+    category: "tentative",
+    options: [
+      { text: "It presents the findings as a confirmed law of business that requires no further evidence.", correct: false },
+      { text: "It indicates that while there is evidence, the authors are presenting the finding cautiously rather than as absolute certainty.", correct: true },
+      { text: "It implies that the researchers are doubting their own data and expect the findings to be proven wrong.", correct: false }
+    ]
+  },
+  {
+    id: 2,
+    sentence: "Thompson (2023, 76) argues that sustainable business practices will fundamentally transform consumer purchasing decisions within five years.",
+    verb: "argues",
+    category: "strong",
+    options: [
+      { text: "It signals that the author is taking a firm, persuasive stance on a debatable or central thesis.", correct: true },
+      { text: "It suggests the author is neutrally describing a process without any personal conviction.", correct: false },
+      { text: "It indicates that the author is angry with the current state of consumer purchasing.", correct: false }
+    ]
+  },
+  {
+    id: 3,
+    sentence: "Patel and Martinez (2024, 29) observe that 78% of executives prioritize workplace flexibility when considering new positions.",
+    verb: "observe",
+    category: "neutral",
+    options: [
+      { text: "It suggests that the authors find the 78% figure surprisingly high and are questioning its validity.", correct: false },
+      { text: "It implies that the researchers are taking a strong side in the flexible work debate.", correct: false },
+      { text: "It presents the finding as a factual, direct outcome of data collection with minimal subjective interpretation.", correct: true }
+    ]
+  },
+  {
+    id: 4,
+    sentence: "The research team speculates that international market expansion could increase revenue by 30% for mid-sized companies (Wilson, 2023, 156).",
+    verb: "speculates",
+    category: "tentative",
+    options: [
+      { text: "It conveys a high degree of uncertainty, signaling that the 30% figure is an educated guess based on limited data.", correct: true },
+      { text: "It confirms that the 30% revenue increase is a guaranteed outcome of the expansion strategy.", correct: false },
+      { text: "It suggests that the research team is criticizing companies that do not expand internationally.", correct: false }
+    ]
+  },
+  {
+    id: 5,
+    sentence: "Several industry experts question the effectiveness of traditional performance reviews for motivating millennial employees (Harris & Nguyen, 2024, 33–35).",
+    verb: "question",
+    category: "critical",
+    options: [
+      { text: "It indicates that the experts are confused about how performance reviews work and need more information.", correct: false },
+      { text: "It signals doubt or a challenge to existing norms, positioning the cited work as a critique of current practices.", correct: true },
+      { text: "It shows that the experts are supportive of traditional reviews and want to keep them.", correct: false }
+    ]
+  },
+  {
+    id: 6,
+    sentence: "Garcia (2023, 112) emphasizes the critical role of data privacy in building customer trust for fintech startups.",
+    verb: "emphasizes",
+    category: "strong",
+    options: [
+      { text: "It suggests the researcher is unsure if data privacy is actually important for trust.", correct: false },
+      { text: "It highlights that the researcher places significant weight on this specific factor as a key finding of the study.", correct: true },
+      { text: "It indicates that the researcher is neutrally listing data privacy as one of many minor factors.", correct: false }
+    ]
+  },
+  {
+    id: 7,
+    sentence: "Lee and Kim (2024, 58) claim that AI-driven automation will replace 40% of entry-level accounting tasks by 2030.",
+    verb: "claim",
+    category: "strong",
+    options: [
+      { text: "It signals that this is the authors' specific position, which the writer may view with some skepticism or as a point requiring further proof.", correct: true },
+      { text: "It presents the 40% figure as an absolute, proven fact that the writer fully endorses.", correct: false },
+      { text: "It suggests that the authors are making a tentative suggestion they don't really believe in.", correct: false }
+    ]
+  },
+  {
+    id: 8,
+    sentence: "The survey notes that most IT managers prefer hybrid cloud architectures for scalable infrastructure (Tan, 2023, 201).",
+    verb: "notes",
+    category: "neutral",
+    options: [
+      { text: "It implies that the writer strongly disagrees with the IT managers' preference.", correct: false },
+      { text: "It suggests that the findings are purely speculative and based on guesswork.", correct: false },
+      { text: "It presents the preference as a direct, observed point from the data without adding an evaluative or persuasive tone.", correct: true }
+    ]
+  }
+];
 
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.currentTarget.classList.add('drag-over');
-        }
+// ── STATE ──
+let currentIndex = 0;
+let selectedOption = null;
+let droppedVerb    = null;
+let completedIds   = new Set();
 
-        function handleDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
-        }
+// ── RENDER ──
+function renderCurrentStep() {
+  const ex   = exercises[currentIndex];
+  const card = document.getElementById('exercise-card');
 
-        function handleDrop(e) {
-            e.preventDefault();
-            const zone = e.currentTarget;
-            zone.classList.remove('drag-over');
-            
-            const word = e.dataTransfer.getData("text/plain");
-            // Clean word from trailing punctuation
-            droppedVerb = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
-            
-            zone.innerHTML = `<span class="dropped-word">${droppedVerb}</span>`;
-            zone.classList.remove('input-correct', 'input-incorrect');
-        }
+  document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / exercises.length) * 100}%`;
+  document.getElementById('progress-text').textContent = `Step ${currentIndex + 1} of ${exercises.length}`;
+  document.getElementById('score-text').textContent    = `Completed: ${completedIds.size} / ${exercises.length}`;
 
-        function selectOption(idx) {
-            const ex = exercises[currentIndex];
-            ex.options.forEach((_, i) => {
-                document.getElementById(`opt-${i}`).classList.remove('option-selected');
-            });
-            document.getElementById(`opt-${idx}`).classList.add('option-selected');
-            selectedOption = idx;
-        }
+  selectedOption = null;
+  droppedVerb    = null;
 
-        function validate() {
-            const ex = exercises[currentIndex];
-            const dropZone = document.getElementById('verb-drop-zone');
-            const catSelect = document.getElementById('cat-select');
-            const feedback = document.getElementById('feedback');
+  const words = ex.sentence.split(/\s+/);
+  const sentenceHtml = words.map(w =>
+    `<span class="word-token" draggable="true" ondragstart="handleDragStart(event,'${w.replace(/[(),']/g,'')}')">${w}</span>`
+  ).join(' ');
 
-            if (!droppedVerb) {
-                feedback.innerHTML = "⚠️ Please identify the verb by dragging it to the box.";
-                feedback.className = "mb-6 p-4 rounded-xl text-sm font-semibold border-2 bg-amber-50 border-amber-200 text-amber-700 block";
-                feedback.classList.remove('hidden');
-                return;
-            }
+  const optionsHtml = ex.options.map((opt, i) =>
+    `<button class="option-card" id="opt-${i}" onclick="selectOption(${i})">${opt.text}</button>`
+  ).join('');
 
-            const inputVal = droppedVerb.toLowerCase();
-            const correctVerb = ex.verb.toLowerCase();
-            
-            const isVerbCorrect = inputVal === correctVerb || inputVal === correctVerb + 's' || (correctVerb.endsWith('s') && inputVal === correctVerb.slice(0, -1));
-            
-            const isCatCorrect = catSelect.value === ex.category;
-            const isOptCorrect = selectedOption !== null && ex.options[selectedOption].correct;
+  card.innerHTML = `
+    <div class="card-body">
+      <span class="card-tag">Case Analysis ${currentIndex + 1} of ${exercises.length}</span>
 
-            dropZone.classList.remove('input-correct', 'input-incorrect');
-            catSelect.classList.remove('input-correct', 'input-incorrect');
-            ex.options.forEach((_, i) => {
-                document.getElementById(`opt-${i}`).classList.remove('option-correct', 'option-incorrect');
-            });
+      <p class="step-label">Drag the reporting verb from the sentence into the box below</p>
+      <div class="sentence-box">${sentenceHtml}</div>
 
-            if (isVerbCorrect && isCatCorrect && isOptCorrect) {
-                dropZone.classList.add('input-correct');
-                catSelect.classList.add('input-correct');
-                document.getElementById(`opt-${selectedOption}`).classList.add('option-correct');
-                
-                feedback.innerHTML = "✅ Excellent! All parts of your analysis are correct.";
-                feedback.className = "mb-6 p-4 rounded-xl text-sm font-semibold border-2 bg-green-50 border-green-200 text-green-700 block";
-                
-                completedIds.add(ex.id);
-                document.getElementById('score-text').innerText = `Completed: ${completedIds.size}/${exercises.length}`;
-            } else {
-                let messages = [];
-                
-                if (isVerbCorrect) {
-                    dropZone.classList.add('input-correct');
-                } else {
-                    dropZone.classList.add('input-incorrect');
-                    messages.push("re-identify the reporting verb");
-                }
+      <div class="two-col">
+        <div>
+          <p class="field-label">1. Reporting Verb</p>
+          <div class="drop-zone" id="verb-drop-zone"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event)">
+            Drop verb here…
+          </div>
+        </div>
+        <div>
+          <p class="field-label">2. Verb Category</p>
+          <select class="cat-select" id="cat-select">
+            <option value="">— Choose Category —</option>
+            <option value="neutral">Neutral</option>
+            <option value="strong">Strong</option>
+            <option value="tentative">Tentative</option>
+            <option value="critical">Critical</option>
+            <option value="supportive">Supportive</option>
+          </select>
+        </div>
+      </div>
 
-                if (isCatCorrect) {
-                    catSelect.classList.add('input-correct');
-                } else {
-                    catSelect.classList.add('input-incorrect');
-                    messages.push("adjust the verb category");
-                }
+      <p class="field-label" style="margin-bottom:10px;">3. Interpretation — what effect does this verb create?</p>
+      <div class="options-grid">${optionsHtml}</div>
 
-                if (selectedOption !== null) {
-                    if (isOptCorrect) {
-                        document.getElementById(`opt-${selectedOption}`).classList.add('option-correct');
-                    } else {
-                        document.getElementById(`opt-${selectedOption}`).classList.add('option-incorrect');
-                        messages.push("review the interpretation");
-                    }
-                } else {
-                    messages.push("select an interpretation");
-                }
+      <div id="feedback" style="display:none;"></div>
 
-                feedback.innerHTML = `⚠️ Almost there! Please ${messages.join(', ')} and try again.`;
-                feedback.className = "mb-6 p-4 rounded-xl text-sm font-semibold border-2 bg-amber-50 border-amber-200 text-amber-700 block";
-                feedback.classList.remove('hidden');
-            }
-        }
+      <button class="btn-primary" onclick="validate()">Validate Analysis</button>
 
-        function prevStep() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                renderCurrentStep();
-            }
-        }
+      <div class="nav-row">
+        <button class="btn-secondary ${currentIndex === 0 ? 'hidden' : ''}" onclick="prevStep()">← Back</button>
+        <button class="btn-secondary" onclick="nextStep()">${currentIndex === exercises.length - 1 ? 'Finish →' : 'Next →'}</button>
+      </div>
+    </div>
+  `;
 
-        function nextStep() {
-            if (currentIndex < exercises.length - 1) {
-                currentIndex++;
-                renderCurrentStep();
-            } else {
-                document.getElementById('exercise-viewport').classList.add('hidden');
-                document.getElementById('completion-view').classList.remove('hidden');
-            }
-        }
+  card.classList.remove('fade-in');
+  void card.offsetWidth;
+  card.classList.add('fade-in');
+}
 
-        function restartActivity() {
-            currentIndex = 0;
-            completedIds.clear();
-            document.getElementById('exercise-viewport').classList.remove('hidden');
-            document.getElementById('completion-view').classList.add('hidden');
-            renderCurrentStep();
-        }
+// ── DRAG & DROP ──
+function handleDragStart(e, word) {
+  e.dataTransfer.setData('text/plain', word);
+  e.dataTransfer.effectAllowed = 'move';
+}
+function handleDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+function handleDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  const zone = e.currentTarget;
+  zone.classList.remove('drag-over');
+  droppedVerb = e.dataTransfer.getData('text/plain').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+  zone.innerHTML = `<span class="dropped-word">${droppedVerb}</span>`;
+  zone.classList.remove('state-correct', 'state-incorrect');
+}
 
-        window.onload = renderCurrentStep;
-    </script>
+// ── OPTION SELECTION ──
+function selectOption(idx) {
+  exercises[currentIndex].options.forEach((_, i) => {
+    document.getElementById(`opt-${i}`).classList.remove('state-selected');
+  });
+  document.getElementById(`opt-${idx}`).classList.add('state-selected');
+  selectedOption = idx;
+}
+
+// ── VALIDATE ──
+function validate() {
+  const ex       = exercises[currentIndex];
+  const zone     = document.getElementById('verb-drop-zone');
+  const catSel   = document.getElementById('cat-select');
+  const feedback = document.getElementById('feedback');
+
+  if (!droppedVerb) {
+    feedback.className   = 'feedback-box warn';
+    feedback.innerHTML   = '<span>⚠️</span><span>Please drag the reporting verb from the sentence into the box first.</span>';
+    feedback.style.display = 'flex';
+    return;
+  }
+
+  const inputVerb    = droppedVerb.toLowerCase();
+  const correctVerb  = ex.verb.toLowerCase();
+  const isVerbOk     = inputVerb === correctVerb || inputVerb === correctVerb + 's' || (correctVerb.endsWith('s') && inputVerb === correctVerb.slice(0,-1));
+  const isCatOk      = catSel.value === ex.category;
+  const isOptOk      = selectedOption !== null && ex.options[selectedOption].correct;
+
+  // reset states
+  zone.classList.remove('state-correct','state-incorrect');
+  catSel.classList.remove('state-correct','state-incorrect');
+  ex.options.forEach((_,i) => document.getElementById(`opt-${i}`).classList.remove('state-correct','state-incorrect'));
+
+  zone.classList.add(isVerbOk ? 'state-correct' : 'state-incorrect');
+  catSel.classList.add(isCatOk ? 'state-correct' : 'state-incorrect');
+  if (selectedOption !== null) {
+    document.getElementById(`opt-${selectedOption}`).classList.add(isOptOk ? 'state-correct' : 'state-incorrect');
+  }
+
+  if (isVerbOk && isCatOk && isOptOk) {
+    feedback.className   = 'feedback-box success';
+    feedback.innerHTML   = '<span>✅</span><span><strong>Excellent!</strong> All three parts of your analysis are correct.</span>';
+    completedIds.add(ex.id);
+    document.getElementById('score-text').textContent = `Completed: ${completedIds.size} / ${exercises.length}`;
+  } else {
+    const hints = [];
+    if (!isVerbOk)  hints.push('re-identify the reporting verb');
+    if (!isCatOk)   hints.push('adjust the verb category');
+    if (!isOptOk)   hints.push(selectedOption === null ? 'select an interpretation' : 'review the interpretation');
+    feedback.className   = 'feedback-box warn';
+    feedback.innerHTML   = `<span>⚠️</span><span>Almost there! Please ${hints.join(', ')} and try again.</span>`;
+  }
+
+  feedback.style.display = 'flex';
+}
+
+// ── NAVIGATION ──
+function prevStep() {
+  if (currentIndex > 0) { currentIndex--; renderCurrentStep(); }
+}
+function nextStep() {
+  if (currentIndex < exercises.length - 1) {
+    currentIndex++;
+    renderCurrentStep();
+  } else {
+    document.getElementById('exercise-viewport').style.display = 'none';
+    document.getElementById('completion-view').style.display   = 'block';
+    document.getElementById('score-text').textContent = `Completed: ${completedIds.size} / ${exercises.length}`;
+  }
+}
+function restartActivity() {
+  currentIndex = 0;
+  completedIds.clear();
+  document.getElementById('exercise-viewport').style.display = 'block';
+  document.getElementById('completion-view').style.display   = 'none';
+  renderCurrentStep();
+}
+
+window.onload = renderCurrentStep;
+</script>
 </body>
 </html>
