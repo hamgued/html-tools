@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Thesis Tense Guide – Academic Writing</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:        #1a56db;
+    --blue-light:  #e8f0fe;
+    --blue-dark:   #1e3a8a;
+    --green:       #057a55;
+    --green-light: #def7ec;
+    --yellow:      #c27803;
+    --yellow-light:#fdf6b2;
+    --orange:      #c2500a;
+    --purple:      #7c3aed;
+    --purple-light:#ede9fe;
+    --gray-50:     #f9fafb;
+    --gray-100:    #f3f4f6;
+    --gray-200:    #e5e7eb;
+    --gray-600:    #4b5563;
+    --gray-700:    #374151;
+    --gray-800:    #1f2937;
+    --gray-900:    #111827;
+    --radius:      8px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--gray-800);
+    background: var(--gray-50);
+  }
+
+  /* HEADER */
+  .site-header {
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .site-header .course-name { font-size: 13px; font-weight: 600; color: var(--gray-600); letter-spacing: .02em; }
+  .site-header a { color: var(--blue); text-decoration: none; }
+  .site-header a:hover { text-decoration: underline; }
+  .site-header .inst { font-size: 12px; color: #9ca3af; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1a56db 60%, #2563eb 100%);
+    color: white;
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+  .hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 700; margin-bottom: 10px; line-height: 1.25; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+  .badge { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 500; }
+  .credit { font-size: 12px; opacity: .6; margin-top: 4px; }
+  .credit a { color: white; }
+
+  /* TABS */
+  .tabs-bar {
+    background: white;
+    border-bottom: 2px solid var(--gray-200);
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 57px;
+    z-index: 99;
+  }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    border: none;
+    background: none;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color .15s, border-color .15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .container { max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; }
+  .section-intro { font-size: 14px; color: var(--gray-600); margin-bottom: 20px; }
+
+  /* ACCORDION */
+  .accordion { border: 1px solid #b2dce8; border-radius: var(--radius); margin-bottom: 10px; background: white; overflow: hidden; }
+  .accordion summary {
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    user-select: none;
+    background: #e8f6f9;
+    color: #1a4a56;
+  }
+  .accordion summary::-webkit-details-marker { display: none; }
+  .accordion summary::after {
+    content: '▾';
+    margin-left: auto;
+    font-size: 12px;
+    color: #4a8fa0;
+    transition: transform .2s;
+  }
+  .accordion[open] summary::after { transform: rotate(180deg); }
+  .accordion summary:hover { background: #d4eef4; }
+  .accordion-body {
+    padding: 0 18px 18px;
+    border-top: 1px solid #b2dce8;
+    font-size: 14px;
+    color: var(--gray-700);
+  }
+  .accordion-body p { margin-top: 10px; }
+
+  /* ROLE CHIP inside summary */
+  .role-chip {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    border-radius: 999px;
+    padding: 2px 9px;
+    flex-shrink: 0;
+    color: white;
+  }
+  .chip-primary  { background: var(--blue); }
+  .chip-optional { background: var(--gray-600); }
+  .chip-studies  { background: var(--blue-dark); }
+  .chip-args     { background: var(--green); }
+  .chip-trends   { background: var(--purple); }
+  .chip-dominant { background: var(--blue-dark); }
+  .chip-voice    { background: var(--gray-600); }
+  .chip-findings { background: var(--blue); }
+  .chip-interp   { background: var(--orange); }
+  .chip-forward  { background: var(--purple); }
+  .chip-summary  { background: var(--blue); }
+
+  /* EXAMPLES */
+  .examples-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--gray-600);
+    margin: 14px 0 6px;
+  }
+  .example-item {
+    background: var(--gray-100);
+    color: var(--gray-900);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    margin-bottom: 6px;
+    border: 1px solid var(--gray-200);
+    overflow: visible;
+    position: relative;
+  }
+  .example-item .verb { color: var(--blue); font-weight: 700; }
+  .example-item .note-ex { color: var(--gray-600); font-style: italic; }
+
+  /* CALLOUT */
+  .callout { border-radius: var(--radius); padding: 12px 16px; margin: 14px 0 4px; font-size: 13.5px; display: flex; gap: 10px; }
+  .callout.info    { background: var(--blue-light);   border-left: 3px solid var(--blue);   color: #1e3a8a; }
+  .callout.warn    { background: var(--yellow-light);  border-left: 3px solid var(--yellow); color: #78350f; }
+  .callout.success { background: var(--green-light);   border-left: 3px solid var(--green);  color: #064e3b; }
+  .callout.tip     { background: #e8f6f9; border-left: 3px solid #4a8fa0; color: #1a4a56; }
+
+  /* NOTE GRID */
+  .note-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  @media (max-width: 560px) { .note-grid { grid-template-columns: 1fr; } }
+  .note-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 14px 16px; font-size: 13.5px; color: var(--gray-700); line-height: 1.6; }
+  .note-card strong { color: var(--gray-900); display: block; margin-bottom: 4px; }
+
+  /* SECTION LABEL */
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); margin: 28px 0 10px; }
+
+  /* QUICK REF TABLE */
+  .tbl-wrap { overflow-x: auto; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--gray-100); text-align: left; padding: 8px 12px; font-weight: 600; color: var(--gray-700); border-bottom: 2px solid var(--gray-200); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--gray-50); }
+
+  .tbl-chip { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 1px 9px; white-space: nowrap; margin: 1px 2px; }
+  .tbl-past    { background: var(--blue-light);   color: var(--blue-dark); }
+  .tbl-present { background: var(--green-light);  color: var(--green); }
+  .tbl-perfect { background: var(--purple-light); color: var(--purple); }
+  .tbl-future  { background: var(--yellow-light); color: var(--yellow); }
+
+  /* BACK TO TOP */
+  .back-top { display: inline-block; margin-top: 24px; font-size: 13px; color: var(--blue); cursor: pointer; }
+
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* REPORTING VERB STRENGTH */
+  .rv { cursor: help; border-bottom: 2px dashed; }
+  .rv-neutral    { border-color: #059669; }
+  .rv-tentative  { border-color: #d97706; }
+  .rv-strong     { border-color: #dc2626; }
+
+  /* CITATION TOOLTIPS */
+  .cite {
+    position: relative;
+    cursor: help;
+    border-bottom: 1px dashed;
+    white-space: nowrap;
+  }
+  .cite-narrative {
+    color: #0369a1;
+    border-color: #0369a1;
+  }
+  .cite-parenthetical {
+    color: #6d28d9;
+    border-color: #6d28d9;
+  }
+  #cite-tooltip {
+    position: fixed;
+    background: var(--gray-900);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    padding: 6px 11px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div>
+    <div class="course-name">Academic English Writing &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    <div class="inst"><a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a></div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Which Tense and Why?</h1>
+  <p style="font-size:18px;font-weight:600;opacity:.9;margin-bottom:28px;">Theses and Research Papers</p>
+  <div class="credit">Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp; <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a></div>
+</div>
+
+<!-- TABS -->
+<nav class="tabs-bar" id="tabsBar">
+  <button class="tab-btn active" data-tab="intro">1 · Introduction</button>
+  <button class="tab-btn" data-tab="litrev">2 · Theoretical Background</button>
+  <button class="tab-btn" data-tab="empirical">3 · Empirical Part</button>
+  <button class="tab-btn" data-tab="discussion">4 · Discussion</button>
+  <button class="tab-btn" data-tab="conclusion">5 · Conclusion</button>
+  <button class="tab-btn" data-tab="quickref">📋 Quick Reference</button>
+</nav>
+
+<!-- ══════════ 1. INTRODUCTION ══════════ -->
+<div class="tab-panel active" id="tab-intro">
+<div class="container">
+  <p class="section-intro">In your introduction, you describe your topic and your goals. Use <strong>present tense</strong> because these things are still true when the reader reads your text.</p>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-primary">Primary</span> Present tense</summary>
+    <div class="accordion-body">
+      <p>Use present tense when you describe what your thesis is about and what you want to find out. These facts are still true now, so you use present tense.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item">This thesis <span class="verb">examines</span> digital literacy among first-year university students.</div>
+      <div class="example-item">The study <span class="verb">aims</span> to identify key barriers to academic writing.</div>
+      <div class="example-item">The research question <span class="verb">concerns</span> how written feedback <span class="verb">affects</span> revision behaviour.</div>
+      <div class="example-item">This paper <span class="verb">investigates</span> the relationship between sleep and academic performance.</div>
+      <div class="example-item">The purpose of this thesis <span class="verb">is</span> to explore how social media <span class="verb">influences</span> consumer behaviour.</div>
+      <div class="example-item">This study <span class="verb">focuses</span> on the challenges faced by international students in Finnish universities.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-optional">Optional</span> Future or present tense</summary>
+    <div class="accordion-body">
+      <p>You can use future or present tense to tell the reader what each chapter or section covers. Both are correct. This helps the reader understand the structure of your thesis.</p>
+      <p class="examples-label">Future tense</p>
+      <div class="example-item">Chapter 2 <span class="verb">will present</span> the theoretical framework.</div>
+      <div class="example-item">The following section <span class="verb">will outline</span> the research design.</div>
+      <div class="example-item">Chapter 4 <span class="verb">will discuss</span> the main findings of the study.</div>
+      <div class="example-item">The conclusion <span class="verb">will summarise</span> the key results and suggest directions for future research.</div>
+      <p class="examples-label" style="margin-top:12px;">Present tense — also correct</p>
+      <div class="example-item">Chapter 2 <span class="verb">presents</span> the theoretical framework.</div>
+      <div class="example-item">The following section <span class="verb">outlines</span> the research design.</div>
+      <div class="example-item">Chapter 4 <span class="verb">discusses</span> the main findings of the study.</div>
+      <div class="example-item">The conclusion <span class="verb">summarises</span> the key results and suggests directions for future research.</div>
+    </div>
+  </details>
+
+  <div class="callout tip">
+    <span>💡</span>
+    <span><strong>Watch out:</strong> Do not write "This thesis <em>aimed</em> to…" in the introduction. Use past tense like this only in the conclusion, when you look back at what you did.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ 2. LIT REVIEW ══════════ -->
+<div class="tab-panel" id="tab-litrev">
+<div class="container">
+  <p class="section-intro">In the theoretical background section, you can use <strong>three different tenses</strong>. You can even use all three in the same paragraph. The tense you choose shows how you are talking about the source.</p>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-studies">For specific past studies</span> Past tense</summary>
+    <div class="accordion-body">
+      <p>Use past tense when you describe a specific study that happened in the past. You usually mention the year next to the author's name.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item"><span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Smith (2018)</span> <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author did, without judgement">found</span> that motivation <span class="verb">declined</span> significantly in online courses.</div>
+      <div class="example-item"><span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Garcia (2019)</span> <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author did, without judgement">reported</span> a significant correlation between feedback frequency and revision quality.</div>
+      <div class="example-item"><span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Johnson and Lee (2020)</span> <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author did, without judgement">examined</span> how peer feedback <span class="verb">affected</span> student writing.</div>
+      <div class="example-item"><span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Chen and Park (2021)</span> <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author did, without judgement">conducted</span> interviews with 45 university students.</div>
+      <div class="example-item"><span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Brown (2015)</span> <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author did, without judgement">concluded</span> that self-assessment <span class="verb">improved</span> learning outcomes.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-args">For author arguments &amp; claims</span> Present tense</summary>
+    <div class="accordion-body">
+      <p>Use present tense when you describe what an author thinks or believes. Their ideas are still relevant today, so you use present tense.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item"><span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Smith (2018)</span> <span class="verb rv rv-strong" data-tip="Strong reporting verb — the author makes a confident, clear claim">argues</span> that autonomy <span class="verb">plays</span> a central role in language learning.</div>
+      <div class="example-item">The framework <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">distinguishes</span> between surface and deep approaches to learning <span class="cite cite-parenthetical" data-tip="Parenthetical (weak): source in brackets, idea is the focus">(Biggs 1999)</span>.</div>
+      <div class="example-item"><span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Johnson (2020)</span> <span class="verb rv rv-strong" data-tip="Strong reporting verb — the author makes a confident, clear claim">claims</span> that written feedback <span class="verb">is</span> more effective than oral feedback.</div>
+      <div class="example-item"><span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Brown and Lee (2022)</span> <span class="verb rv rv-tentative" data-tip="Tentative reporting verb — the author is careful or not fully certain">suggest</span> that motivation <span class="verb">depends</span> on both internal and external factors.</div>
+      <div class="example-item">The model <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">identifies</span> three key stages in the writing process <span class="cite cite-parenthetical" data-tip="Parenthetical (weak): source in brackets, idea is the focus">(Garcia 2019)</span>.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-trends">For research trends</span> Present perfect</summary>
+    <div class="accordion-body">
+      <p>Use present perfect when you want to show that something started in the past and is still important today. It connects older research to the current situation in your field.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item">Researchers <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">have increasingly focused</span> on the role of peer feedback in academic writing <span class="cite cite-parenthetical" data-tip="Parenthetical (weak): source in brackets, idea is the focus">(Smith 2018; Johnson 2020)</span>.</div>
+      <div class="example-item">Several studies <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">have demonstrated</span> a positive effect of formative assessment on student outcomes <span class="cite cite-parenthetical" data-tip="Parenthetical (weak): source in brackets, idea is the focus">(Brown 2015; Garcia 2019)</span>.</div>
+      <div class="example-item">Interest in online learning <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">has grown</span> significantly over the past decade <span class="cite cite-parenthetical" data-tip="Parenthetical (weak): source in brackets, idea is the focus">(Chen &amp; Park 2021)</span>.</div>
+      <div class="example-item">Scholars <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">have debated</span> the definition of motivation for many years <span class="cite cite-parenthetical" data-tip="Parenthetical (weak): source in brackets, idea is the focus">(Brown &amp; Lee 2022)</span>.</div>
+      <div class="example-item">Recent research <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">has shown</span> that feedback timing <span class="verb">matters</span> as much as feedback quality <span class="cite cite-parenthetical" data-tip="Parenthetical (weak): source in brackets, idea is the focus">(Johnson 2020)</span>.</div>
+    </div>
+  </details>
+
+  <div class="callout info">
+    <span>ℹ️</span>
+    <span>It is correct — and normal — to use all three tenses in the same paragraph. Example: <em>"Smith (2018) <strong>found</strong> [past] that motivation declined — and this <strong>remains</strong> [present] a key issue today, as more recent studies <strong>have confirmed</strong> [present perfect]."</em></span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ 3. EMPIRICAL PART ══════════ -->
+<div class="tab-panel" id="tab-empirical">
+<div class="container">
+  <p class="section-intro">In this section, you describe what you did and what you found. Use <strong>past tense</strong> because your research is now finished.</p>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-dominant">Dominant throughout</span> Past tense</summary>
+    <div class="accordion-body">
+      <p>Everything in this section is finished, so use past tense. This applies to both what you did (your methods) and what you found (your results).</p>
+      <p class="examples-label">Methods</p>
+      <div class="example-item">Data <span class="verb">were collected</span> through semi-structured interviews with 12 participants.</div>
+      <div class="example-item">Participants <span class="verb">were recruited</span> using purposive sampling.</div>
+      <div class="example-item">A questionnaire <span class="verb">was distributed</span> to 80 students in three different classes.</div>
+      <div class="example-item">The interviews <span class="verb">lasted</span> approximately 30 minutes each.</div>
+      <div class="example-item">All responses <span class="verb">were recorded</span> and later <span class="verb">transcribed</span> for analysis.</div>
+      <p class="examples-label" style="margin-top:12px;">Results</p>
+      <div class="example-item">The analysis <span class="verb">revealed</span> three recurring themes across the data.</div>
+      <div class="example-item">Response rates <span class="verb">varied</span> considerably across participant groups.</div>
+      <div class="example-item">Most participants <span class="verb">reported</span> a preference for written feedback.</div>
+      <div class="example-item">The results <span class="verb">showed</span> a clear difference between the two groups.</div>
+      <div class="example-item">Over 70% of respondents <span class="verb">agreed</span> that peer feedback <span class="verb">was</span> helpful.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-voice">A note on voice</span> Passive voice — common but not required</summary>
+    <div class="accordion-body">
+      <p>Many writers use passive voice in this section (e.g. "Data <em>were collected</em>"). This puts the focus on the action, not on you as the researcher. But you can also write "I <em>collected</em> data" — both are correct. Ask your supervisor which they prefer.</p>
+      <p class="examples-label">Passive vs active — same meaning</p>
+      <div class="example-item">Transcripts <span class="verb">were coded</span> thematically. <span class="note-ex">(passive)</span></div>
+      <div class="example-item">I <span class="verb">coded</span> the transcripts thematically. <span class="note-ex">(active)</span></div>
+      <div class="example-item">The data <span class="verb">were analysed</span> using thematic analysis. <span class="note-ex">(passive)</span></div>
+      <div class="example-item">I <span class="verb">analysed</span> the data using thematic analysis. <span class="note-ex">(active)</span></div>
+      <div class="example-item">Participants <span class="verb">were asked</span> to complete a short questionnaire. <span class="note-ex">(passive)</span></div>
+      <div class="example-item">I <span class="verb">asked</span> participants to complete a short questionnaire. <span class="note-ex">(active)</span></div>
+    </div>
+  </details>
+
+  <div class="callout warn">
+    <span>⚠️</span>
+    <span>Only use present tense in this section when you refer to a table or figure. For example: <em>"Table 1 <strong>shows</strong> the results."</em> For everything else, use past tense.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ 4. DISCUSSION ══════════ -->
+<div class="tab-panel" id="tab-discussion">
+<div class="container">
+  <p class="section-intro">In the discussion, you do two things: you talk about your results (past tense) and you explain what they mean (present tense). Changing tense here is correct — it has a purpose.</p>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-findings">Referring back to findings</span> Past tense</summary>
+    <div class="accordion-body">
+      <p>Use past tense when you refer back to what your data showed. Your research is finished, so you describe the results in the past.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item">The results <span class="verb">indicated</span> a strong preference for written over oral feedback.</div>
+      <div class="example-item">Participants <span class="verb">reported</span> feeling unsupported during the revision stage.</div>
+      <div class="example-item">The data <span class="verb">showed</span> that younger students <span class="verb">used</span> social media more frequently.</div>
+      <div class="example-item">Most interviewees <span class="verb">mentioned</span> time pressure as a key challenge.</div>
+      <div class="example-item">The survey <span class="verb">revealed</span> that 65% of respondents <span class="verb">preferred</span> online learning.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-interp">Interpreting meaning</span> Present tense</summary>
+    <div class="accordion-body">
+      <p>Use present tense when you explain what your results mean. You are sharing your conclusions and ideas, which are current and still relevant.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item">This <span class="verb rv rv-tentative" data-tip="Tentative reporting verb — the author is careful or not fully certain">suggests</span> that feedback timing <span class="verb">matters</span> more than feedback volume.</div>
+      <div class="example-item">The pattern <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">aligns</span> with what <span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Smith (2018)</span> <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author did, without judgement">found</span> in a similar context.</div>
+      <div class="example-item">These findings <span class="verb rv rv-strong" data-tip="Strong reporting verb — the author makes a confident, clear claim">challenge</span> the assumptions made by <span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Garcia (2019)</span> about autonomous learning.</div>
+      <div class="example-item">This <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">indicates</span> that students <span class="verb">need</span> more structured support during the writing process.</div>
+      <div class="example-item">The result <span class="verb rv rv-strong" data-tip="Strong reporting verb — the author makes a confident, clear claim">supports</span> what <span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Brown and Lee (2022)</span> <span class="verb rv rv-strong" data-tip="Strong reporting verb — the author makes a confident, clear claim">argue</span> about the value of peer feedback.</div>
+      <div class="example-item">This <span class="verb rv rv-neutral" data-tip="Neutral reporting verb — describes what the author does, without judgement">confirms</span> the findings of <span class="cite cite-narrative" data-tip="Narrative (strong): author is the subject">Chen and Park (2021)</span> on online motivation.</div>
+    </div>
+  </details>
+
+  <div class="callout success">
+    <span>✅</span>
+    <span><strong>A common pattern in the discussion:</strong><br><em>"The interviews <strong>showed</strong> that students had problems with citations [past] — this <strong>suggests</strong> that more support is needed [present]."</em><br>Changing tense here is correct. Each tense has a different job.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ 5. CONCLUSION ══════════ -->
+<div class="tab-panel" id="tab-conclusion">
+<div class="container">
+  <p class="section-intro">In the conclusion, you summarise what you found and what it means. You also suggest what could be studied or done next.</p>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-summary">Summarising main points</span> Present tense</summary>
+    <div class="accordion-body">
+      <p>Use present tense to tell the reader what your thesis shows. These are your main conclusions, and they are still true now.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item">The findings <span class="verb">demonstrate</span> the value of formative feedback in academic writing contexts.</div>
+      <div class="example-item">This thesis <span class="verb">contributes</span> to a better understanding of peer review practices in higher education.</div>
+      <div class="example-item">The results <span class="verb">show</span> that regular feedback <span class="verb">has</span> a positive effect on student writing.</div>
+      <div class="example-item">This study <span class="verb">highlights</span> the importance of early intervention in the writing process.</div>
+      <div class="example-item">The evidence <span class="verb">supports</span> the use of peer review as a regular classroom activity.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-forward">Recommendations &amp; future work</span> Future / modal tense</summary>
+    <div class="accordion-body">
+      <p>Use future tense or modal verbs (could, may, might) when you suggest what researchers or practitioners could do next.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item">Future studies <span class="verb">could explore</span> the long-term effects of peer feedback on writing development.</div>
+      <div class="example-item">Teachers <span class="verb">may wish to consider</span> using peer review at different stages of the writing process.</div>
+      <div class="example-item">Further research <span class="verb">should investigate</span> how feedback affects different age groups.</div>
+      <div class="example-item">Future studies <span class="verb">might focus</span> on the use of AI tools in academic writing courses.</div>
+      <div class="example-item">This approach <span class="verb">could be applied</span> in other subject areas beyond academic writing.</div>
+    </div>
+  </details>
+
+  <div class="callout tip">
+    <span>💡</span>
+    <span>The conclusion is the one place where you <em>can</em> use past tense to look back at your aims: <em>"This thesis <strong>aimed</strong> to… and <strong>found</strong> that…"</em> — followed immediately by a present-tense statement: <em>"These results <strong>suggest</strong> that…"</em></span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ QUICK REFERENCE ══════════ -->
+<div class="tab-panel" id="tab-quickref">
+<div class="container">
+  <p class="section-intro">A summary of tense choices across all five sections, plus the key principles to keep in mind.</p>
+
+  <details class="accordion">
+    <summary>📋 Tense summary by section</summary>
+    <div class="accordion-body">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Section</th>
+              <th>Tense(s)</th>
+              <th>What each tense is for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1 · Introduction</strong></td>
+              <td><span class="tbl-chip tbl-present">Present</span> <span class="tbl-chip tbl-future">Future</span></td>
+              <td>Present: topic, context, aims.<br>Future (optional): chapter roadmap.</td>
+            </tr>
+            <tr>
+              <td><strong>2 · Theoretical Background</strong></td>
+              <td><span class="tbl-chip tbl-past">Past</span> <span class="tbl-chip tbl-present">Present</span> <span class="tbl-chip tbl-perfect">Present perfect</span></td>
+              <td>Past: specific studies as events.<br>Present: author arguments and claims.<br>Present perfect: research trends.</td>
+            </tr>
+            <tr>
+              <td><strong>3 · Empirical Part</strong></td>
+              <td><span class="tbl-chip tbl-past">Past (dominant)</span></td>
+              <td>Reporting completed methods and results. Passive voice common but not required.</td>
+            </tr>
+            <tr>
+              <td><strong>4 · Discussion</strong></td>
+              <td><span class="tbl-chip tbl-past">Past</span> <span class="tbl-chip tbl-present">Present</span></td>
+              <td>Past: referring back to findings.<br>Present: interpreting meaning and significance.</td>
+            </tr>
+            <tr>
+              <td><strong>5 · Conclusion</strong></td>
+              <td><span class="tbl-chip tbl-present">Present</span> <span class="tbl-chip tbl-future">Future / Modal</span></td>
+              <td>Present: main points and contributions.<br>Future/modal: recommendations and further research.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <p class="section-label">Key principles</p>
+
+  <details class="accordion">
+    <summary>🔀 Mixing tenses is normal</summary>
+    <div class="accordion-body">
+      <p>When the communicative function changes — e.g. from reporting a result to interpreting it — the tense changes too. That is not inconsistency; it is precision. The key is that every tense shift should have a reason.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>😵 Unmotivated switching is the problem</summary>
+    <div class="accordion-body">
+      <p>Changing tense with no change in function makes readers lose their footing. Before switching tense, ask yourself: <em>Why am I switching here?</em> If you cannot answer, stay in the same tense.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>🎓 Discipline conventions vary</summary>
+    <div class="accordion-body">
+      <p>These patterns reflect common academic English conventions. Always check what your field or supervisor expects — some disciplines have stricter norms than others, and conventions in sciences may differ from those in the humanities or social sciences.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>✍️ Passive voice is a choice, not a rule</summary>
+    <div class="accordion-body">
+      <p>Use passive voice when the agent (who did something) is less important than the action itself. Active voice is equally valid and is often preferred in qualitative or reflective research. Conventions vary by discipline and supervisor.</p>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<script>
+  // Tab switching
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panels  = document.querySelectorAll('.tab-panel');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // Body-appended tooltip (bypasses overflow:hidden on accordions)
+  const tip = document.createElement('div');
+  tip.id = 'cite-tooltip';
+  document.body.appendChild(tip);
+
+  document.querySelectorAll('.cite, .rv').forEach(el => {
+    el.addEventListener('mouseenter', e => {
+      tip.textContent = el.dataset.tip;
+      tip.style.opacity = '1';
+      position(e);
+    });
+    el.addEventListener('mousemove', position);
+    el.addEventListener('mouseleave', () => { tip.style.opacity = '0'; });
+  });
+
+  function position(e) {
+    const gap = 12;
+    const tw = tip.offsetWidth;
+    const th = tip.offsetHeight;
+    let x = e.clientX - tw / 2;
+    let y = e.clientY - th - gap;
+    // keep within viewport
+    x = Math.max(8, Math.min(x, window.innerWidth - tw - 8));
+    if (y < 8) y = e.clientY + gap;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+  }
+</script>
+</body>
+</html>
