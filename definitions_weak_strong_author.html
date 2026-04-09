@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academic Citation Navigator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:        #1a56db;
+  --blue-light:  #e8f0fe;
+  --blue-dark:   #1e3a8a;
+  --green:       #057a55;
+  --green-light: #def7ec;
+  --yellow:      #c27803;
+  --yellow-light:#fdf6b2;
+  --orange:      #c2500a;
+  --purple:      #7c3aed;
+  --purple-light:#ede9fe;
+  --red:         #dc2626;
+  --red-light:   #fee2e2;
+  --gray-50:     #f9fafb;
+  --gray-100:    #f3f4f6;
+  --gray-200:    #e5e7eb;
+  --gray-400:    #9ca3af;
+  --gray-600:    #4b5563;
+  --gray-700:    #374151;
+  --gray-800:    #1f2937;
+  --gray-900:    #111827;
+  --radius:      8px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--gray-800);
+  background: var(--gray-50);
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.site-header .course-name { font-size: 13px; font-weight: 600; color: var(--gray-600); }
+.site-header a { color: var(--blue); text-decoration: none; }
+.site-header a:hover { text-decoration: underline; }
+.site-header .inst { font-size: 12px; color: var(--gray-400); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1a56db 60%, #2563eb 100%);
+  color: white;
+  padding: 48px 24px 40px;
+  text-align: center;
+}
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 700; margin-bottom: 10px; line-height: 1.25; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+.badge { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 500; }
+.credit { font-size: 12px; opacity: .6; margin-top: 4px; }
+.credit a { color: white; }
+
+/* ── TABS ── */
+.tabs-bar {
+  background: white;
+  border-bottom: 2px solid var(--gray-200);
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 57px;
+  z-index: 99;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 14px 18px; font-size: 13px; font-weight: 600; color: var(--gray-600);
+  border: none; background: none; cursor: pointer; white-space: nowrap;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: color .15s, border-color .15s; font-family: 'Inter', sans-serif;
+}
+.tab-btn:hover { color: var(--blue); }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* ── PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.container { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+.section-intro { font-size: 14px; color: var(--gray-600); margin-bottom: 24px; line-height: 1.7; }
+.section-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); margin: 28px 0 10px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-200); }
+
+/* ── ACCORDION ── */
+.accordion { border: 1px solid #b2dce8; border-radius: var(--radius); margin-bottom: 10px; background: white; overflow: hidden; }
+.accordion summary {
+  padding: 14px 18px; font-weight: 600; font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; list-style: none;
+  user-select: none; background: #e8f6f9; color: #1a4a56;
+}
+.accordion summary::-webkit-details-marker { display: none; }
+.accordion summary::after { content: '▾'; margin-left: auto; font-size: 12px; color: #4a8fa0; transition: transform .2s; }
+.accordion[open] summary::after { transform: rotate(180deg); }
+.accordion summary:hover { background: #d4eef4; }
+.accordion-body { padding: 0 18px 18px; border-top: 1px solid #b2dce8; font-size: 14px; color: var(--gray-700); }
+.accordion-body p { margin-top: 10px; }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: var(--radius); padding: 12px 16px; margin: 14px 0 4px; font-size: 13.5px; display: flex; gap: 10px; }
+.callout.info    { background: var(--blue-light);    border-left: 3px solid var(--blue);   color: #1e3a8a; }
+.callout.warn    { background: var(--yellow-light);  border-left: 3px solid var(--yellow); color: #78350f; }
+.callout.success { background: var(--green-light);   border-left: 3px solid var(--green);  color: #064e3b; }
+.callout.tip     { background: #e8f6f9; border-left: 3px solid #4a8fa0; color: #1a4a56; }
+
+/* ── EXAMPLE ITEMS ── */
+.examples-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); margin: 14px 0 6px; }
+.example-item {
+  background: var(--gray-100); color: var(--gray-900); border-radius: 6px;
+  padding: 8px 14px; font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  line-height: 1.65; margin-bottom: 6px; border: 1px solid var(--gray-200);
+}
+.example-item .verb { color: var(--blue); font-weight: 700; }
+
+/* ── BACK TO TOP ── */
+.back-top { display: inline-block; margin-top: 24px; font-size: 13px; color: var(--blue); cursor: pointer; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── BROWSER: TWO-PANE LAYOUT ── */
+.browser-wrap {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 640px) { .browser-wrap { grid-template-columns: 1fr; } }
+
+/* ── SIDEBAR ── */
+.sidebar { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 16px; }
+.sidebar-group-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: 8px; margin-top: 16px;
+}
+.sidebar-group-label:first-child { margin-top: 0; }
+.sidebar-group-label.strong { color: var(--blue); }
+.sidebar-group-label.weak   { color: var(--yellow); }
+
+.example-btn {
+  width: 100%; text-align: left; padding: 10px 12px; border-radius: var(--radius);
+  font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--gray-200);
+  background: white; color: var(--gray-700); font-family: 'Inter', sans-serif;
+  transition: all .15s; margin-bottom: 6px; display: block;
+}
+.example-btn:hover { border-color: var(--blue); color: var(--blue); }
+.example-btn.active-strong { background: var(--blue); color: white; border-color: var(--blue); font-weight: 600; }
+.example-btn.active-weak   { background: var(--yellow); color: white; border-color: var(--yellow); font-weight: 600; }
+
+/* ── EXAMPLE DETAIL CARD ── */
+.detail-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 28px; }
+
+.type-chip {
+  display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; border-radius: 999px; padding: 3px 12px; margin-bottom: 4px;
+}
+.type-chip.strong { background: var(--blue-light); color: var(--blue); }
+.type-chip.weak   { background: var(--yellow-light); color: var(--yellow); }
+
+.detail-title { font-size: 20px; font-weight: 700; color: var(--gray-800); margin-bottom: 16px; }
+
+.formula-box {
+  background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: var(--radius);
+  padding: 12px 16px; margin-bottom: 24px;
+}
+.formula-box .formula-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-600); margin-bottom: 6px; }
+.formula-box code { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--blue); }
+
+/* ── PARAGRAPH STRUCTURE ── */
+.para-structure { display: flex; flex-direction: column; gap: 0; }
+.para-step { display: flex; gap: 0; }
+.step-line { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 32px; }
+.step-dot  { width: 24px; height: 24px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; flex-shrink: 0; }
+.step-dot.neutral { background: var(--gray-400); }
+.step-dot.strong  { background: var(--blue); }
+.step-dot.weak    { background: var(--yellow); }
+.step-dot.gray    { background: var(--gray-300); color: var(--gray-600); }
+.step-connector   { width: 2px; flex: 1; min-height: 16px; background: var(--gray-200); margin: 2px 0; }
+.step-content     { padding: 0 0 20px 12px; flex: 1; }
+.step-role-label  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-400); margin-bottom: 4px; }
+
+.citation-strong { background: var(--blue-light); color: var(--blue-dark); font-weight: 700; padding: 0 4px; border-radius: 3px; }
+.citation-weak   { background: var(--yellow-light); color: #78350f; font-weight: 700; padding: 0 4px; border-radius: 3px; }
+
+/* ── QUIZ ── */
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 8px; }
+.quiz-meta h2 { font-size: 18px; font-weight: 700; }
+.score-badge { background: var(--blue); color: white; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+
+.quiz-question-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+.quiz-question-card h3 { font-size: 15px; font-weight: 600; color: var(--gray-800); margin-bottom: 16px; line-height: 1.6; }
+
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-opt {
+  width: 100%; text-align: left; padding: 13px 16px; border: 2px solid var(--gray-200);
+  border-radius: var(--radius); background: white; font-size: 14px; color: var(--gray-700);
+  cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s; line-height: 1.5;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-light); color: var(--blue-dark); }
+.quiz-opt.correct  { border-color: var(--green) !important; background: var(--green-light) !important; color: #064e3b !important; }
+.quiz-opt.wrong    { border-color: var(--red)   !important; background: var(--red-light)   !important; color: #7f1d1d !important; }
+.quiz-opt.faded    { opacity: .35; }
+.quiz-opt:disabled { cursor: default; }
+
+.quiz-feedback { border-radius: var(--radius); padding: 14px 16px; margin-top: 16px; font-size: 14px; display: flex; gap: 10px; }
+.quiz-feedback.correct { background: var(--green-light); border: 1px solid #a7f3d0; color: #064e3b; }
+.quiz-feedback.wrong   { background: var(--red-light);   border: 1px solid #fca5a5; color: #7f1d1d; }
+.quiz-feedback h4 { font-weight: 700; margin-bottom: 4px; }
+
+.btn-primary {
+  width: 100%; padding: 13px; background: var(--blue); color: white; border: none;
+  border-radius: var(--radius); font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: background .15s; margin-top: 12px;
+}
+.btn-primary:hover { background: var(--blue-dark); }
+
+/* ── COMPLETION ── */
+.completion-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 48px 32px; text-align: center; }
+.completion-icon { width: 72px; height: 72px; background: var(--green-light); border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 20px; }
+.completion-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+.completion-card p  { font-size: 14px; color: var(--gray-600); margin-bottom: 24px; }
+.score-big { font-size: 28px; font-weight: 700; color: var(--blue); }
+.btn-restart { padding: 12px 32px; background: var(--blue); color: white; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; }
+.btn-restart:hover { background: var(--blue-dark); }
+
+/* ── REFERENCES ── */
+.ref-item { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 10px; font-size: 13.5px; color: var(--gray-700); line-height: 1.7; }
+
+/* ── SOURCE LINK ── */
+.source-link { display: inline-block; margin: 10px 0 4px; font-weight: 600; }
+
+/* ── FADE ── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn .3s ease-out; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div>
+    <div class="course-name">Academic English Writing &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    <div class="inst"><a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a></div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Academic Citation Navigator</h1>
+  <div class="badges">
+    <span class="badge">Strong/Narrative &amp; Weak/Parenthetical Citations</span>
+    <span class="badge">Paragraph Structure</span>
+    <span class="badge">Skills Quiz</span>
+  </div>
+  <div class="credit">
+    Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp;
+    <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences, Language Centre</a> &nbsp;·&nbsp;
+    Generated with Claude 4.6
+  </div>
+</div>
+
+<!-- TABS -->
+<nav class="tabs-bar">
+  <button class="tab-btn active" data-tab="browser">📖 Example Browser</button>
+  <button class="tab-btn" data-tab="quiz">📝 Skills Quiz</button>
+  <button class="tab-btn" data-tab="references">📋 References</button>
+  <button class="tab-btn" data-tab="sources">📚 Sources</button>
+</nav>
+
+
+<!-- ══════════ BROWSER ══════════ -->
+<div class="tab-panel active" id="tab-browser">
+<div class="container">
+  <p class="section-intro">Explore each citation example. Click an example in the sidebar to see its formula, the mechanic it uses, and how it fits into a paragraph structure.</p>
+
+  <div class="browser-wrap">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-group-label strong">Strong / Narrative Author</div>
+      <button class="example-btn active-strong" id="btn-1.1" onclick="selectExample('1.1')">Example 1.1<br><span style="font-size:11px;font-weight:400;opacity:.8;">According to</span></button>
+      <button class="example-btn" id="btn-1.2" onclick="selectExample('1.2')">Example 1.2<br><span style="font-size:11px;font-weight:400;opacity:.8;">explain that</span></button>
+      <button class="example-btn" id="btn-1.3" onclick="selectExample('1.3')">Example 1.3<br><span style="font-size:11px;font-weight:400;opacity:.8;">define … as</span></button>
+
+      <div class="sidebar-group-label weak">Weak / Parenthetical Author</div>
+      <button class="example-btn" id="btn-2.1" onclick="selectExample('2.1')">Example 2.1<br><span style="font-size:11px;font-weight:400;opacity:.8;">Passive voice</span></button>
+      <button class="example-btn" id="btn-2.2" onclick="selectExample('2.2')">Example 2.2<br><span style="font-size:11px;font-weight:400;opacity:.8;">"is" statement</span></button>
+    </div>
+
+    <!-- DETAIL PANE -->
+    <div id="detail-pane" class="fade-in"></div>
+
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+
+<!-- ══════════ QUIZ ══════════ -->
+<div class="tab-panel" id="tab-quiz">
+<div class="container">
+
+  <div class="quiz-meta">
+    <div>
+      <h2>Citation Skills Quiz</h2>
+      <p id="q-sub" style="font-size:13px;color:var(--gray-600);margin-top:2px;">Question 1 of 4</p>
+    </div>
+    <div class="score-badge">SCORE: <span id="score">0</span></div>
+  </div>
+
+  <div id="quiz-area"></div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+
+<!-- ══════════ REFERENCES ══════════ -->
+<div class="tab-panel" id="tab-references">
+<div class="container">
+  <p class="section-intro">These are the reference list entries for the sources used in the citation examples. Use these as models for formatting your own reference list.</p>
+
+  <div class="callout tip">
+    <span>💡</span>
+    <span>Reference list formatting follows LAB University guidelines. Always check the official LAB thesis guidelines for the most current requirements.</span>
+  </div>
+
+  <p class="section-label" style="margin-top:24px;">Reference entries</p>
+
+  <div class="ref-item">Hassan, M. M. &amp; Tabasum, M. 2018. Customer profiling and segmentation in retail banks using data mining techniques. <em>International journal of advanced research in computer science.</em> Vol. 9 (4), 24–29. Retrieved on 12 October 2025. Available at DOI 10.26483/ijarcs.v9i4.6172.</div>
+  <div class="ref-item">Kaikkonen, S. 2017. Developing sustainable value proposition for renewable packaging material. Lappeenranta University of Technology. Thesis (Master's degree). Retrieved on 12 October 2025. Available at <a href="https://urn.fi/URN:NBN:fi-fe201702211819" target="_blank">https://urn.fi/URN:NBN:fi-fe201702211819</a></div>
+  <div class="ref-item">Payne, A., Frow, P. &amp; Eggert, A. 2017. The customer value proposition: evolution, development, and application in marketing. <em>Journal of the Academy of Marketing Science,</em> Vol 45 (4), 467–489. Retrieved on 12 October 2025. Available at DOI 10.1007/s11747-017-0523-z.</div>
+  <div class="ref-item">Smith, B. &amp; Wesson, J. 2022. <em>UX Research Essentials.</em> E-book. UX Research Publishers. LAB Primo.</div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+
+<!-- ══════════ SOURCES ══════════ -->
+<div class="tab-panel" id="tab-sources">
+<div class="container">
+  <p class="section-intro">The content of this tool draws on the following academic and institutional sources.</p>
+
+  <details class="accordion" open>
+    <summary>📚 LAB University — Thesis Guidelines</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://elab.lab.fi/en/completing-studies/theses/thesis-bachelors-degree" target="_blank">LAB University of Applied Sciences — Bachelor's Thesis Guidelines</a>
+      <p>The official LAB guidelines for source citation, reference list formatting, and academic writing conventions. <strong>These guidelines take precedence for LAB students.</strong></p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 Academic Phrasebank — University of Manchester</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://www.phrasebank.manchester.ac.uk/referring-to-sources/" target="_blank">Referring to Sources — Academic Phrasebank, University of Manchester</a>
+      <p>A comprehensive reference for academic language patterns, including strong/narrative and weak/parenthetical author citation structures and reporting verb use.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 Reporting Verbs — University of Warwick</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://warwick.ac.uk/fac/soc/al/globalpad-rip/openhouse/academicenglishskills/grammar/reportingverbs/" target="_blank">Reporting Verbs — University of Warwick, Global Pad Open House</a>
+      <p>A practical reference on using reporting verbs in academic writing, directly relevant to strong/narrative author citation patterns.</p>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+
+<script>
+// ── TAB SWITCHING ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+// ── DATA ──
+const examples = {
+  '1.1': {
+    title: 'Strong/Narrative Author: "According to"',
+    type: 'Strong',
+    mechanic: 'according to + [Author (Year, Page)] + [Term] + is',
+    formula: 'According to [Author] ([Year], [Page]), [Term] is [Definition]',
+    topicSentence: 'Value proposition plays a central role in business planning and requires clear definition.',
+    prefix: 'While there are many definitions and some disagreement (Kaikkonen 2017, 34), ',
+    citation: 'according to Payne et al. (2017, 467),',
+    citationType: 'strong',
+    definition: 'value proposition is a strategic tool that a business can use to outline the benefits it offers and the value it creates.',
+    elaboration: '[The rest of the paragraph elaborates on the term with examples and additional sources.]'
+  },
+  '1.2': {
+    title: 'Strong/Narrative Author: Reporting Verb (explain that)',
+    type: 'Strong',
+    mechanic: '[Author (Year, Page)] + explain that + [Term] + is',
+    formula: '[Author] ([Year], [Page]) explain that [Term] is [Definition]',
+    topicSentence: 'Value proposition plays a central role in business planning and requires clear definition.',
+    prefix: 'While there are many definitions and some disagreement (Kaikkonen 2017, 34), ',
+    citation: 'Payne et al. (2017, 467) explain that',
+    citationType: 'strong',
+    definition: 'value proposition is a strategic tool that a business can use to outline the benefits it offers and the value it creates.',
+    elaboration: '[The rest of the paragraph elaborates on the term with examples and additional sources.]'
+  },
+  '1.3': {
+    title: 'Strong/Narrative Author: Reporting Verb (define as)',
+    type: 'Strong',
+    mechanic: '[Author (Year, Page)] + define + [Term] + as',
+    formula: '[Author] ([Year], [Page]) define [Term] as [Definition]',
+    topicSentence: 'Value proposition plays a central role in business planning and requires clear definition.',
+    prefix: 'While there are many definitions and some disagreement (Kaikkonen 2017, 34), ',
+    citation: 'Payne et al. (2017, 467) define',
+    citationType: 'strong',
+    definition: 'value proposition as a strategic tool that a business can use to outline the benefits it offers and the value it creates.',
+    elaboration: '[The rest of the paragraph elaborates on the term with examples and additional sources.]'
+  },
+  '2.1': {
+    title: 'Weak/Parenthetical Author: Passive Voice',
+    type: 'Weak',
+    mechanic: '[Term] + can be defined as + [Definition] + (weak citation)',
+    formula: '[Term] can be defined as [Definition] ([Author] [Year], [Page])',
+    topicSentence: 'Defining the concept of usability is essential for understanding good user experience.',
+    prefix: '',
+    citation: '(Smith & Wesson 2022, 24).',
+    citationType: 'weak',
+    definition: 'Usability can be defined as part of UX research and a core concept in discussions on better user experience',
+    elaboration: '[The rest of the paragraph elaborates on the term with examples and additional sources.]'
+  },
+  '2.2': {
+    title: 'Weak/Parenthetical Author: "is" Statement',
+    type: 'Weak',
+    mechanic: '[Term] + is + [Definition] + (weak citation)',
+    formula: '[Term] is [Definition] ([Author] [Year], [Page])',
+    topicSentence: 'Defining the concept of usability is essential for understanding good user experience.',
+    prefix: '',
+    citation: '(Smith & Wesson 2022, 24).',
+    citationType: 'weak',
+    definition: 'Usability is part of UX research and a core concept in discussions on better user experience',
+    elaboration: '[The rest of the paragraph elaborates on the term with examples and additional sources.]'
+  }
+};
+
+const quizQuestions = [
+  {
+    question: "Which of the following is a characteristic of a Strong/Narrative Author citation?",
+    options: [
+      "The author is placed in parentheses at the end of the sentence.",
+      "The author is integrated as the subject of the sentence (e.g., 'Payne et al. explain...').",
+      "The author's name is only listed in the reference section.",
+      "Passive voice is always used to introduce the author."
+    ],
+    correct: 1,
+    explanation: "In Strong/Narrative Author citations, the author acts as the subject of the sentence, often followed by a reporting verb such as 'explain', 'argue', or 'define'."
+  },
+  {
+    question: "In the Weak/Parenthetical Author examples, how is the source cited?",
+    options: [
+      "A reporting verb like 'defines as' introduces the author.",
+      "The words 'According to' precede the author name.",
+      "A citation in parentheses (e.g., Smith & Wesson 2022, 24) follows the definition.",
+      "A full bibliography entry is included inline."
+    ],
+    correct: 2,
+    explanation: "Weak/Parenthetical Author citations put the emphasis on the information itself and cite the source parenthetically at the end of the sentence."
+  },
+  {
+    question: "What is the primary role of the Topic Sentence in the paragraph structure shown?",
+    options: [
+      "To provide the formal definition of a term.",
+      "To cite the source for the first time.",
+      "To establish context and show why the definition is necessary.",
+      "To conclude the paragraph with a summary."
+    ],
+    correct: 2,
+    explanation: "The Topic Sentence introduces the subject area and highlights the need for clear definition before the specific source is introduced."
+  },
+  {
+    question: "Which reporting verb structure is used in Strong/Narrative Author Example 1.3?",
+    options: ["explain that", "define … as", "according to", "describe"],
+    correct: 1,
+    explanation: "Example 1.3 uses the specific structure: [Author] define [Term] as [Definition]. The verb 'define' is followed by the term, then 'as'."
+  }
+];
+
+// ── STATE ──
+let currentExampleId = '1.1';
+let quizIdx   = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+// ── BROWSER ──
+function selectExample(id) {
+  currentExampleId = id;
+
+  // Update sidebar buttons
+  ['1.1','1.2','1.3','2.1','2.2'].forEach(eid => {
+    const btn = document.getElementById('btn-' + eid);
+    btn.className = 'example-btn';
+    if (eid === id) {
+      btn.classList.add(examples[eid].type === 'Strong' ? 'active-strong' : 'active-weak');
+    }
+  });
+
+  renderDetail();
+}
+
+function renderDetail() {
+  const ex   = examples[currentExampleId];
+  const pane = document.getElementById('detail-pane');
+  const isStrong = ex.type === 'Strong';
+
+  const citationSpan = `<span class="citation-${ex.citationType}">${ex.citation}</span>`;
+  const defSentence  = isStrong
+    ? `${ex.prefix}${citationSpan} ${ex.definition}`
+    : `${ex.definition} ${citationSpan}`;
+
+  pane.innerHTML = `
+    <div class="detail-card fade-in">
+      <span class="type-chip ${isStrong ? 'strong' : 'weak'}">${ex.type === 'Strong' ? 'Strong/Narrative' : 'Weak/Parenthetical'} Author Style</span>
+      <div class="detail-title">${ex.title}</div>
+
+      <div class="formula-box">
+        <div class="formula-label">Formula</div>
+        <code>${ex.formula}</code>
+      </div>
+
+      <p class="section-label" style="margin-top:0;">Paragraph structure</p>
+
+      <div class="para-structure">
+        <div class="para-step">
+          <div class="step-line">
+            <div class="step-dot neutral">1</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-role-label">Topic Sentence</div>
+            <p style="font-size:14px;color:var(--gray-700);">${ex.topicSentence}</p>
+          </div>
+        </div>
+
+        <div class="para-step">
+          <div class="step-line">
+            <div class="step-dot ${isStrong ? 'strong' : 'weak'}">2</div>
+            <div class="step-connector"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-role-label">Definition &amp; Citation</div>
+            <p style="font-size:14px;color:var(--gray-700);line-height:1.7;">${defSentence}</p>
+          </div>
+        </div>
+
+        <div class="para-step">
+          <div class="step-line">
+            <div class="step-dot neutral" style="background:var(--gray-200);color:var(--gray-600);">3</div>
+          </div>
+          <div class="step-content">
+            <div class="step-role-label">Elaboration / Examples</div>
+            <p style="font-size:14px;color:var(--gray-400);font-style:italic;">${ex.elaboration}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout tip" style="margin-top:20px;">
+        <span>🔧</span>
+        <span><strong>Mechanic:</strong> <code style="font-family:'JetBrains Mono',monospace;font-size:12px;">${ex.mechanic}</code></span>
+      </div>
+    </div>
+  `;
+}
+
+// ── QUIZ ──
+function renderQuiz() {
+  const area = document.getElementById('quiz-area');
+
+  if (quizIdx >= quizQuestions.length) {
+    area.innerHTML = `
+      <div class="completion-card fade-in">
+        <div class="completion-icon">🎓</div>
+        <h2>Quiz Complete!</h2>
+        <p>Your score: <span class="score-big">${quizScore} / ${quizQuestions.length}</span></p>
+        <button class="btn-restart" onclick="resetQuiz()">Try Again</button>
+      </div>
+    `;
+    return;
+  }
+
+  quizAnswered = false;
+  const q = quizQuestions[quizIdx];
+  document.getElementById('q-sub').textContent = `Question ${quizIdx + 1} of ${quizQuestions.length}`;
+  document.getElementById('score').textContent = quizScore;
+
+  const optsHtml = q.options.map((opt, i) =>
+    `<button class="quiz-opt" id="qopt-${i}" onclick="handleAnswer(${i})">${opt}</button>`
+  ).join('');
+
+  area.innerHTML = `
+    <div class="quiz-question-card fade-in">
+      <h3>${q.question}</h3>
+      <div class="quiz-options">${optsHtml}</div>
+      <div id="quiz-feedback" style="display:none;"></div>
+      <button class="btn-primary" id="btn-next" style="display:none;" onclick="nextQuestion()">NEXT QUESTION →</button>
+    </div>
+  `;
+}
+
+function handleAnswer(choice) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q = quizQuestions[quizIdx];
+  const isCorrect = choice === q.correct;
+  if (isCorrect) quizScore++;
+  document.getElementById('score').textContent = quizScore;
+
+  q.options.forEach((_, i) => {
+    const btn = document.getElementById('qopt-' + i);
+    btn.disabled = true;
+    if (i === q.correct)                btn.classList.add('correct');
+    else if (i === choice && !isCorrect) btn.classList.add('wrong');
+    else                                 btn.classList.add('faded');
+  });
+
+  const fb = document.getElementById('quiz-feedback');
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'wrong');
+  fb.innerHTML = `<div><h4>${isCorrect ? 'Correct!' : 'Not quite:'}</h4><p>${q.explanation}</p></div>`;
+  fb.style.display = 'block';
+  document.getElementById('btn-next').style.display = 'block';
+}
+
+function nextQuestion() { quizIdx++; renderQuiz(); }
+function resetQuiz()    { quizIdx = 0; quizScore = 0; quizAnswered = false; renderQuiz(); }
+
+// ── INIT ──
+window.onload = () => { renderDetail(); renderQuiz(); };
+</script>
+</body>
+</html>
