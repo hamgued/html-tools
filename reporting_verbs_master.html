@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reporting Verbs Master</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:        #1a56db;
+    --blue-light:  #e8f0fe;
+    --blue-dark:   #1e3a8a;
+    --green:       #057a55;
+    --green-light: #def7ec;
+    --yellow:      #c27803;
+    --yellow-light:#fdf6b2;
+    --orange:      #c2500a;
+    --purple:      #7c3aed;
+    --purple-light:#ede9fe;
+    --red:         #dc2626;
+    --red-light:   #fee2e2;
+    --gray-50:     #f9fafb;
+    --gray-100:    #f3f4f6;
+    --gray-200:    #e5e7eb;
+    --gray-600:    #4b5563;
+    --gray-700:    #374151;
+    --gray-800:    #1f2937;
+    --gray-900:    #111827;
+    --radius:      8px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--gray-800);
+    background: var(--gray-50);
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .site-header .course-name { font-size: 13px; font-weight: 600; color: var(--gray-600); letter-spacing: .02em; }
+  .site-header a { color: var(--blue); text-decoration: none; }
+  .site-header a:hover { text-decoration: underline; }
+  .site-header .inst { font-size: 12px; color: #9ca3af; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1a56db 60%, #2563eb 100%);
+    color: white;
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+  .hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 700; margin-bottom: 10px; line-height: 1.25; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+  .badge { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 500; }
+  .credit { font-size: 12px; opacity: .6; margin-top: 4px; }
+  .credit a { color: white; }
+
+  /* ── TABS ── */
+  .tabs-bar {
+    background: white;
+    border-bottom: 2px solid var(--gray-200);
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 57px;
+    z-index: 99;
+  }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    border: none;
+    background: none;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color .15s, border-color .15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── CONTENT ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .container { max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; }
+  .section-intro { font-size: 14px; color: var(--gray-600); margin-bottom: 20px; }
+
+  /* ── ACCORDION ── */
+  .accordion { border: 1px solid #b2dce8; border-radius: var(--radius); margin-bottom: 10px; background: white; overflow: hidden; }
+  .accordion summary {
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    user-select: none;
+    background: #e8f6f9;
+    color: #1a4a56;
+  }
+  .accordion summary::-webkit-details-marker { display: none; }
+  .accordion summary::after { content: '▾'; margin-left: auto; font-size: 12px; color: #4a8fa0; transition: transform .2s; }
+  .accordion[open] summary::after { transform: rotate(180deg); }
+  .accordion summary:hover { background: #d4eef4; }
+  .accordion-body { padding: 0 18px 18px; border-top: 1px solid #b2dce8; font-size: 14px; color: var(--gray-700); }
+  .accordion-body p { margin-top: 10px; }
+
+  /* ── ROLE CHIPS ── */
+  .role-chip {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+    border-radius: 999px; padding: 2px 9px; flex-shrink: 0; color: white;
+  }
+  .chip-neutral   { background: var(--blue); }
+  .chip-tentative { background: var(--yellow); }
+  .chip-strong    { background: var(--green); }
+
+  /* ── EXAMPLES ── */
+  .examples-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); margin: 14px 0 6px; }
+  .example-item {
+    background: var(--gray-100); color: var(--gray-900); border-radius: 6px;
+    padding: 8px 14px; font-family: 'Courier New', monospace; font-size: 13px;
+    line-height: 1.65; margin-bottom: 6px; border: 1px solid var(--gray-200);
+  }
+  .example-item .verb { color: var(--blue); font-weight: 700; }
+
+  /* ── CALLOUTS ── */
+  .callout { border-radius: var(--radius); padding: 12px 16px; margin: 14px 0 4px; font-size: 13.5px; display: flex; gap: 10px; }
+  .callout.info    { background: var(--blue-light);    border-left: 3px solid var(--blue);   color: #1e3a8a; }
+  .callout.warn    { background: var(--yellow-light);  border-left: 3px solid var(--yellow); color: #78350f; }
+  .callout.success { background: var(--green-light);   border-left: 3px solid var(--green);  color: #064e3b; }
+  .callout.tip     { background: #e8f6f9; border-left: 3px solid #4a8fa0; color: #1a4a56; }
+
+  /* ── SECTION LABEL ── */
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); margin: 28px 0 10px; }
+
+  /* ── BACK TO TOP ── */
+  .back-top { display: inline-block; margin-top: 24px; font-size: 13px; color: var(--blue); cursor: pointer; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── STRENGTH GRID (Study Guide) ── */
+  .strength-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+  @media (max-width: 600px) { .strength-grid { grid-template-columns: 1fr; } }
+
+  .strength-card { border-radius: var(--radius); border: 2px solid; padding: 20px; }
+  .strength-card.tentative { background: var(--yellow-light); border-color: #fbbf24; color: #78350f; }
+  .strength-card.neutral   { background: var(--blue-light);   border-color: #93c5fd; color: #1e3a8a; }
+  .strength-card.strong    { background: var(--green-light);  border-color: #6ee7b7; color: #064e3b; }
+  .strength-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .strength-card p  { font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
+
+  .verb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .verb-chip  { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; border: 1px solid rgba(0,0,0,.1); background: rgba(255,255,255,.6); }
+
+  /* ── GRAMMAR GRID ── */
+  .grammar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+  @media (max-width: 500px) { .grammar-grid { grid-template-columns: 1fr; } }
+  .grammar-card { background: var(--yellow-light); border: 1px solid #fde68a; border-radius: var(--radius); padding: 14px 16px; }
+  .grammar-card h4 { font-size: 13px; font-weight: 700; color: #78350f; margin-bottom: 6px; }
+  .grammar-card p  { font-size: 12.5px; color: #92400e; margin-bottom: 8px; }
+  .grammar-example {
+    background: rgba(255,255,255,.7); border: 1px solid #fcd34d; border-radius: 5px;
+    padding: 6px 10px; font-size: 12px; line-height: 1.8;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* ── SORTING GAME ── */
+  .sort-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+  .sort-header h2 { font-size: 18px; font-weight: 700; color: var(--gray-800); }
+  .sort-header p  { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+
+  .btn-secondary {
+    padding: 8px 16px; background: var(--gray-100); border: 1px solid var(--gray-200);
+    border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif; color: var(--gray-700); transition: background .15s;
+    white-space: nowrap;
+  }
+  .btn-secondary:hover { background: var(--gray-200); }
+
+  .sort-verbs {
+    display: flex; flex-wrap: wrap; gap: 10px; min-height: 80px; padding: 16px;
+    background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 24px;
+  }
+  .sort-verb-btn {
+    padding: 8px 18px; border: 2px solid var(--gray-200); border-radius: var(--radius);
+    background: white; font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif; color: var(--gray-800); transition: all .15s;
+  }
+  .sort-verb-btn:hover:not(.placed) { border-color: var(--blue); color: var(--blue); }
+  .sort-verb-btn.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,219,.15); }
+  .sort-verb-btn.correct-tentative { background: var(--yellow-light); border-color: #f59e0b; color: #78350f; pointer-events: none; }
+  .sort-verb-btn.correct-neutral   { background: var(--blue-light);   border-color: var(--blue); color: #1e3a8a; pointer-events: none; }
+  .sort-verb-btn.correct-strong    { background: var(--green-light);  border-color: var(--green); color: #064e3b; pointer-events: none; }
+  .sort-verb-btn.incorrect { background: var(--red-light); border-color: var(--red); color: var(--red); animation: shake .35s; }
+
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  .sort-buckets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 500px) { .sort-buckets { grid-template-columns: 1fr; } }
+
+  .bucket {
+    border-radius: var(--radius); border: 2px dashed; padding: 20px 12px; min-height: 80px;
+    cursor: pointer; transition: all .15s; text-align: center;
+  }
+  .bucket.tentative { border-color: #f59e0b; background: #fffbeb; }
+  .bucket.tentative:hover, .bucket.tentative.active { background: var(--yellow-light); border-style: solid; transform: scale(1.02); }
+  .bucket.neutral   { border-color: #93c5fd; background: #eff6ff; }
+  .bucket.neutral:hover, .bucket.neutral.active { background: var(--blue-light); border-style: solid; transform: scale(1.02); }
+  .bucket.strong    { border-color: #6ee7b7; background: #f0fdf4; }
+  .bucket.strong:hover, .bucket.strong.active { background: var(--green-light); border-style: solid; transform: scale(1.02); }
+  .bucket-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .bucket.tentative .bucket-label { color: #92400e; }
+  .bucket.neutral   .bucket-label { color: #1e3a8a; }
+  .bucket.strong    .bucket-label { color: #064e3b; }
+
+  /* ── CHALLENGE QUIZ ── */
+  .quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 8px; }
+  .quiz-meta h2 { font-size: 18px; font-weight: 700; }
+  .quiz-meta p  { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+  .score-badge { background: var(--blue); color: white; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+
+  .quiz-context { background: var(--gray-900); color: white; padding: 20px 24px; border-radius: var(--radius); margin-bottom: 16px; }
+  .quiz-context .ctx-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #818cf8; margin-bottom: 8px; }
+  .quiz-context p { font-size: 15px; font-style: italic; line-height: 1.6; }
+
+  .quiz-sentence {
+    background: white; border: 2px solid var(--gray-200); border-radius: var(--radius);
+    padding: 20px 24px; font-size: 16px; font-weight: 500; margin-bottom: 20px; line-height: 1.8;
+  }
+  .blank { display: inline-block; min-width: 130px; border-bottom: 3px solid var(--blue); color: var(--blue); font-weight: 700; text-align: center; padding: 0 6px; transition: color .2s; }
+
+  .quiz-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  @media (max-width: 500px) { .quiz-options { grid-template-columns: 1fr; } }
+
+  .quiz-opt {
+    padding: 14px 12px; border: 2px solid var(--gray-200); border-radius: var(--radius);
+    background: white; font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif; color: var(--gray-800); transition: all .15s;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+  .quiz-opt.correct { background: var(--green-light); border-color: var(--green); color: #064e3b; }
+  .quiz-opt.wrong   { background: var(--red-light);   border-color: var(--red);   color: var(--red); }
+  .quiz-opt.faded   { opacity: .35; }
+  .quiz-opt:disabled { cursor: default; }
+
+  .quiz-feedback {
+    border-radius: var(--radius); padding: 16px 18px; margin-bottom: 16px;
+    display: flex; gap: 12px; align-items: flex-start; font-size: 14px;
+  }
+  .quiz-feedback.correct { background: var(--green-light); border: 1px solid #a7f3d0; color: #064e3b; }
+  .quiz-feedback.wrong   { background: var(--red-light);   border: 1px solid #fca5a5; color: #7f1d1d; }
+  .quiz-feedback .icon { font-size: 20px; flex-shrink: 0; line-height: 1.4; }
+  .quiz-feedback h4 { font-weight: 700; margin-bottom: 4px; }
+
+  .btn-primary {
+    width: 100%; padding: 14px; background: var(--blue); color: white; border: none;
+    border-radius: var(--radius); font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: background .15s; letter-spacing: .04em;
+  }
+  .btn-primary:hover { background: var(--blue-dark); }
+
+  /* ── SOURCES ── */
+  .source-link { display: inline-block; margin: 10px 0 4px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div>
+    <div class="course-name">Academic English Writing &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    <div class="inst"><a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a></div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Reporting Verbs Master</h1>
+  <div class="badges">
+    <span class="badge">Academic English</span>
+    <span class="badge">Study · Sort · Quiz</span>
+  </div>
+  <div class="credit">Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp; <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences, Language Centre</a> &nbsp;·&nbsp; Generated with Claude 4.6</div>
+</div>
+
+<!-- TABS -->
+<nav class="tabs-bar">
+  <button class="tab-btn active" data-tab="guide">📖 Study Guide</button>
+  <button class="tab-btn" data-tab="sort">🎮 Sorting Game</button>
+  <button class="tab-btn" data-tab="quiz">📝 Challenge Quiz</button>
+  <button class="tab-btn" data-tab="sources">📚 Sources</button>
+</nav>
+
+<!-- ══════════ STUDY GUIDE ══════════ -->
+<div class="tab-panel active" id="tab-guide">
+<div class="container">
+  <p class="section-intro">Reporting verbs signal your academic stance towards a source. Are you being cautious? Making a firm argument? Or simply reporting an observation? The verb you choose tells the reader.</p>
+
+  <div class="strength-grid">
+    <div class="strength-card tentative">
+      <h3>🟡 Tentative</h3>
+      <p>Used when the writer is being hesitant or speculative — not 100% certain of the claim.</p>
+      <div class="verb-chips">
+        <span class="verb-chip">suggest</span><span class="verb-chip">speculate</span>
+        <span class="verb-chip">imply</span><span class="verb-chip">propose</span>
+        <span class="verb-chip">hypothesize</span><span class="verb-chip">postulate</span>
+        <span class="verb-chip">recommend</span><span class="verb-chip">moot</span>
+        <span class="verb-chip">intimate</span>
+      </div>
+    </div>
+    <div class="strength-card neutral">
+      <h3>🔵 Neutral</h3>
+      <p>Used to describe facts, methodology, or observations without making a judgment.</p>
+      <div class="verb-chips">
+        <span class="verb-chip">describe</span><span class="verb-chip">show</span>
+        <span class="verb-chip">reveal</span><span class="verb-chip">note</span>
+        <span class="verb-chip">point out</span><span class="verb-chip">indicate</span>
+        <span class="verb-chip">report</span><span class="verb-chip">observe</span>
+        <span class="verb-chip">state</span><span class="verb-chip">examine</span>
+      </div>
+    </div>
+    <div class="strength-card strong">
+      <h3>🟢 Strong</h3>
+      <p>Used when the writer is making a firm claim or is prepared to defend their argument.</p>
+      <div class="verb-chips">
+        <span class="verb-chip">argue</span><span class="verb-chip">claim</span>
+        <span class="verb-chip">emphasize</span><span class="verb-chip">contend</span>
+        <span class="verb-chip">maintain</span><span class="verb-chip">assert</span>
+        <span class="verb-chip">refute</span><span class="verb-chip">reject</span>
+        <span class="verb-chip">challenge</span><span class="verb-chip">deny</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label" style="margin-top:28px;">Verb categories in context</p>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-tentative">Tentative</span> suggest · hypothesize · imply · propose</summary>
+    <div class="accordion-body">
+      <p>Use these when the evidence is preliminary or when the author is being cautious about their claim. They signal appropriate academic hedging.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item">Smith (2021) <span class="verb">suggests</span> that remote work may <span class="verb">improve</span> productivity in certain contexts.</div>
+      <div class="example-item">The data <span class="verb">implies</span> a link between sleep deprivation and poor academic performance.</div>
+      <div class="example-item">The team <span class="verb">hypothesizes</span> a new mechanism for dark matter distribution.</div>
+      <div class="example-item">The researcher <span class="verb">proposes</span> that early intervention <span class="verb">could reduce</span> dropout rates significantly.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-neutral">Neutral</span> describe · indicate · note · show · report</summary>
+    <div class="accordion-body">
+      <p>Use these to report findings, observations, or methodology without adding a stance. These are the most frequent verbs in academic writing.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item">The study <span class="verb">describes</span> how temperature <span class="verb">affects</span> the rate of the chemical reaction.</div>
+      <div class="example-item">The latest figures <span class="verb">indicate</span> a significant increase in urban migration.</div>
+      <div class="example-item">Johnson (2019) <span class="verb">notes</span> that feedback frequency <span class="verb">varies</span> considerably across institutions.</div>
+      <div class="example-item">The survey <span class="verb">reveals</span> a strong preference for online learning among respondents.</div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary><span class="role-chip chip-strong">Strong</span> argue · contend · refute · assert · challenge</summary>
+    <div class="accordion-body">
+      <p>Use these when the author is making a firm, defensible claim, or actively disagreeing with an existing position.</p>
+      <p class="examples-label">Examples</p>
+      <div class="example-item">Miller (2020) <span class="verb">argues</span> that the current economic model <span class="verb">is</span> fundamentally unsustainable.</div>
+      <div class="example-item">Dr. Aris <span class="verb">refutes</span> the long-held theory that taxes always <span class="verb">reduce</span> economic growth.</div>
+      <div class="example-item">The author <span class="verb">challenges</span> the widely held view that grammar instruction <span class="verb">is</span> unnecessary.</div>
+      <div class="example-item">She <span class="verb">maintains</span> that the original findings <span class="verb">remain</span> valid despite recent criticism.</div>
+    </div>
+  </details>
+
+  <p class="section-label">Grammar rules</p>
+
+  <div class="callout warn">
+    <span>⚠️</span>
+    <div>
+      <strong>Two rules to master</strong><br>
+      <span style="font-size:13px;">These are the two most common grammar errors students make when using reporting verbs in academic writing.</span>
+    </div>
+  </div>
+
+  <div class="grammar-grid">
+    <div class="grammar-card">
+      <h4>1. The Third-Person -s</h4>
+      <p>When the subject is singular (e.g., Smith, the author, the study), add <strong>-s</strong> to the verb.</p>
+      <div class="grammar-example">
+        ✅ Smith <strong>argues</strong>…<br>
+        ❌ Smith <strong>argue</strong>…<br>
+        ✅ The study <strong>shows</strong>…<br>
+        ❌ The study <strong>show</strong>…
+      </div>
+    </div>
+    <div class="grammar-card">
+      <h4>2. Present Tense Choice</h4>
+      <p>Use Present Simple to bring past research into the current academic conversation.</p>
+      <div class="grammar-example">
+        ✅ Jones <strong>suggests</strong> that…<br>
+        ❌ Jones <strong>suggested</strong> that…<br>
+        ✅ The data <strong>show</strong> that…
+      </div>
+    </div>
+  </div>
+
+  <div class="callout tip" style="margin-top:16px;">
+    <span>💡</span>
+    <span><strong>Exception:</strong> Use past tense when you cite a specific completed study — e.g., <em>"Smith (2018) <strong>found</strong> that…"</em> — especially when the year appears next to the author's name. This treats the research as a completed event in time.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ SORTING GAME ══════════ -->
+<div class="tab-panel" id="tab-sort">
+<div class="container">
+  <div class="sort-header">
+    <div>
+      <h2>Sorting Game <span id="round-label" style="color:var(--gray-600);font-size:14px;font-weight:500;">— Round <span id="round-num">1</span> of 5</span></h2>
+      <p>Click a verb to select it, then click the correct bucket to place it.</p>
+    </div>
+    <button class="btn-secondary" onclick="nextRound()">Next Round ›</button>
+  </div>
+
+  <div class="sort-verbs" id="sort-verbs"></div>
+
+  <div class="sort-buckets">
+    <div class="bucket tentative" id="bucket-tentative" onclick="placeToBucket('tentative')">
+      <div class="bucket-label">🟡 Tentative</div>
+    </div>
+    <div class="bucket neutral" id="bucket-neutral" onclick="placeToBucket('neutral')">
+      <div class="bucket-label">🔵 Neutral</div>
+    </div>
+    <div class="bucket strong" id="bucket-strong" onclick="placeToBucket('strong')">
+      <div class="bucket-label">🟢 Strong</div>
+    </div>
+  </div>
+
+  <div class="callout tip" style="margin-top:20px;">
+    <span>💡</span>
+    <span>Select a verb above, then tap a bucket below. Correctly placed verbs stay coloured; incorrect ones shake. Use <strong>Next Round ›</strong> to try a new set.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ CHALLENGE QUIZ ══════════ -->
+<div class="tab-panel" id="tab-quiz">
+<div class="container">
+  <div class="quiz-meta">
+    <div>
+      <h2>Challenge Quiz</h2>
+      <p>Question <span id="q-num">1</span> of <span id="q-total">10</span></p>
+    </div>
+    <div class="score-badge">SCORE: <span id="score">0</span></div>
+  </div>
+
+  <div class="quiz-context">
+    <div class="ctx-label">Context</div>
+    <p id="q-context"></p>
+  </div>
+
+  <div class="quiz-sentence" id="q-sentence"></div>
+
+  <div class="quiz-options" id="q-options"></div>
+
+  <div id="q-feedback" style="display:none;"></div>
+
+  <button class="btn-primary" id="btn-next" style="display:none;" onclick="nextQuestion()">NEXT QUESTION →</button>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ SOURCES ══════════ -->
+<div class="tab-panel" id="tab-sources">
+<div class="container">
+  <p class="section-intro">The content of this tool draws on the following academic and institutional sources. Where LAB guidelines and external sources differ, follow LAB guidelines.</p>
+
+  <details class="accordion">
+    <summary>📚 LAB University — Thesis Guidelines</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://elab.lab.fi/en/completing-studies/theses/thesis-bachelors-degree" target="_blank">LAB University of Applied Sciences — Bachelor's Thesis Guidelines</a>
+      <p>The official LAB guidelines for completing a bachelor's thesis, including structure, formatting, and referencing requirements. Reporting verb choice is directly relevant to stance-marking in LAB theses. <strong>These guidelines take precedence for LAB students.</strong></p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 Reporting Verbs — University of Warwick</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://warwick.ac.uk/fac/soc/al/globalpad-rip/openhouse/academicenglishskills/grammar/reportingverbs/" target="_blank">Reporting Verbs — University of Warwick, Global Pad Open House</a>
+      <p>A practical reference on using reporting verbs in academic writing, including the distinction between strong, neutral, and tentative verbs. The primary source for the verb categories in this tool.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 Academic Phrasebank — University of Manchester</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://www.phrasebank.manchester.ac.uk/referring-to-sources/" target="_blank">Referring to Sources — Academic Phrasebank, University of Manchester</a>
+      <p>A comprehensive resource for academic phrases, including how to frame source attribution using reporting verbs across different rhetorical functions.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 Verb Tense — APA Style</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://apastyle.apa.org/style-grammar-guidelines/grammar/verb-tense" target="_blank">Verb Tense — APA Style Guidelines</a>
+      <p>APA guidance on verb tense across different sections of a research paper, relevant to understanding when present vs. past tense is appropriate when citing sources.</p>
+      <div class="callout warn" style="margin-top:14px;">
+        <span>⚠️</span>
+        <span>For in-text citations and references in LAB theses, follow LAB guidelines rather than APA.</span>
+      </div>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 Academic Writing — Purdue OWL</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://owl.purdue.edu/owl/general_writing/academic_writing/index.html" target="_blank">Academic Writing — Purdue Online Writing Lab (OWL)</a>
+      <p>A broad academic writing reference covering grammar, style, and structure. Useful supplementary reading on verb choice, hedging language, and academic register.</p>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<script>
+  // ── TAB SWITCHING ──
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const panels  = document.querySelectorAll('.tab-panel');
+
+  tabBtns.forEach(btn => btn.addEventListener('click', () => {
+    tabBtns.forEach(b => b.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }));
+
+  // ── SORTING GAME ──
+  const sortGames = [
+    [{w:'argue',cat:'strong'},{w:'suggest',cat:'tentative'},{w:'show',cat:'neutral'},{w:'claim',cat:'strong'},{w:'imply',cat:'tentative'},{w:'describe',cat:'neutral'}],
+    [{w:'refute',cat:'strong'},{w:'hypothesize',cat:'tentative'},{w:'observe',cat:'neutral'},{w:'reject',cat:'strong'},{w:'speculate',cat:'tentative'},{w:'examine',cat:'neutral'}],
+    [{w:'contend',cat:'strong'},{w:'postulate',cat:'tentative'},{w:'indicate',cat:'neutral'},{w:'assert',cat:'strong'},{w:'propose',cat:'tentative'},{w:'report',cat:'neutral'}],
+    [{w:'maintain',cat:'strong'},{w:'moot',cat:'tentative'},{w:'state',cat:'neutral'},{w:'deny',cat:'strong'},{w:'intimate',cat:'tentative'},{w:'note',cat:'neutral'}],
+    [{w:'challenge',cat:'strong'},{w:'recommend',cat:'tentative'},{w:'reveal',cat:'neutral'},{w:'emphasize',cat:'strong'},{w:'hypothesize',cat:'tentative'},{w:'point out',cat:'neutral'}],
+  ];
+
+  let sortRound = 0;
+  let selectedIdx = null;
+  let sortState = {};
+
+  function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+  function loadRound() {
+    selectedIdx = null;
+    sortState = {};
+    document.getElementById('round-num').textContent = sortRound + 1;
+    const verbs = shuffle(sortGames[sortRound]);
+    const container = document.getElementById('sort-verbs');
+    container.innerHTML = '';
+    verbs.forEach((v, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'sort-verb-btn';
+      btn.textContent = v.w;
+      btn.dataset.idx = i;
+      btn.dataset.cat = v.cat;
+      btn.addEventListener('click', () => selectVerb(i));
+      container.appendChild(btn);
+    });
+  }
+
+  function selectVerb(idx) {
+    if (sortState[idx]) return;
+    selectedIdx = idx;
+    document.querySelectorAll('.sort-verb-btn').forEach((btn, i) => {
+      if (!sortState[i]) btn.classList.toggle('selected', i === idx);
+    });
+  }
+
+  function placeToBucket(bucket) {
+    if (selectedIdx === null) return;
+    const btns = document.querySelectorAll('.sort-verb-btn');
+    const btn = btns[selectedIdx];
+    if (bucket === btn.dataset.cat) {
+      btn.classList.remove('selected');
+      btn.classList.add('correct-' + btn.dataset.cat);
+      sortState[selectedIdx] = true;
+    } else {
+      btn.classList.remove('selected');
+      btn.classList.add('incorrect');
+      setTimeout(() => btn.classList.remove('incorrect'), 400);
+    }
+    selectedIdx = null;
+  }
+
+  function nextRound() {
+    sortRound = (sortRound + 1) % sortGames.length;
+    loadRound();
+  }
+
+  // ── CHALLENGE QUIZ ──
+  const questions = [
+    { context: "The researcher found some early evidence, but more studies are needed to be sure.", sentence: "The researcher ________ that the new drug might be effective.", options: ["claims","suggests","notes"], correct: "suggests", explanation: "'Suggests' is tentative. Since the evidence is early and more studies are needed, a cautious verb is best." },
+    { context: "The author has a very firm opinion and is ready to defend it against critics.", sentence: "Professor Miller ________ that the current economic model is failing.", options: ["mentions","speculates","contends"], correct: "contends", explanation: "'Contends' is a strong verb. It matches the author's firm opinion and readiness to defend their stance." },
+    { context: "A simple description of what happened in the experiment.", sentence: "The study ________ how the temperature affected the chemical reaction.", options: ["argues","describes","hypothesizes"], correct: "describes", explanation: "'Describes' is neutral. It states what the study does without adding a level of certainty or argument." },
+    { context: "The writer is guessing about a future outcome based on very little data.", sentence: "The economist ________ that the market will crash next year.", options: ["speculates","states","emphasizes"], correct: "speculates", explanation: "'Speculates' is tentative. It is perfect when you don't have enough data to support a confident claim." },
+    { context: "The author completely disagrees with a previous theory and provides proof against it.", sentence: "Dr. Aris ________ the theory that gravity is a social construct.", options: ["notes","refutes","suggests"], correct: "refutes", explanation: "'Refutes' is a strong verb used to show absolute disagreement backed by evidence." },
+    { context: "The researcher is explaining the steps they took in the lab.", sentence: "This section ________ the methodology used to collect the samples.", options: ["argues","outlines","postulates"], correct: "outlines", explanation: "When describing methodology or steps, neutral verbs like 'outlines' or 'describes' are standard choices." },
+    { context: "The author has held the same firm position for twenty years despite constant criticism.", sentence: "She ________ that the original findings remain valid today.", options: ["maintains","implies","mentions"], correct: "maintains", explanation: "'Maintains' is a strong verb. It indicates a persistent, firm belief held over time and under pressure." },
+    { context: "The scientists are proposing a new idea that has not been tested yet.", sentence: "The team ________ a new theory for dark matter distribution.", options: ["reveals","states","hypothesizes"], correct: "hypothesizes", explanation: "'Hypothesizes' is tentative. It is the correct academic term for a theory that is still being tested." },
+    { context: "The researcher points to specific evidence that contradicts a common belief.", sentence: "The data ________ the widely held view that high taxes always hurt growth.", options: ["challenges","shows","recommends"], correct: "challenges", explanation: "'Challenges' is a strong verb showing that the author is actively questioning an existing belief." },
+    { context: "The statistics simply provide a clear, factual link without arguing for a specific policy.", sentence: "The latest figures ________ a significant increase in urban migration.", options: ["argue","indicate","speculate"], correct: "indicate", explanation: "'Indicate' is a neutral verb. It presents factual data or trends without adding personal judgment." },
+  ];
+
+  let qIndex = 0;
+  let score = 0;
+  let answered = false;
+
+  function renderQuestion() {
+    const q = questions[qIndex];
+    answered = false;
+    document.getElementById('q-num').textContent = qIndex + 1;
+    document.getElementById('q-total').textContent = questions.length;
+    document.getElementById('score').textContent = score;
+    document.getElementById('q-context').textContent = '\u201c' + q.context + '\u201d';
+
+    const parts = q.sentence.split('________');
+    document.getElementById('q-sentence').innerHTML =
+      parts[0] + '<span class="blank" id="blank-span">__________</span>' + parts[1];
+
+    const optContainer = document.getElementById('q-options');
+    optContainer.innerHTML = '';
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-opt';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => handleAnswer(opt));
+      optContainer.appendChild(btn);
+    });
+
+    document.getElementById('q-feedback').style.display = 'none';
+    document.getElementById('btn-next').style.display = 'none';
+  }
+
+  function handleAnswer(chosen) {
+    if (answered) return;
+    answered = true;
+    const q = questions[qIndex];
+    const isCorrect = chosen === q.correct;
+    if (isCorrect) score++;
+    document.getElementById('score').textContent = score;
+
+    const blank = document.getElementById('blank-span');
+    blank.textContent = chosen;
+    blank.style.borderBottomColor = isCorrect ? 'var(--green)' : 'var(--red)';
+    blank.style.color = isCorrect ? 'var(--green)' : 'var(--red)';
+
+    document.querySelectorAll('.quiz-opt').forEach(btn => {
+      btn.disabled = true;
+      if (btn.textContent === q.correct)                 btn.classList.add('correct');
+      else if (btn.textContent === chosen && !isCorrect) btn.classList.add('wrong');
+      else                                               btn.classList.add('faded');
+    });
+
+    const fb = document.getElementById('q-feedback');
+    fb.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'wrong');
+    fb.innerHTML = `<div class="icon">${isCorrect ? '✅' : '❌'}</div><div><h4>${isCorrect ? 'Excellent!' : 'Learn for next time:'}</h4><p>${q.explanation}</p></div>`;
+    fb.style.display = 'flex';
+    document.getElementById('btn-next').style.display = 'block';
+  }
+
+  function nextQuestion() {
+    qIndex = (qIndex + 1) % questions.length;
+    renderQuestion();
+  }
+
+  // ── INIT ──
+  loadRound();
+  renderQuestion();
+</script>
+</body>
+</html>
