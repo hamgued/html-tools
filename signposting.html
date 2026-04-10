@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academic Signposting &amp; Punctuation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:        #1a56db;
+  --blue-light:  #e8f0fe;
+  --blue-dark:   #1e3a8a;
+  --green:       #057a55;
+  --green-light: #def7ec;
+  --yellow:      #c27803;
+  --yellow-light:#fdf6b2;
+  --orange:      #c2500a;
+  --purple:      #7c3aed;
+  --purple-light:#ede9fe;
+  --red:         #dc2626;
+  --red-light:   #fee2e2;
+  --gray-50:     #f9fafb;
+  --gray-100:    #f3f4f6;
+  --gray-200:    #e5e7eb;
+  --gray-400:    #9ca3af;
+  --gray-600:    #4b5563;
+  --gray-700:    #374151;
+  --gray-800:    #1f2937;
+  --gray-900:    #111827;
+  --radius:      8px;
+}
+
+body { font-family:'Inter',sans-serif; font-size:15px; line-height:1.6; color:var(--gray-800); background:var(--gray-50); }
+
+/* ── HEADER ── */
+.site-header { background:white; border-bottom:1px solid var(--gray-200); padding:12px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; position:sticky; top:0; z-index:100; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.site-header .course-name { font-size:13px; font-weight:600; color:var(--gray-600); }
+.site-header a { color:var(--blue); text-decoration:none; }
+.site-header a:hover { text-decoration:underline; }
+.site-header .inst { font-size:12px; color:var(--gray-400); }
+
+/* ── HERO ── */
+.hero { background:linear-gradient(135deg,#1e3a8a 0%,#1a56db 60%,#2563eb 100%); color:white; padding:48px 24px 40px; text-align:center; }
+.hero h1 { font-size:clamp(22px,4vw,32px); font-weight:700; margin-bottom:10px; line-height:1.25; }
+.badges { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:28px; }
+.badge { background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3); border-radius:999px; padding:4px 14px; font-size:13px; font-weight:500; }
+.credit { font-size:12px; opacity:.6; margin-top:4px; }
+.credit a { color:white; }
+
+/* ── TABS ── */
+.tabs-bar { background:white; border-bottom:2px solid var(--gray-200); display:flex; justify-content:center; overflow-x:auto; scrollbar-width:none; position:sticky; top:57px; z-index:99; }
+.tabs-bar::-webkit-scrollbar { display:none; }
+.tab-btn { padding:14px 18px; font-size:13px; font-weight:600; color:var(--gray-600); border:none; background:none; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; margin-bottom:-2px; transition:color .15s,border-color .15s; font-family:'Inter',sans-serif; }
+.tab-btn:hover { color:var(--blue); }
+.tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+
+/* ── PANELS ── */
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+.container { max-width:860px; margin:0 auto; padding:32px 20px 80px; }
+.section-intro { font-size:14px; color:var(--gray-600); margin-bottom:24px; line-height:1.7; }
+
+/* ── ACCORDION ── */
+.accordion { border:1px solid #b2dce8; border-radius:var(--radius); margin-bottom:10px; background:white; position:relative; }
+.accordion summary { padding:14px 18px; font-weight:600; font-size:14px; cursor:pointer; display:flex; align-items:center; gap:8px; list-style:none; user-select:none; background:#e8f6f9; color:#1a4a56; border-radius:var(--radius); }
+.accordion[open] summary { border-radius:var(--radius) var(--radius) 0 0; }
+.accordion summary::-webkit-details-marker { display:none; }
+.accordion summary::after { content:'▾'; margin-left:auto; font-size:12px; color:#4a8fa0; transition:transform .2s; }
+.accordion[open] summary::after { transform:rotate(180deg); }
+.accordion summary:hover { background:#d4eef4; }
+.accordion-body { padding:16px 18px 18px; border-top:1px solid #b2dce8; font-size:14px; color:var(--gray-700); }
+
+/* ── CALLOUTS ── */
+.callout { border-radius:var(--radius); padding:12px 16px; margin:14px 0 4px; font-size:13.5px; display:flex; gap:10px; }
+.callout.warn  { background:var(--yellow-light); border-left:3px solid var(--yellow); color:#78350f; }
+.callout.tip   { background:#e8f6f9; border-left:3px solid #4a8fa0; color:#1a4a56; }
+.callout.info  { background:var(--blue-light); border-left:3px solid var(--blue); color:#1e3a8a; }
+
+/* ── EXAMPLE ITEMS ── */
+.example-item { background:var(--gray-100); color:var(--gray-900); border-radius:6px; padding:8px 14px; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.65; margin-bottom:6px; border:1px solid var(--gray-200); }
+.example-item .verb { color:var(--blue); font-weight:700; }
+
+/* ── WORD GRID ── */
+.word-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+@media(max-width:520px){ .word-grid { grid-template-columns:1fr 1fr; } }
+
+.word-chip { background:var(--blue-light); border:1px solid #93c5fd; border-radius:var(--radius); padding:10px 14px; color:var(--blue-dark); font-size:13.5px; font-weight:600; text-align:center; font-family:'JetBrains Mono',monospace; }
+
+/* ── SENTENCE EXAMPLE ── */
+.sentence-example { background:var(--gray-50); border-left:3px solid var(--blue); border-radius:0 var(--radius) var(--radius) 0; padding:12px 16px; font-style:italic; color:var(--gray-700); font-size:14px; margin-top:4px; line-height:1.7; }
+.sentence-example strong { color:var(--blue-dark); font-style:normal; }
+
+/* ── PUNCTUATION RULE CARD ── */
+.rule-box { background:white; border:1px solid var(--gray-200); border-radius:var(--radius); padding:20px 24px; margin-bottom:24px; }
+.rule-box h3 { font-size:15px; font-weight:700; color:var(--gray-800); margin-bottom:10px; }
+.rule-box p  { font-size:14px; color:var(--gray-700); margin-bottom:14px; line-height:1.7; }
+.option-row  { font-size:14px; color:var(--gray-700); margin-bottom:8px; line-height:1.7; }
+.option-row code { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--gray-100); border:1px solid var(--gray-200); border-radius:4px; padding:1px 6px; color:var(--blue-dark); font-weight:600; }
+
+/* ── MISC ── */
+.back-top { display:inline-block; margin-top:24px; font-size:13px; color:var(--blue); cursor:pointer; }
+a { color:var(--blue); text-decoration:none; }
+a:hover { text-decoration:underline; }
+.source-link { display:inline-block; margin:10px 0 4px; font-weight:600; }
+.eyebrow { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-600); margin:28px 0 10px; padding-bottom:8px; border-bottom:1px solid var(--gray-200); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div>
+    <div class="course-name">Academic English Writing &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    <div class="inst"><a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a></div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Academic Signposting &amp; Punctuation</h1>
+  <div class="badges">
+    <span class="badge">Transition Words</span>
+    <span class="badge">Punctuation Rules</span>
+  </div>
+  <div class="credit">
+    Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp;
+    <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences, Language Centre</a> &nbsp;·&nbsp;
+    Generated with Claude 4.6
+  </div>
+</div>
+
+<!-- TABS -->
+<nav class="tabs-bar">
+  <button class="tab-btn active" data-tab="guide">📖 Study Guide</button>
+  <button class="tab-btn" data-tab="sources">📚 Sources</button>
+</nav>
+
+
+<!-- ══════════ STUDY GUIDE ══════════ -->
+<div class="tab-panel active" id="tab-guide">
+<div class="container">
+
+  <p class="section-intro">Signposting words guide the reader through your argument. Use them to add information, contrast ideas, show cause and effect, give examples, or draw conclusions. The punctuation rule below applies to all of them.</p>
+
+  <!-- PUNCTUATION RULE -->
+  <div class="rule-box">
+    <h3>⚠️ The Punctuation Rule</h3>
+    <p>Most signposting words need a comma after them. If you use them to join two full thoughts in one sentence, use a <strong>semicolon</strong> before them.</p>
+    <div class="option-row"><strong>Option A — Two sentences:</strong> The theory is popular. <code>However,</code> the data is limited.</div>
+    <div class="option-row"><strong>Option B — One sentence:</strong> The theory is popular<code>; however,</code> the data is limited.</div>
+  </div>
+
+  <p class="eyebrow">Categories</p>
+
+  <!-- ADDING INFORMATION -->
+  <details class="accordion">
+    <summary>➕ &nbsp;Adding Information</summary>
+    <div class="accordion-body">
+      <div class="word-grid">
+        <div class="word-chip">Furthermore,</div>
+        <div class="word-chip">In addition,</div>
+        <div class="word-chip">Moreover,</div>
+        <div class="word-chip">Additionally,</div>
+        <div class="word-chip">Similarly,</div>
+      </div>
+      <div class="sentence-example">
+        "<strong>Furthermore,</strong> recent studies suggest that customer loyalty is driven by brand values as much as price."
+      </div>
+      <div class="sentence-example">
+        "The strategy reduced operational costs; <strong>moreover,</strong> it improved employee satisfaction across all departments."
+      </div>
+      <div class="sentence-example">
+        "<strong>In addition,</strong> the theoretical framework accounts for cultural differences in consumer behaviour."
+      </div>
+      <div class="sentence-example">
+        "The results confirm the initial hypothesis. <strong>Similarly,</strong> earlier research by Patel (2021) reached comparable conclusions."
+      </div>
+    </div>
+  </details>
+
+  <!-- COMPARING & CONTRASTING -->
+  <details class="accordion">
+    <summary>⇄ &nbsp;Comparing &amp; Contrasting</summary>
+    <div class="accordion-body">
+      <div class="word-grid">
+        <div class="word-chip">However,</div>
+        <div class="word-chip">Conversely,</div>
+        <div class="word-chip">Nevertheless,</div>
+        <div class="word-chip">On the contrary,</div>
+        <div class="word-chip">In contrast,</div>
+      </div>
+      <div class="sentence-example">
+        "The initial results supported the hypothesis; <strong>however,</strong> the second trial yielded conflicting data."
+      </div>
+      <div class="sentence-example">
+        "Large corporations benefit from economies of scale. <strong>In contrast,</strong> small enterprises rely on flexibility and niche positioning."
+      </div>
+      <div class="sentence-example">
+        "The qualitative data pointed to user frustration; <strong>nevertheless,</strong> overall satisfaction scores remained high."
+      </div>
+      <div class="sentence-example">
+        "The authors argue that price is the primary driver. <strong>Conversely,</strong> Singh et al. (2022) found that trust outweighs cost in repeat purchases."
+      </div>
+    </div>
+  </details>
+
+  <!-- CAUSE & EFFECT -->
+  <details class="accordion">
+    <summary>➜ &nbsp;Cause &amp; Effect</summary>
+    <div class="accordion-body">
+      <div class="word-grid">
+        <div class="word-chip">Consequently,</div>
+        <div class="word-chip">Therefore,</div>
+        <div class="word-chip">As a result,</div>
+        <div class="word-chip">Hence,</div>
+        <div class="word-chip">Accordingly,</div>
+      </div>
+      <div class="sentence-example">
+        "The company failed to adapt to digital trends; <strong>consequently,</strong> market share declined rapidly."
+      </div>
+      <div class="sentence-example">
+        "Supply chain disruptions increased production costs; <strong>therefore,</strong> retail prices were adjusted accordingly."
+      </div>
+      <div class="sentence-example">
+        "The new policy reduced waste by 40%. <strong>As a result,</strong> the company met its sustainability targets two years ahead of schedule."
+      </div>
+      <div class="sentence-example">
+        "The data were insufficient to draw firm conclusions; <strong>hence,</strong> the study recommends further investigation."
+      </div>
+    </div>
+  </details>
+
+  <!-- GIVING EXAMPLES -->
+  <details class="accordion">
+    <summary>🔎 &nbsp;Giving Examples</summary>
+    <div class="accordion-body">
+      <div class="word-grid">
+        <div class="word-chip">For instance,</div>
+        <div class="word-chip">Specifically,</div>
+        <div class="word-chip">For example,</div>
+        <div class="word-chip">To illustrate,</div>
+        <div class="word-chip">In particular,</div>
+      </div>
+      <div class="sentence-example">
+        "Marimekko uses specific tactics to maintain a premium brand image; <strong>for instance,</strong> they limit product availability in certain regions."
+      </div>
+      <div class="sentence-example">
+        "Several Nordic companies have adopted circular economy principles. <strong>For example,</strong> IKEA now offers a furniture buy-back scheme in all its markets."
+      </div>
+      <div class="sentence-example">
+        "The survey revealed strong dissatisfaction with response times; <strong>specifically,</strong> 68% of respondents rated customer service as poor."
+      </div>
+      <div class="sentence-example">
+        "Digitalisation has transformed many traditional industries; <strong>in particular,</strong> the banking sector has undergone significant structural change."
+      </div>
+    </div>
+  </details>
+
+  <!-- CONCLUDING -->
+  <details class="accordion">
+    <summary>🏁 &nbsp;Concluding</summary>
+    <div class="accordion-body">
+      <div class="word-grid">
+        <div class="word-chip">To summarize,</div>
+        <div class="word-chip">In conclusion,</div>
+        <div class="word-chip">In short,</div>
+        <div class="word-chip">Overall,</div>
+      </div>
+      <div class="sentence-example">
+        "<strong>In short,</strong> the findings provide a new framework for understanding corporate sustainability in the textile industry."
+      </div>
+      <div class="sentence-example">
+        "<strong>In conclusion,</strong> the evidence supports the view that remote work increases productivity when employees have adequate resources."
+      </div>
+      <div class="sentence-example">
+        "<strong>Overall,</strong> the study demonstrates that early stakeholder engagement significantly reduces project risk."
+      </div>
+      <div class="sentence-example">
+        "<strong>To summarize,</strong> three key factors emerged from the analysis: leadership style, organisational culture, and communication clarity."
+      </div>
+    </div>
+  </details>
+
+  <div class="callout tip" style="margin-top:24px;">
+    <span>💡</span>
+    <span>Don't overuse signposting words — one per paragraph is usually enough. Overuse makes writing feel formulaic and can actually obscure your argument rather than clarify it.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+
+<!-- ══════════ SOURCES ══════════ -->
+<div class="tab-panel" id="tab-sources">
+<div class="container">
+  <p class="section-intro">The content of this tool draws on the following academic and institutional sources. Where LAB guidelines and external sources differ, follow LAB guidelines.</p>
+
+  <details class="accordion">
+    <summary>📚 LAB University — Thesis Guidelines</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://elab.lab.fi/en/completing-studies/theses/thesis-bachelors-degree" target="_blank">LAB University of Applied Sciences — Bachelor's Thesis Guidelines</a>
+      <p style="margin-top:10px;">The official LAB guidelines for completing a bachelor's thesis, including conventions for academic writing style and language use. <strong>These guidelines take precedence over other sources for LAB students.</strong></p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 Academic Phrasebank — University of Manchester</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://www.phrasebank.manchester.ac.uk/signalling-transition/" target="_blank">Signalling Transition — Academic Phrasebank, University of Manchester</a>
+      <p style="margin-top:10px;">A comprehensive bank of academic phrases organised by rhetorical function, including transition and signposting language for all sections of a thesis or research paper.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 Academic Writing — Purdue OWL</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://owl.purdue.edu/owl/general_writing/mechanics/transitions_and_transitional_devices/index.html" target="_blank">Transitions and Transitional Devices — Purdue Online Writing Lab (OWL)</a>
+      <p style="margin-top:10px;">A broad reference on transition words and devices in academic writing, including guidance on punctuation, placement, and appropriate use by category.</p>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
