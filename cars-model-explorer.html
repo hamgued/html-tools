@@ -186,9 +186,16 @@ body {
   padding: 2px 4px; border-radius: 3px; cursor: pointer; transition: background .2s;
   border-bottom: 2px solid transparent;
 }
-.annotated-intro .seg-1 { background: rgba(26, 86, 219, .08); border-bottom-color: var(--blue); }
-.annotated-intro .seg-2 { background: rgba(124, 58, 237, .08); border-bottom-color: var(--purple); }
-.annotated-intro .seg-3 { background: rgba(5, 122, 85, .08); border-bottom-color: var(--green); }
+/* Move 1 — blue family */
+.annotated-intro .seg-1a { background: rgba(26, 86, 219, .10); border-bottom-color: #1a56db; }
+.annotated-intro .seg-1b { background: rgba(30, 64, 175, .10); border-bottom-color: #1e40af; }
+.annotated-intro .seg-1c { background: rgba(14, 165, 233, .12); border-bottom-color: #0ea5e9; }
+/* Move 2 — purple family */
+.annotated-intro .seg-2a { background: rgba(124, 58, 237, .10); border-bottom-color: #7c3aed; }
+.annotated-intro .seg-2b { background: rgba(217, 70, 239, .10); border-bottom-color: #d946ef; }
+/* Move 3 — green family */
+.annotated-intro .seg-3a { background: rgba(5, 122, 85, .10); border-bottom-color: #057a55; }
+.annotated-intro .seg-3b { background: rgba(13, 148, 136, .12); border-bottom-color: #0d9488; }
 .annotated-intro .seg:hover { filter: brightness(.94); }
 
 .legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0 10px; font-size: 13px; }
@@ -526,24 +533,28 @@ a:hover { text-decoration: underline; }
   <p class="section-intro">Below is a sample introduction to a short research paper. <strong>Hover over (or tap) any highlighted segment</strong> to see which CARS move it performs and why.</p>
 
   <div class="legend">
-    <div class="legend-item"><span class="legend-swatch" style="background:rgba(26,86,219,.2);border:1px solid var(--blue);"></span> Move 1 — Territory</div>
-    <div class="legend-item"><span class="legend-swatch" style="background:rgba(124,58,237,.2);border:1px solid var(--purple);"></span> Move 2 — Niche</div>
-    <div class="legend-item"><span class="legend-swatch" style="background:rgba(5,122,85,.2);border:1px solid var(--green);"></span> Move 3 — Occupying</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(26,86,219,.18);border:1px solid #1a56db;"></span> M1 · Centrality</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(30,64,175,.18);border:1px solid #1e40af;"></span> M1 · Generalisation</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(14,165,233,.18);border:1px solid #0ea5e9;"></span> M1 · Prev. research</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(124,58,237,.18);border:1px solid #7c3aed;"></span> M2 · Gap</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(217,70,239,.18);border:1px solid #d946ef;"></span> M2 · Question</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(5,122,85,.18);border:1px solid #057a55;"></span> M3 · Purpose</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(13,148,136,.18);border:1px solid #0d9488;"></span> M3 · Structure</div>
   </div>
 
   <div class="annotated-intro" style="position: relative;">
     <p>
-      <span class="seg seg-1" data-move="1a" data-step="Move 1 · Claiming centrality">Generative AI tools such as ChatGPT have rapidly become part of the everyday writing practices of university students across Europe.</span>
-      <span class="seg seg-1" data-move="1b" data-step="Move 1 · Topic generalisation">Surveys conducted in 2023 and 2024 indicate that more than 60% of higher education students now use these tools at some stage of their academic writing process.</span>
-      <span class="seg seg-1" data-move="1c" data-step="Move 1 · Reviewing previous research">Recent studies have examined how AI affects student engagement (Lee, 2023), academic integrity (Martinez &amp; Singh, 2024), and the development of writing skills (Park, 2024).</span>
+      <span class="seg seg-1a" data-move="1a" data-step="Move 1 · Claiming centrality">Generative AI tools such as ChatGPT have rapidly become part of the everyday writing practices of university students across Europe.</span>
+      <span class="seg seg-1b" data-move="1b" data-step="Move 1 · Topic generalisation">Surveys conducted in 2023 and 2024 indicate that more than 60% of higher education students now use these tools at some stage of their academic writing process.</span>
+      <span class="seg seg-1c" data-move="1c" data-step="Move 1 · Reviewing previous research">Recent studies have examined how AI affects student engagement (Lee, 2023), academic integrity (Martinez &amp; Singh, 2024), and the development of writing skills (Park, 2024).</span>
     </p>
     <p style="margin-top:12px;">
-      <span class="seg seg-2" data-move="2a" data-step="Move 2 · Indicating a gap">However, little research has so far addressed how non-native English speakers in vocational higher education actually use these tools when drafting academic texts in English.</span>
-      <span class="seg seg-2" data-move="2b" data-step="Move 2 · Question-raising">It also remains unclear whether reliance on AI tools supports or undermines the long-term development of independent writing skills in this group.</span>
+      <span class="seg seg-2a" data-move="2a" data-step="Move 2 · Indicating a gap">However, little research has so far addressed how non-native English speakers in vocational higher education actually use these tools when drafting academic texts in English.</span>
+      <span class="seg seg-2b" data-move="2b" data-step="Move 2 · Question-raising">It also remains unclear whether reliance on AI tools supports or undermines the long-term development of independent writing skills in this group.</span>
     </p>
     <p style="margin-top:12px;">
-      <span class="seg seg-3" data-move="3a" data-step="Move 3 · Outlining purposes">The aim of this paper is to investigate how first-year business students at a Finnish university of applied sciences use generative AI tools when producing written assignments in English.</span>
-      <span class="seg seg-3" data-move="3b" data-step="Move 3 · Indicating structure">The paper is structured as follows: Section 2 reviews the literature on AI and academic writing, Section 3 describes the survey methodology, Section 4 reports the findings, and Section 5 discusses pedagogical implications for English teachers at LAB.</span>
+      <span class="seg seg-3a" data-move="3a" data-step="Move 3 · Outlining purposes">The aim of this paper is to investigate how first-year business students at a Finnish university of applied sciences use generative AI tools when producing written assignments in English.</span>
+      <span class="seg seg-3b" data-move="3b" data-step="Move 3 · Indicating structure">The paper is structured as follows: Section 2 reviews the literature on AI and academic writing, Section 3 describes the survey methodology, Section 4 reports the findings, and Section 5 discusses pedagogical implications for English teachers at LAB.</span>
     </p>
   </div>
 
