@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CARS Model Explorer — Writing Research Introductions</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:        #1a56db;
+  --blue-light:  #e8f0fe;
+  --blue-dark:   #1e3a8a;
+  --green:       #057a55;
+  --green-light: #def7ec;
+  --yellow:      #c27803;
+  --yellow-light:#fdf6b2;
+  --orange:      #c2500a;
+  --purple:      #7c3aed;
+  --purple-light:#ede9fe;
+  --red:         #dc2626;
+  --red-light:   #fee2e2;
+  --gray-50:     #f9fafb;
+  --gray-100:    #f3f4f6;
+  --gray-200:    #e5e7eb;
+  --gray-400:    #9ca3af;
+  --gray-600:    #4b5563;
+  --gray-700:    #374151;
+  --gray-800:    #1f2937;
+  --gray-900:    #111827;
+  --radius:      8px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--gray-800);
+  background: var(--gray-50);
+}
+
+/* ── SITE HEADER ── */
+.site-header {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  padding: 12px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.site-header .course-name { font-size: 13px; font-weight: 600; color: var(--gray-600); }
+.site-header .inst { font-size: 12px; color: var(--gray-400); }
+.site-header a { color: var(--blue); text-decoration: none; }
+.site-header a:hover { text-decoration: underline; }
+
+/* ── HERO ── */
+.page-header {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1a56db 60%, #2563eb 100%);
+  color: white;
+  padding: 48px 24px 40px;
+  text-align: center;
+}
+.page-header h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 700; margin-bottom: 8px; }
+.page-header p  { font-size: 15px; opacity: .85; margin-bottom: 24px; max-width: 640px; margin-left: auto; margin-right: auto; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+.badge { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 500; }
+.credit { font-size: 12px; opacity: .6; }
+.credit a { color: white; text-decoration: underline; }
+
+/* ── STICKY NAV ── */
+.tabs-bar {
+  background: white;
+  border-bottom: 2px solid var(--gray-200);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 57px;
+  z-index: 99;
+  justify-content: center;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 14px 18px; font-size: 13px; font-weight: 600; color: var(--gray-600);
+  border: none; background: none; cursor: pointer; white-space: nowrap;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: color .15s, border-color .15s; font-family: 'Inter', sans-serif;
+}
+.tab-btn:hover { color: var(--blue); }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* ── PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.container { max-width: 900px; margin: 0 auto; padding: 36px 20px 80px; }
+
+/* ── SECTION HEADINGS ── */
+.section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--gray-600); margin: 36px 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.section-intro { font-size: 14px; color: var(--gray-600); margin-bottom: 20px; line-height: 1.7; }
+
+/* ── MOVE CARDS (overview) ── */
+.move-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
+.move-card {
+  border-radius: var(--radius);
+  padding: 18px 18px 20px;
+  border: 1px solid var(--gray-200);
+  background: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.move-card .move-num {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: white; padding: 3px 10px; border-radius: 999px; display: inline-block; margin-bottom: 10px;
+  align-self: flex-start;
+}
+.move-card.move-1 { border-top: 4px solid var(--blue); }
+.move-card.move-1 .move-num { background: var(--blue); }
+.move-card.move-2 { border-top: 4px solid var(--purple); }
+.move-card.move-2 .move-num { background: var(--purple); }
+.move-card.move-3 { border-top: 4px solid var(--green); }
+.move-card.move-3 .move-num { background: var(--green); }
+.move-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--gray-900); }
+.move-card .move-meta { font-size: 12px; color: var(--gray-600); font-style: italic; margin-bottom: 10px; }
+.move-card ul { list-style: none; padding: 0; margin-top: 8px; }
+.move-card ul li { font-size: 13px; padding: 6px 0; border-top: 1px solid var(--gray-100); color: var(--gray-700); }
+.move-card ul li strong { color: var(--gray-900); display: block; font-size: 13px; }
+@media (max-width: 700px) {
+  .move-grid { grid-template-columns: 1fr; }
+}
+
+/* ── ACCORDION ── */
+.accordion { border: 1px solid var(--gray-200); border-radius: var(--radius); margin-bottom: 10px; background: white; overflow: hidden; }
+.accordion summary {
+  padding: 14px 18px; font-weight: 600; font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; list-style: none;
+  user-select: none; background: var(--gray-50); color: var(--gray-800);
+}
+.accordion summary::-webkit-details-marker { display: none; }
+.accordion summary::after { content: '▾'; margin-left: auto; font-size: 12px; color: var(--gray-600); transition: transform .2s; }
+.accordion[open] summary::after { transform: rotate(180deg); }
+.accordion summary:hover { background: var(--gray-100); }
+.accordion-body { padding: 16px 18px 18px; border-top: 1px solid var(--gray-200); font-size: 14px; color: var(--gray-700); }
+.accordion-body p { margin-top: 10px; }
+.accordion-body p:first-child { margin-top: 0; }
+
+.accordion.move-1-acc summary { background: var(--blue-light); color: var(--blue-dark); }
+.accordion.move-2-acc summary { background: var(--purple-light); color: #4c1d95; }
+.accordion.move-3-acc summary { background: var(--green-light); color: #064e3b; }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: var(--radius); padding: 12px 16px; margin: 14px 0; font-size: 13.5px; display: flex; gap: 10px; }
+.callout.info    { background: var(--blue-light);    border-left: 3px solid var(--blue);   color: #1e3a8a; }
+.callout.warn    { background: var(--yellow-light);  border-left: 3px solid var(--yellow); color: #78350f; }
+.callout.success { background: var(--green-light);   border-left: 3px solid var(--green);  color: #064e3b; }
+.callout.tip     { background: #e8f6f9; border-left: 3px solid #4a8fa0; color: #1a4a56; }
+.callout.error   { background: var(--red-light);     border-left: 3px solid var(--red);    color: #7f1d1d; }
+
+/* ── EXAMPLE ITEMS ── */
+.example-item {
+  background: var(--gray-50); color: var(--gray-900); border-radius: 6px;
+  padding: 12px 16px; font-size: 14px;
+  line-height: 1.65; margin-bottom: 8px; border: 1px solid var(--gray-200);
+  border-left: 3px solid var(--blue);
+}
+.example-item .verb { color: var(--blue); font-weight: 700; }
+.move-2-acc + * .example-item, .accordion.move-2-acc .example-item { border-left-color: var(--purple); }
+.accordion.move-2-acc .example-item .verb { color: var(--purple); }
+.accordion.move-3-acc .example-item { border-left-color: var(--green); }
+.accordion.move-3-acc .example-item .verb { color: var(--green); }
+
+.example-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gray-600); margin: 14px 0 6px; }
+
+/* ── ANNOTATED INTRO ── */
+.annotated-intro {
+  background: white; border: 1px solid var(--gray-200); border-radius: var(--radius);
+  padding: 24px 26px; font-size: 15px; line-height: 1.85; color: var(--gray-800);
+}
+.annotated-intro .seg {
+  padding: 2px 4px; border-radius: 3px; cursor: pointer; transition: background .2s;
+  border-bottom: 2px solid transparent;
+}
+.annotated-intro .seg-1 { background: rgba(26, 86, 219, .08); border-bottom-color: var(--blue); }
+.annotated-intro .seg-2 { background: rgba(124, 58, 237, .08); border-bottom-color: var(--purple); }
+.annotated-intro .seg-3 { background: rgba(5, 122, 85, .08); border-bottom-color: var(--green); }
+.annotated-intro .seg:hover { filter: brightness(.94); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0 10px; font-size: 13px; }
+.legend-item { display: flex; align-items: center; gap: 6px; color: var(--gray-700); }
+.legend-swatch { width: 14px; height: 14px; border-radius: 3px; }
+
+.annotation-box {
+  margin-top: 14px; padding: 14px 16px; border-radius: var(--radius);
+  background: var(--gray-50); border: 1px solid var(--gray-200); font-size: 14px;
+  min-height: 90px;
+}
+.annotation-box .ann-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
+.annotation-box.empty { color: var(--gray-400); font-style: italic; }
+
+/* ── TOOLTIP ── */
+.cars-tooltip {
+  position: absolute;
+  z-index: 200;
+  max-width: 320px;
+  background: var(--gray-900);
+  color: white;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  line-height: 1.55;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .15s, transform .15s;
+}
+.cars-tooltip.visible { opacity: 1; transform: translateY(0); }
+.cars-tooltip .tt-label {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  margin-bottom: 5px; display: block;
+}
+.cars-tooltip.move-1 { border-left: 3px solid var(--blue); }
+.cars-tooltip.move-1 .tt-label { color: #93c5fd; }
+.cars-tooltip.move-2 { border-left: 3px solid var(--purple); }
+.cars-tooltip.move-2 .tt-label { color: #c4b5fd; }
+.cars-tooltip.move-3 { border-left: 3px solid var(--green); }
+.cars-tooltip.move-3 .tt-label { color: #6ee7b7; }
+@media (max-width: 500px) {
+  .cars-tooltip { max-width: 260px; font-size: 12.5px; }
+}
+
+/* ── PRACTICE QUIZ ── */
+.quiz-card {
+  background: white; border: 1px solid var(--gray-200); border-radius: var(--radius);
+  padding: 20px 22px; margin-bottom: 16px;
+}
+.quiz-card .quiz-q { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-600); margin-bottom: 10px; }
+.quiz-card .quiz-sentence { font-size: 15px; color: var(--gray-900); margin-bottom: 16px; line-height: 1.65; font-style: italic; padding: 12px 14px; background: var(--gray-50); border-radius: 6px; border-left: 3px solid var(--gray-400); }
+.quiz-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 600px) { .quiz-options { grid-template-columns: 1fr; } }
+.quiz-opt {
+  padding: 10px 12px; font-size: 13px; font-weight: 600; border-radius: 6px;
+  border: 1.5px solid var(--gray-200); background: white; cursor: pointer; text-align: left;
+  font-family: 'Inter', sans-serif; color: var(--gray-700); transition: all .15s;
+}
+.quiz-opt:hover { border-color: var(--blue); color: var(--blue); }
+.quiz-opt.correct { background: var(--green-light); border-color: var(--green); color: #064e3b; }
+.quiz-opt.incorrect { background: var(--red-light); border-color: var(--red); color: #7f1d1d; }
+.quiz-opt:disabled { cursor: default; }
+.quiz-feedback { margin-top: 12px; font-size: 13.5px; padding: 10px 14px; border-radius: 6px; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.right { background: var(--green-light); color: #064e3b; border-left: 3px solid var(--green); }
+.quiz-feedback.wrong { background: var(--red-light); color: #7f1d1d; border-left: 3px solid var(--red); }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.shake { animation: shake .35s ease both; }
+
+.score-display {
+  text-align: center; padding: 16px; background: var(--blue-light);
+  border-radius: var(--radius); margin-bottom: 20px; border: 1px solid #93c5fd;
+  font-size: 14px; color: var(--blue-dark); font-weight: 600;
+}
+.score-display strong { font-size: 18px; }
+
+/* ── SOURCES ── */
+.source-link { color: var(--blue); font-weight: 600; font-size: 14px; }
+.source-link:hover { text-decoration: underline; }
+
+/* ── BACK TO TOP ── */
+.back-top { display: inline-block; margin-top: 24px; font-size: 13px; color: var(--blue); cursor: pointer; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── FOOTER ── */
+.page-footer { text-align: center; padding: 24px; font-size: 12px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 40px; }
+.page-footer a { color: var(--gray-600); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="course-name">Academic Writing &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+    <div class="inst"><a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a></div>
+  </div>
+</header>
+
+<div class="page-header">
+  <h1>The CARS Model Explorer</h1>
+  <p>Creating A Research Space — a step-by-step guide to writing strong introductions for academic papers and research articles, based on John M. Swales' three-move model.</p>
+  <div class="badges">
+    <span class="badge">Research Writing</span>
+    <span class="badge">Academic English</span>
+  </div>
+  <div class="credit">
+    Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp;
+    <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a> &nbsp;·&nbsp;
+    Generated with Claude 4.6
+  </div>
+</div>
+
+<nav class="tabs-bar">
+  <button class="tab-btn active" data-tab="overview">🗺️ Overview</button>
+  <button class="tab-btn" data-tab="move1">1️⃣ Move 1</button>
+  <button class="tab-btn" data-tab="move2">2️⃣ Move 2</button>
+  <button class="tab-btn" data-tab="move3">3️⃣ Move 3</button>
+  <button class="tab-btn" data-tab="annotated">🔍 Annotated</button>
+  <button class="tab-btn" data-tab="practice">🎯 Practice</button>
+  <button class="tab-btn" data-tab="sources">📚 Sources</button>
+</nav>
+
+<!-- ══════════ OVERVIEW ══════════ -->
+<div class="tab-panel active" id="tab-overview">
+<div class="container">
+  <p class="section-intro">The CARS model (Create A Research Space) was developed by linguist John M. Swales in 1990 to describe how writers introduce research articles in English. It identifies three rhetorical moves that guide a reader from a broad topic into the specific gap your study addresses.</p>
+
+  <div class="callout info">
+    <span>💡</span>
+    <span>Think of it as a funnel: you start wide (your field), narrow down to a problem nobody has solved (the niche), then plant your flag on it (your study).</span>
+  </div>
+
+  <p class="section-title">The three moves at a glance</p>
+
+  <div class="move-grid">
+    <div class="move-card move-1">
+      <span class="move-num">Move 1</span>
+      <h3>Establishing a territory</h3>
+      <div class="move-meta">Show the topic matters</div>
+      <ul>
+        <li><strong>Claiming centrality</strong>This topic is important</li>
+        <li><strong>Topic generalisations</strong>What we know so far</li>
+        <li><strong>Reviewing previous research</strong>Who has studied this</li>
+      </ul>
+    </div>
+    <div class="move-card move-2">
+      <span class="move-num">Move 2</span>
+      <h3>Establishing a niche</h3>
+      <div class="move-meta">Find what's missing</div>
+      <ul>
+        <li><strong>Counter-claiming</strong>Challenging past work</li>
+        <li><strong>Indicating a gap</strong>What's still unknown</li>
+        <li><strong>Question-raising</strong>New questions to ask</li>
+        <li><strong>Continuing a tradition</strong>Building on prior work</li>
+      </ul>
+    </div>
+    <div class="move-card move-3">
+      <span class="move-num">Move 3</span>
+      <h3>Occupying the niche</h3>
+      <div class="move-meta">Present your study</div>
+      <ul>
+        <li><strong>Outlining purposes</strong>Aims / hypotheses</li>
+        <li><strong>Announcing findings</strong>Key results</li>
+        <li><strong>Indicating structure</strong>Roadmap of the paper</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-title">Why it matters for your writing</p>
+  <p style="font-size:14px;color:var(--gray-700);line-height:1.7;">A weak introduction often fails because it skips Move 2. The writer describes the topic and then jumps straight to "the aim of this paper is…". The reader is left wondering: <em>why does this study need to exist?</em> The CARS model forces you to answer that question explicitly by naming a gap before claiming it.</p>
+
+  <div class="callout tip">
+    <span>🎓</span>
+    <span>The model was developed for research articles, but the same funnel logic works for any academic writing where you need to motivate a study or argument — essays, term papers, literature reviews, and reports.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ MOVE 1 ══════════ -->
+<div class="tab-panel" id="tab-move1">
+<div class="container">
+  <p class="section-intro"><strong>Move 1 — Establishing a territory.</strong> You position your topic in a wider field and convince the reader it deserves attention. This is your widest point in the funnel.</p>
+
+  <details class="accordion move-1-acc">
+    <summary>Step 1 — Claiming centrality</summary>
+    <div class="accordion-body">
+      <p>You assert that the topic is important, problematic, or relevant — to society, to the discipline, or to a specific group of people. This is your "hook".</p>
+      <p class="example-label">Examples</p>
+      <div class="example-item">Climate change <span class="verb">has become</span> one of the most pressing challenges facing modern societies.</div>
+      <div class="example-item">In recent years, there <span class="verb">has been growing interest</span> in the use of AI tools in higher education.</div>
+      <p class="example-label">Useful language</p>
+      <p style="font-size:13px;">…has become a major concern · is widely recognised as · plays a key role in · is increasingly important for · has attracted considerable attention</p>
+    </div>
+  </details>
+
+  <details class="accordion move-1-acc">
+    <summary>Step 2 — Making topic generalisations</summary>
+    <div class="accordion-body">
+      <p>You give the reader background knowledge: established facts, current understanding, or accepted definitions. This is the "what we already know" section.</p>
+      <p class="example-label">Examples</p>
+      <div class="example-item">Renewable energy sources <span class="verb">currently account for</span> approximately 30% of global electricity generation.</div>
+      <div class="example-item">It <span class="verb">is generally accepted that</span> formative feedback improves student writing outcomes.</div>
+      <p class="example-label">Useful language</p>
+      <p style="font-size:13px;">It is well established that… · Recent studies suggest that… · A common assumption is that… · Generally speaking…</p>
+    </div>
+  </details>
+
+  <details class="accordion move-1-acc">
+    <summary>Step 3 — Reviewing items of previous research</summary>
+    <div class="accordion-body">
+      <p>You cite specific studies that have addressed the topic. Be selective — only the most relevant work belongs in the introduction. The full literature review comes later.</p>
+      <p class="example-label">Examples</p>
+      <div class="example-item">Smith and Johnson (2021) <span class="verb">demonstrated</span> that peer review improves student engagement in EFL classrooms.</div>
+      <div class="example-item">Several studies <span class="verb">have examined</span> the impact of remote work on productivity (Lee, 2020; Martinez et al., 2022).</div>
+      <p class="example-label">Useful language</p>
+      <p style="font-size:13px;">X (2023) showed that… · Previous research has demonstrated… · A number of studies have investigated…</p>
+    </div>
+  </details>
+
+  <div class="callout warn">
+    <span>⚠️</span>
+    <span><strong>Common mistake:</strong> writing a Move 1 that is so general it could open any paper in the field. Be specific enough that the reader already senses where you are heading.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ MOVE 2 ══════════ -->
+<div class="tab-panel" id="tab-move2">
+<div class="container">
+  <p class="section-intro"><strong>Move 2 — Establishing a niche.</strong> This is the pivot of the introduction. You show that, despite all the work in Move 1, something is still missing, contested, or underexplored. Without Move 2, your study has no reason to exist.</p>
+
+  <details class="accordion move-2-acc">
+    <summary>Option A — Counter-claiming</summary>
+    <div class="accordion-body">
+      <p>You challenge or push back against an existing claim, theory, or approach. Strong but risky — make sure you can back it up.</p>
+      <div class="example-item"><span class="verb">However</span>, this assumption <span class="verb">has been challenged</span> by recent evidence suggesting the opposite effect.</div>
+      <p style="font-size:13px;">However… · In contrast… · This view, however, overlooks… · Yet such accounts fail to consider…</p>
+    </div>
+  </details>
+
+  <details class="accordion move-2-acc">
+    <summary>Option B — Indicating a gap (most common)</summary>
+    <div class="accordion-body">
+      <p>You point out that something has not yet been studied, or has been studied only in limited contexts. This is the most common Move 2 strategy in student writing.</p>
+      <div class="example-item"><span class="verb">However, little research has been conducted</span> on how these tools affect non-native English writers in vocational higher education.</div>
+      <div class="example-item">To date, <span class="verb">no study has examined</span> the combined effect of these two variables in a Finnish context.</div>
+      <p style="font-size:13px;">However, little is known about… · Few studies have addressed… · Research on X remains limited… · The literature has paid less attention to…</p>
+    </div>
+  </details>
+
+  <details class="accordion move-2-acc">
+    <summary>Option C — Question-raising</summary>
+    <div class="accordion-body">
+      <p>You raise a question that previous research has not answered. Useful when the gap is hard to state as a flat absence.</p>
+      <div class="example-item">It <span class="verb">remains unclear</span> whether these results would hold in a multilingual classroom.</div>
+      <p style="font-size:13px;">It remains unclear whether… · An open question is… · Why X happens is still poorly understood…</p>
+    </div>
+  </details>
+
+  <details class="accordion move-2-acc">
+    <summary>Option D — Continuing a tradition</summary>
+    <div class="accordion-body">
+      <p>You frame your study as the next logical step in an existing line of research. Useful when there is no real gap, only an opportunity to extend prior work.</p>
+      <div class="example-item"><span class="verb">Building on</span> the framework developed by Swales (1990), this study extends the model to a new academic context.</div>
+      <p style="font-size:13px;">Building on… · Extending this line of research… · Following the approach of…</p>
+    </div>
+  </details>
+
+  <div class="callout error">
+    <span>🚫</span>
+    <span><strong>Avoid:</strong> "There is no research on X" — this is almost always false and easy for a supervisor to disprove. Use "<em>little</em> research" or "<em>limited</em> research" instead.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ MOVE 3 ══════════ -->
+<div class="tab-panel" id="tab-move3">
+<div class="container">
+  <p class="section-intro"><strong>Move 3 — Occupying the niche.</strong> You step into the gap you just opened. You announce what your study does, what it found, and how the rest of the paper is organised.</p>
+
+  <details class="accordion move-3-acc">
+    <summary>Step 1 — Outlining purposes or announcing research</summary>
+    <div class="accordion-body">
+      <p>State the aim, objectives, research questions, or hypotheses of your study. This is the most essential element — never omit it.</p>
+      <div class="example-item">The <span class="verb">aim of this paper is to investigate</span> how vocational higher education students in Finland use generative AI tools when writing academic English.</div>
+      <div class="example-item">This study <span class="verb">addresses three research questions</span>: (1) … (2) … (3) …</div>
+      <p style="font-size:13px;">The aim of this study is to… · This paper investigates… · The present research seeks to…</p>
+    </div>
+  </details>
+
+  <details class="accordion move-3-acc">
+    <summary>Step 2 — Announcing principal findings (optional)</summary>
+    <div class="accordion-body">
+      <p>Common in research articles, less common in shorter student papers. If your assignment expects it, give a one-sentence preview of the main result.</p>
+      <div class="example-item">The findings <span class="verb">suggest that</span> structured AI prompting significantly improves first-draft quality without reducing student ownership.</div>
+      <p style="font-size:13px;">The findings suggest that… · Results indicate… · This study shows that…</p>
+    </div>
+  </details>
+
+  <details class="accordion move-3-acc">
+    <summary>Step 3 — Indicating the structure of the paper</summary>
+    <div class="accordion-body">
+      <p>Give the reader a roadmap of what is coming next. In a longer paper, this often takes a short paragraph at the end of the introduction.</p>
+      <div class="example-item">The paper <span class="verb">is organised as follows</span>. Section 2 reviews the literature on… Section 3 describes the methodology… Section 4 presents the findings… Section 5 discusses the implications.</div>
+      <p style="font-size:13px;">This paper is organised as follows… · The remainder of this article proceeds as follows… · Section 2 outlines…</p>
+    </div>
+  </details>
+
+  <div class="callout success">
+    <span>✅</span>
+    <span><strong>Tip:</strong> Move 3 should clearly answer the gap you raised in Move 2. If your aim does not address the gap, one of the two needs to be rewritten.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ ANNOTATED ══════════ -->
+<div class="tab-panel" id="tab-annotated">
+<div class="container">
+  <p class="section-intro">Below is a sample introduction to a short research paper. <strong>Hover over (or tap) any highlighted segment</strong> to see which CARS move it performs and why.</p>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(26,86,219,.2);border:1px solid var(--blue);"></span> Move 1 — Territory</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(124,58,237,.2);border:1px solid var(--purple);"></span> Move 2 — Niche</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:rgba(5,122,85,.2);border:1px solid var(--green);"></span> Move 3 — Occupying</div>
+  </div>
+
+  <div class="annotated-intro" style="position: relative;">
+    <p>
+      <span class="seg seg-1" data-move="1a" data-step="Move 1 · Claiming centrality">Generative AI tools such as ChatGPT have rapidly become part of the everyday writing practices of university students across Europe.</span>
+      <span class="seg seg-1" data-move="1b" data-step="Move 1 · Topic generalisation">Surveys conducted in 2023 and 2024 indicate that more than 60% of higher education students now use these tools at some stage of their academic writing process.</span>
+      <span class="seg seg-1" data-move="1c" data-step="Move 1 · Reviewing previous research">Recent studies have examined how AI affects student engagement (Lee, 2023), academic integrity (Martinez &amp; Singh, 2024), and the development of writing skills (Park, 2024).</span>
+    </p>
+    <p style="margin-top:12px;">
+      <span class="seg seg-2" data-move="2a" data-step="Move 2 · Indicating a gap">However, little research has so far addressed how non-native English speakers in vocational higher education actually use these tools when drafting academic texts in English.</span>
+      <span class="seg seg-2" data-move="2b" data-step="Move 2 · Question-raising">It also remains unclear whether reliance on AI tools supports or undermines the long-term development of independent writing skills in this group.</span>
+    </p>
+    <p style="margin-top:12px;">
+      <span class="seg seg-3" data-move="3a" data-step="Move 3 · Outlining purposes">The aim of this paper is to investigate how first-year business students at a Finnish university of applied sciences use generative AI tools when producing written assignments in English.</span>
+      <span class="seg seg-3" data-move="3b" data-step="Move 3 · Indicating structure">The paper is structured as follows: Section 2 reviews the literature on AI and academic writing, Section 3 describes the survey methodology, Section 4 reports the findings, and Section 5 discusses pedagogical implications for English teachers at LAB.</span>
+    </p>
+  </div>
+
+  <div class="callout tip" style="margin-top:24px;">
+    <span>💡</span>
+    <span>Notice how Move 2 directly motivates Move 3: the gap is "non-native speakers in vocational HE" → the aim is "first-year business students at a Finnish UAS". The two halves match.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ PRACTICE ══════════ -->
+<div class="tab-panel" id="tab-practice">
+<div class="container">
+  <p class="section-intro">Read each sentence and decide which CARS move it performs. You'll get instant feedback and a short explanation.</p>
+
+  <div class="score-display" id="score-display">Score: <strong><span id="score">0</span> / <span id="total">0</span></strong></div>
+
+  <div id="quiz-container"></div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<!-- ══════════ SOURCES ══════════ -->
+<div class="tab-panel" id="tab-sources">
+<div class="container">
+  <p class="section-intro">The CARS model is one of the most widely cited frameworks in English for Academic Purposes. Below are the original source and reliable secondary references.</p>
+
+  <details class="accordion">
+    <summary>📖 Swales, J. M. (1990) — the original book</summary>
+    <div class="accordion-body">
+      <p>Swales, J. M. (1990). <em>Genre Analysis: English in Academic and Research Settings</em>. Cambridge University Press.</p>
+      <p>The book where John M. Swales first proposed the CARS model in Chapter 7. Still the canonical reference. Available through most university libraries — search your LAB Primo catalogue.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>🏛️ Purdue OWL — Organization &amp; the CARS Model</summary>
+    <div class="accordion-body">
+      <p><a class="source-link" href="https://owl.purdue.edu/owl/general_writing/the_writing_process/organization_CARS_Model.html" target="_blank">Organization &amp; the CARS Model — Purdue OWL</a></p>
+      <p>The most widely used academic writing reference site in the world. Clear, concise summary of the three moves with revision questions students can apply to their own drafts.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>🏛️ USC Libraries — The C.A.R.S. Model (detailed guide)</summary>
+    <div class="accordion-body">
+      <p><a class="source-link" href="https://libguides.usc.edu/writingguide/CARS" target="_blank">The C.A.R.S. Model — University of Southern California Libraries</a></p>
+      <p>The most thorough freely-available walkthrough of CARS. Breaks down each move and step, includes example phrases, and discusses limitations of the model honestly.</p>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<footer class="page-footer">
+  CARS Model Explorer &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp; <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a> &nbsp;·&nbsp; Generated with Claude 4.6
+</footer>
+
+<script>
+/* ── TAB SWITCHING ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+/* ── ANNOTATED INTRO TOOLTIPS ── */
+const annotations = {
+  '1a': { move: 1, title: 'Move 1 · Claiming centrality', text: 'The writer asserts that the topic (AI in student writing) is widespread and relevant. Phrases like "have rapidly become part of the everyday" signal centrality.' },
+  '1b': { move: 1, title: 'Move 1 · Topic generalisation', text: 'A factual generalisation supported by survey data — establishes "what we already know" and shows the topic has measurable scale.' },
+  '1c': { move: 1, title: 'Move 1 · Reviewing previous research', text: 'The writer cites specific studies that have already addressed neighbouring questions. This shows familiarity with the literature without becoming a full review.' },
+  '2a': { move: 2, title: 'Move 2 · Indicating a gap', text: 'The pivot. "However, little research has so far addressed…" names a specific population (non-native speakers in vocational HE) the literature has overlooked. This is the most common Move 2 strategy.' },
+  '2b': { move: 2, title: 'Move 2 · Question-raising', text: 'A second Move 2 step that raises a follow-up question previous research has not answered. Strengthens the case for the study.' },
+  '3a': { move: 3, title: 'Move 3 · Outlining purposes', text: 'The aim statement. Notice how it directly mirrors the gap from Move 2: same population, same problem. This match is what makes the introduction feel coherent.' },
+  '3b': { move: 3, title: 'Move 3 · Indicating structure', text: 'A roadmap of the rest of the paper. Helps the reader navigate and signals that the writer has a clear plan.' }
+};
+
+// Create one shared tooltip element
+const tooltip = document.createElement('div');
+tooltip.className = 'cars-tooltip';
+document.body.appendChild(tooltip);
+
+function showTooltip(seg, evt) {
+  const data = annotations[seg.dataset.move];
+  if (!data) return;
+  tooltip.className = 'cars-tooltip move-' + data.move;
+  tooltip.innerHTML = '<span class="tt-label">' + data.title + '</span>' + data.text;
+  tooltip.classList.add('visible');
+  positionTooltip(seg);
+}
+
+function positionTooltip(seg) {
+  const rect = seg.getBoundingClientRect();
+  const ttRect = tooltip.getBoundingClientRect();
+  const margin = 10;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  // Default: above the segment, horizontally centred on it
+  let top = rect.top + window.scrollY - ttRect.height - 8;
+  let left = rect.left + window.scrollX + (rect.width / 2) - (ttRect.width / 2);
+
+  // If not enough room above, place below
+  if (rect.top - ttRect.height - 8 < margin) {
+    top = rect.bottom + window.scrollY + 8;
+  }
+
+  // Clamp horizontally to viewport
+  const minLeft = window.scrollX + margin;
+  const maxLeft = window.scrollX + vw - ttRect.width - margin;
+  if (left < minLeft) left = minLeft;
+  if (left > maxLeft) left = maxLeft;
+
+  tooltip.style.top = top + 'px';
+  tooltip.style.left = left + 'px';
+}
+
+function hideTooltip() {
+  tooltip.classList.remove('visible');
+}
+
+document.querySelectorAll('.annotated-intro .seg').forEach(seg => {
+  // Desktop: hover
+  seg.addEventListener('mouseenter', (e) => showTooltip(seg, e));
+  seg.addEventListener('mouseleave', hideTooltip);
+  // Touch / click: toggle
+  seg.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (tooltip.classList.contains('visible') && tooltip.dataset.activeSeg === seg.dataset.move) {
+      hideTooltip();
+      tooltip.dataset.activeSeg = '';
+    } else {
+      showTooltip(seg, e);
+      tooltip.dataset.activeSeg = seg.dataset.move;
+    }
+  });
+});
+
+// Hide tooltip on outside click (for mobile)
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.seg')) {
+    hideTooltip();
+    tooltip.dataset.activeSeg = '';
+  }
+});
+
+// Reposition on scroll/resize while visible
+window.addEventListener('scroll', () => {
+  if (tooltip.classList.contains('visible') && tooltip.dataset.activeSeg) {
+    const seg = document.querySelector('.seg[data-move="' + tooltip.dataset.activeSeg + '"]');
+    if (seg) positionTooltip(seg);
+  }
+}, { passive: true });
+window.addEventListener('resize', hideTooltip);
+
+/* ── PRACTICE QUIZ ── */
+const quizItems = [
+  { sentence: 'Climate change has become one of the most urgent challenges facing humanity in the twenty-first century.', answer: 1, explain: 'Claiming centrality: the writer asserts the topic is important and pressing.' },
+  { sentence: 'However, few studies have examined how small Finnish municipalities adapt their public services to climate-related risks.', answer: 2, explain: 'Indicating a gap: "however, few studies have examined" is a textbook Move 2 phrase.' },
+  { sentence: 'The aim of this paper is to investigate the adaptation strategies used by three municipalities in the Päijät-Häme region.', answer: 3, explain: 'Outlining purposes: an explicit aim statement that names what the study will do.' },
+  { sentence: 'It is generally accepted that early bilingual exposure supports cognitive flexibility in children.', answer: 1, explain: 'Topic generalisation (Move 1): the writer states established background knowledge.' },
+  { sentence: 'The remainder of this paper is organised as follows: Section 2 reviews the literature, Section 3 outlines the methodology…', answer: 3, explain: 'Indicating structure (Move 3): a roadmap of the sections ahead.' },
+  { sentence: 'Smith and Lee (2022) demonstrated that flipped classrooms improved student outcomes in introductory statistics.', answer: 1, explain: 'Reviewing previous research (Move 1): a specific citation of prior work.' },
+  { sentence: 'It remains unclear whether these benefits extend to vocational higher education contexts.', answer: 2, explain: 'Question-raising (Move 2): a question previous research has not yet answered.' },
+  { sentence: 'This study addresses three research questions concerning the role of feedback in EFL writing classrooms.', answer: 3, explain: 'Outlining purposes (Move 3): naming the research questions of the study.' }
+];
+
+const quizContainer = document.getElementById('quiz-container');
+let score = 0, answered = 0;
+const total = quizItems.length;
+document.getElementById('total').textContent = total;
+
+quizItems.forEach((item, i) => {
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  card.innerHTML = `
+    <div class="quiz-q">Question ${i + 1} of ${total}</div>
+    <div class="quiz-sentence">"${item.sentence}"</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-pick="1">Move 1 · Territory</button>
+      <button class="quiz-opt" data-pick="2">Move 2 · Niche</button>
+      <button class="quiz-opt" data-pick="3">Move 3 · Occupying</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  `;
+  quizContainer.appendChild(card);
+
+  const buttons = card.querySelectorAll('.quiz-opt');
+  const feedback = card.querySelector('.quiz-feedback');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      const pick = parseInt(btn.dataset.pick);
+      const correct = pick === item.answer;
+      buttons.forEach(b => b.disabled = true);
+      buttons.forEach(b => {
+        if (parseInt(b.dataset.pick) === item.answer) b.classList.add('correct');
+      });
+      if (!correct) {
+        btn.classList.add('incorrect');
+        card.classList.add('shake');
+        setTimeout(() => card.classList.remove('shake'), 400);
+        feedback.className = 'quiz-feedback show wrong';
+        feedback.innerHTML = '❌ Not quite. ' + item.explain;
+      } else {
+        score++;
+        feedback.className = 'quiz-feedback show right';
+        feedback.innerHTML = '✅ Correct! ' + item.explain;
+      }
+      answered++;
+      document.getElementById('score').textContent = score;
+    });
+  });
+});
+</script>
+</body>
+</html>
