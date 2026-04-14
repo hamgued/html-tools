@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academic Citation Conventions — Interactive Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:        #1a56db;
+  --blue-light:  #e8f0fe;
+  --blue-dark:   #1e3a8a;
+  --green:       #057a55;
+  --green-light: #def7ec;
+  --yellow:      #c27803;
+  --yellow-light:#fdf6b2;
+  --orange:      #c2500a;
+  --purple:      #7c3aed;
+  --purple-light:#ede9fe;
+  --red:         #dc2626;
+  --red-light:   #fee2e2;
+  --gray-50:     #f9fafb;
+  --gray-100:    #f3f4f6;
+  --gray-200:    #e5e7eb;
+  --gray-400:    #9ca3af;
+  --gray-600:    #4b5563;
+  --gray-700:    #374151;
+  --gray-800:    #1f2937;
+  --gray-900:    #111827;
+  --radius:      8px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--gray-800);
+  background: var(--gray-50);
+}
+
+/* ── SITE HEADER ── */
+.site-header {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  padding: 12px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.site-header .course-name { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+.site-header .inst { font-size: 12px; color: var(--gray-400); }
+.site-header a { color: var(--blue); text-decoration: none; }
+.site-header a:hover { text-decoration: underline; }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1a56db 60%, #2563eb 100%);
+  color: white;
+  padding: 48px 24px 40px;
+  text-align: center;
+}
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 700; margin-bottom: 8px; }
+.hero p  { font-size: 15px; opacity: .8; margin-bottom: 22px; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 18px; }
+.badge { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 500; }
+.credit { font-size: 12px; opacity: .6; }
+.credit a { color: white; }
+
+/* ── TAB BAR ── */
+.tabs-bar {
+  background: white;
+  border-bottom: 2px solid var(--gray-200);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 57px;
+  z-index: 99;
+  justify-content: center;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 14px 18px; font-size: 13px; font-weight: 600; color: var(--gray-600);
+  border: none; background: none; cursor: pointer; white-space: nowrap;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: color .15s, border-color .15s; font-family: 'Inter', sans-serif;
+}
+.tab-btn:hover { color: var(--blue); }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* ── PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.container { max-width: 1080px; margin: 0 auto; padding: 32px 20px 80px; }
+
+/* ── SECTION ── */
+.section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--gray-600); margin: 32px 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.section-intro { font-size: 14px; color: var(--gray-600); margin-bottom: 20px; line-height: 1.7; }
+
+/* ── CALLOUTS ── */
+.callout { border-radius: var(--radius); padding: 12px 16px; margin: 14px 0; font-size: 13.5px; display: flex; gap: 10px; }
+.callout.info    { background: var(--blue-light);    border-left: 3px solid var(--blue);   color: #1e3a8a; }
+.callout.warn    { background: var(--yellow-light);  border-left: 3px solid var(--yellow); color: #78350f; }
+.callout.success { background: var(--green-light);   border-left: 3px solid var(--green);  color: #064e3b; }
+.callout.tip     { background: #e8f6f9; border-left: 3px solid #4a8fa0; color: #1a4a56; }
+
+/* ── INTERACTIVE EXAMPLE ── */
+.example-stage {
+  position: relative;
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 16px 0 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.example-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 36px;
+  position: relative;
+}
+@media (max-width: 760px) {
+  .example-grid { grid-template-columns: 1fr; gap: 20px; }
+}
+
+.text-card {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--gray-800);
+  padding: 16px 18px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  background: var(--gray-50);
+}
+.text-card p + p { margin-top: 12px; }
+
+/* highlight spans — start transparent, get coloured on reveal */
+.hl {
+  background: transparent;
+  padding: 1px 2px;
+  border-radius: 3px;
+  transition: background-color .5s ease;
+}
+.hl.show-green  { background: #c6f0d4; }
+.hl.show-orange { background: #ffd9a8; }
+.hl.show-blue   { background: #d4e6f9; }
+.hl.show-yellow { background: #fff4b8; }
+
+/* tip cards column */
+.tips-col { display: flex; flex-direction: column; gap: 14px; }
+.tip-card {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  background: white;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--gray-700);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .45s ease, transform .45s ease;
+  pointer-events: none;
+}
+.tip-card.revealed { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.tip-card .tip-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 2px 9px;
+  border-radius: 999px;
+  color: white;
+  margin-bottom: 8px;
+}
+.tip-card .tip-label.green  { background: var(--green); }
+.tip-card .tip-label.orange { background: var(--orange); }
+.tip-card .tip-label.blue   { background: var(--blue); }
+.tip-card .tip-label.yellow { background: var(--yellow); }
+.tip-card strong { color: var(--gray-900); }
+.tip-card ul { margin: 6px 0 0 18px; }
+.tip-card li { margin-bottom: 2px; }
+
+/* SVG arrow overlay */
+.arrow-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+.arrow-path {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.arrow-path.green  { stroke: var(--green); }
+.arrow-path.orange { stroke: var(--orange); }
+.arrow-path.blue   { stroke: var(--blue); }
+.arrow-path.yellow { stroke: var(--yellow); }
+
+/* controls */
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed var(--gray-200);
+}
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--blue);
+  background: var(--blue);
+  color: white;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+.btn:hover:not(:disabled) { background: var(--blue-dark); }
+.btn:active:not(:disabled) { transform: scale(.97); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn.secondary { background: white; color: var(--blue); }
+.btn.secondary:hover:not(:disabled) { background: var(--blue-light); }
+.step-counter {
+  font-size: 12px;
+  color: var(--gray-600);
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: auto;
+}
+
+/* example title bar */
+.ex-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 4px;
+}
+.ex-subtitle {
+  font-size: 13px;
+  color: var(--gray-600);
+  margin-bottom: 14px;
+}
+
+/* ── ACCORDION (sources) ── */
+.accordion { border: 1px solid #b2dce8; border-radius: var(--radius); margin-bottom: 10px; background: white; overflow: hidden; }
+.accordion summary {
+  padding: 14px 18px; font-weight: 600; font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; list-style: none;
+  user-select: none; background: #e8f6f9; color: #1a4a56;
+}
+.accordion summary::-webkit-details-marker { display: none; }
+.accordion summary::after { content: '▾'; margin-left: auto; font-size: 12px; color: #4a8fa0; transition: transform .2s; }
+.accordion[open] summary::after { transform: rotate(180deg); }
+.accordion summary:hover { background: #d4eef4; }
+.accordion-body { padding: 14px 18px 18px; border-top: 1px solid #b2dce8; font-size: 14px; color: var(--gray-700); }
+.accordion-body p { margin-top: 8px; }
+.source-link { display: inline-block; font-weight: 600; margin-bottom: 4px; }
+
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.back-top { display: inline-block; margin-top: 24px; font-size: 13px; color: var(--blue); cursor: pointer; }
+
+.page-footer { text-align: center; padding: 24px; font-size: 12px; color: var(--gray-400); border-top: 1px solid var(--gray-200); margin-top: 40px; }
+.page-footer a { color: var(--gray-600); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="course-name">Academic English Writing &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a></div>
+  <div class="inst"><a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a></div>
+</header>
+
+<div class="hero">
+  <h1>Academic Citation Conventions</h1>
+  <p>Click through the steps to see how citations work in academic writing</p>
+  <div class="badges">
+    <span class="badge">Academic English</span>
+    <span class="badge">Interactive</span>
+  </div>
+  <div class="credit">Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp; <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a> &nbsp;·&nbsp; Generated with Claude 4.6</div>
+</div>
+
+<nav class="tabs-bar">
+  <button class="tab-btn active" data-tab="weakstrong">👤 Weak vs Strong Author</button>
+  <button class="tab-btn" data-tab="range">📏 Range &amp; Punctuation</button>
+  <button class="tab-btn" data-tab="sources">📚 Sources</button>
+</nav>
+
+
+<!-- ══════════ TAB 1: WEAK vs STRONG AUTHOR ══════════ -->
+<div class="tab-panel active" id="tab-weakstrong">
+<div class="container">
+  <p class="section-intro">An in-text citation can be <strong>weak (parenthetical)</strong> — author and year tucked inside brackets — or <strong>strong (narrative)</strong> — the author's name woven into the sentence. Click <em>Next step</em> to reveal each citation, see what type it is, and learn when to use it.</p>
+
+  <div class="callout info">
+    <span>ℹ️</span>
+    <span><strong>About the terminology.</strong> "Weak" and "strong" are classroom labels used here for clarity. Major style guides use different terms for the same distinction: <strong>parenthetical / narrative</strong> (APA), or <strong>non-integral / integral</strong> (Hyland). The mechanics are identical — only the names differ.</span>
+  </div>
+
+  <p class="section-title">Example paragraph</p>
+
+  <div class="example-stage">
+    <div class="ex-title">Marimekko's pricing strategy</div>
+    <div class="ex-subtitle">A student paragraph using both citation styles. Reveal one step at a time.</div>
+
+    <div class="controls">
+      <button class="btn" id="ex1-next">▶ Next step</button>
+      <button class="btn secondary" id="ex1-reset">↺ Reset</button>
+      <span class="step-counter" id="ex1-counter">step 0 / 3</span>
+    </div>
+
+    <div class="example-grid" id="ex1-grid">
+      <svg class="arrow-svg" id="ex1-svg"></svg>
+
+      <div class="text-card">
+        <p>Differentiation serves as a driver for Marimekko, which allows the company to adjust pricing based on consumer psychology. <span class="hl" id="ex1-hs1">Huefner and Sanders (2012, 27)</span> define differentiation as a tactic where prices are set according to a customer's perceived ability to pay. To achieve this, Marimekko uses multi-channel surveys to gather consumer insights, which then inform specific product and pricing adjustments <span class="hl" id="ex1-j1">(Jones 2023a, 19–21)</span>. These insights are vital because they ensure that the company's premium positioning remains aligned with actual market demand. By bridging the gap between consumer expectations and price, Marimekko's differentiation strategy serves as a foundational component of its wider corporate goals.</p>
+        <p>Beyond pricing tactics, Marimekko's wider goals focus on sustainable international growth in the global textile market <span class="hl" id="ex1-mk1">(Marimekko 2022)</span>. <span class="hl" id="ex1-j2">Jones (2023b, 25)</span> notes that focusing on sustainable international growth… However, <span class="hl" id="ex1-hs2">Huefner and Sanders (2012, 86)</span> point out that…</p>
+      </div>
+
+      <div class="tips-col">
+        <div class="tip-card" id="ex1-tip1">
+          <span class="tip-label green">Strong (narrative)</span>
+          <div><strong>Commonly used for definitions.</strong></div>
+          <div style="margin-top:6px;">The author's name is part of the sentence: <em>Huefner and Sanders (2012, 27) define X as…</em></div>
+        </div>
+        <div class="tip-card" id="ex1-tip2">
+          <span class="tip-label orange">Weak (parenthetical)</span>
+          <div><strong>The basic style for in-text citations.</strong></div>
+          <div style="margin-top:6px;">Use this when you just need to credit the source without naming the author in your sentence.</div>
+        </div>
+        <div class="tip-card" id="ex1-tip3">
+          <span class="tip-label green">Strong (narrative)</span>
+          <div><strong>Commonly used for comparing different authors' ideas.</strong></div>
+          <div style="margin-top:6px;"><em>Jones (2023b, 25) notes A… However, Huefner and Sanders (2012, 86) point out B…</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <span>💡</span>
+    <span><strong>Quick rule:</strong> If you're <em>defining</em> a term or <em>comparing</em> what authors say, prefer narrative (strong). If you're just supporting a claim, parenthetical (weak) is the default.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+
+<!-- ══════════ TAB 2: RANGE & PUNCTUATION ══════════ -->
+<div class="tab-panel" id="tab-range">
+<div class="container">
+  <p class="section-intro">A citation can refer to <strong>one sentence</strong> or to <strong>several sentences</strong>. The position of the period changes accordingly. When several sources back the same idea, they can be <strong>grouped</strong> inside the same parentheses.</p>
+
+  <p class="section-title">Example paragraph</p>
+
+  <div class="example-stage">
+    <div class="ex-title">Marimekko's brand licensing</div>
+    <div class="ex-subtitle">Watch how punctuation shifts depending on citation range, and how grouped sources are formatted.</div>
+
+    <div class="controls">
+      <button class="btn" id="ex2-next">▶ Next step</button>
+      <button class="btn secondary" id="ex2-reset">↺ Reset</button>
+      <span class="step-counter" id="ex2-counter">step 0 / 2</span>
+    </div>
+
+    <div class="example-grid" id="ex2-grid">
+      <svg class="arrow-svg" id="ex2-svg"></svg>
+
+      <div class="text-card">
+        <p>Marimekko leverages strategic brand licensing to amplify its market presence. <span class="hl" id="ex2-blue">Licensing functions as a low-risk entry mechanism into non-core categories (e.g., tableware and home technology); this allows the brand to monetize its iconic print library without heavy capital investment</span> <span class="hl" id="ex2-cite1">(Jones 2021, 5).</span> <span class="hl" id="ex2-yellow">This approach relies on aesthetic consistency, where Marimekko's Unikko pattern maintains brand equity even when applied to third-party manufacturing. By carefully selecting partners that mirror its values, Marimekko ensures these collaborations drive both high-margin royalty revenue and global brand awareness. Consequently, this model transforms the company's artistic intellectual property into a scalable financial asset.</span> <span class="hl" id="ex2-cite2">(Marimekko 2022; Jones et al. 2023, 15; Smith 2024; Henderson 2026, 6.)</span></p>
+      </div>
+
+      <div class="tips-col">
+        <div class="tip-card" id="ex2-tip1">
+          <span class="tip-label blue">One-sentence range</span>
+          <div><strong>Citation is <em>inside</em> the sentence.</strong></div>
+          <div style="margin-top:6px;">A period is placed <strong>after</strong> the closing parenthesis: <code>… investment (Jones 2021, 5).</code></div>
+        </div>
+        <div class="tip-card" id="ex2-tip2">
+          <span class="tip-label yellow">Several-sentence range</span>
+          <div><strong>Citation is <em>outside</em> the sentences.</strong></div>
+          <div style="margin-top:6px;">The period goes <strong>inside</strong> the parentheses. Multiple sources are:</div>
+          <ul>
+            <li>listed in <em>chronological order</em> (oldest → newest)</li>
+            <li>separated with <em>semicolons</em></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <span>⚠️</span>
+    <span><strong>Watch the period.</strong> Where the full stop sits is the single clearest signal of whether your citation refers to one sentence or to a whole block. Misplacing it changes the meaning of your citation.</span>
+  </div>
+
+  <div class="callout info">
+    <span>ℹ️</span>
+    <span><strong>Why chronological?</strong> Listing grouped sources from oldest to newest helps the reader trace how an idea has developed over time in the literature.</span>
+  </div>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+
+<!-- ══════════ TAB 3: SOURCES ══════════ -->
+<div class="tab-panel" id="tab-sources">
+<div class="container">
+  <p class="section-intro">Reference works on academic citation practice for further reading.</p>
+
+  <div class="callout warn">
+    <span>⚠️</span>
+    <span><strong>LAB guidelines come first.</strong> When LAB's own thesis and publication guidelines differ from external standards (APA, Purdue OWL, etc.), follow LAB. The external sources below are useful for context and additional examples, but the LAB Guide to Publishing and the LAB Thesis Guidebook are the standards your work will be assessed against.</span>
+  </div>
+
+  <details class="accordion">
+    <summary>📚 LAB Thesis Guidebook — Bachelor's Degree</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://elab.lab.fi/en/completing-studies/theses/thesis-bachelors-degree" target="_blank">elab.lab.fi — Thesis (Bachelor's degree)</a>
+      <p>Official LAB thesis guidelines covering the whole thesis process, including reporting, sources, and language. Each field of study may add its own further instructions on top of this.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 APA Style — Parenthetical versus narrative in-text citations</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://apastyle.apa.org/style-grammar-guidelines/citations/basic-principles/parenthetical-versus-narrative" target="_blank">apastyle.apa.org</a>
+      <p>Official APA Style guidance — the primary source for the parenthetical/narrative distinction. Concise definitions and side-by-side examples straight from the publishers of the APA Publication Manual (7th ed.).</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 Purdue OWL — In-Text Citations: The Basics</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://owl.purdue.edu/owl/research_and_citation/apa_style/apa_formatting_and_style_guide/in_text_citations_the_basics.html" target="_blank">owl.purdue.edu</a>
+      <p>Practical, student-facing guide to APA in-text citations, including narrative vs. parenthetical formats and grouped citations.</p>
+    </div>
+  </details>
+
+  <details class="accordion">
+    <summary>📚 University of Manchester Academic Phrasebank — Being Critical / Referring to Sources</summary>
+    <div class="accordion-body">
+      <a class="source-link" href="https://www.phrasebank.manchester.ac.uk/referring-to-sources/" target="_blank">phrasebank.manchester.ac.uk</a>
+      <p>Bank of ready-made phrases for narrative citations, including reporting verbs grouped by stance (neutral, tentative, strong).</p>
+    </div>
+  </details>
+
+  <p class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</p>
+</div>
+</div>
+
+<footer class="page-footer">
+  Academic Citation Conventions &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> &nbsp;·&nbsp; <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a>
+</footer>
+
+<script>
+/* ── tab switching ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // redraw any visible arrows after layout settles
+    setTimeout(redrawAll, 350);
+  });
+});
+
+/* ── interactive examples engine ── */
+const examples = {
+  ex1: {
+    grid: 'ex1-grid',
+    svg: 'ex1-svg',
+    next: 'ex1-next',
+    reset: 'ex1-reset',
+    counter: 'ex1-counter',
+    steps: [
+      { highlights: [{id:'ex1-hs1', cls:'show-green'}], tip:'ex1-tip1', color:'green' },
+      { highlights: [{id:'ex1-j1', cls:'show-orange'}, {id:'ex1-mk1', cls:'show-orange'}], tip:'ex1-tip2', color:'orange' },
+      { highlights: [{id:'ex1-j2', cls:'show-green'}, {id:'ex1-hs2', cls:'show-green'}], tip:'ex1-tip3', color:'green' },
+    ],
+    current: 0
+  },
+  ex2: {
+    grid: 'ex2-grid',
+    svg: 'ex2-svg',
+    next: 'ex2-next',
+    reset: 'ex2-reset',
+    counter: 'ex2-counter',
+    steps: [
+      { highlights: [{id:'ex2-blue', cls:'show-blue'}, {id:'ex2-cite1', cls:'show-green'}], tip:'ex2-tip1', color:'blue' },
+      { highlights: [{id:'ex2-yellow', cls:'show-yellow'}, {id:'ex2-cite2', cls:'show-green'}], tip:'ex2-tip2', color:'yellow' },
+    ],
+    current: 0
+  }
+};
+
+function updateCounter(ex) {
+  document.getElementById(ex.counter).textContent = `step ${ex.current} / ${ex.steps.length}`;
+  document.getElementById(ex.next).disabled = ex.current >= ex.steps.length;
+  document.getElementById(ex.next).textContent = ex.current >= ex.steps.length ? '✓ Complete' : (ex.current === 0 ? '▶ Start' : '▶ Next step');
+}
+
+function revealStep(ex, stepIndex) {
+  const step = ex.steps[stepIndex];
+  step.highlights.forEach(h => {
+    document.getElementById(h.id).classList.add(h.cls);
+  });
+  const tipEl = document.getElementById(step.tip);
+  tipEl.classList.add('revealed');
+  // draw arrows from each highlight to the tip
+  setTimeout(() => {
+    step.highlights.forEach(h => {
+      drawArrow(ex.svg, ex.grid, h.id, step.tip, step.color);
+    });
+  }, 50);
+}
+
+function drawArrow(svgId, gridId, fromId, toId, colorClass) {
+  const svg = document.getElementById(svgId);
+  const grid = document.getElementById(gridId);
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+  if (!from || !to) return;
+  const gRect = grid.getBoundingClientRect();
+  const fRect = from.getBoundingClientRect();
+  const tRect = to.getBoundingClientRect();
+
+  const fcx = fRect.left + fRect.width/2 - gRect.left;
+  const fcy = fRect.top + fRect.height/2 - gRect.top;
+  const tcx = tRect.left + tRect.width/2 - gRect.left;
+  const tcy = tRect.top + tRect.height/2 - gRect.top;
+  const dx = tcx - fcx;
+  const dy = tcy - fcy;
+
+  let x1, y1, x2, y2;
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    // horizontal-dominant
+    if (dx > 0) {
+      x1 = fRect.right - gRect.left;
+      x2 = tRect.left - gRect.left;
+    } else {
+      x1 = fRect.left - gRect.left;
+      x2 = tRect.right - gRect.left;
+    }
+    y1 = fcy; y2 = tcy;
+  } else {
+    // vertical-dominant
+    if (dy > 0) {
+      y1 = fRect.bottom - gRect.top;
+      y2 = tRect.top - gRect.top;
+    } else {
+      y1 = fRect.top - gRect.top;
+      y2 = tRect.bottom - gRect.top;
+    }
+    x1 = fcx; x2 = tcx;
+  }
+
+  // bezier curve
+  const mx = (x1 + x2) / 2;
+  const my = (y1 + y2) / 2;
+  const horizontal = Math.abs(dx) >= Math.abs(dy);
+  const d = horizontal
+    ? `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`
+    : `M ${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`;
+
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', d);
+  path.setAttribute('class', 'arrow-path ' + colorClass);
+  path.dataset.from = fromId;
+  path.dataset.to = toId;
+  path.dataset.color = colorClass;
+  svg.appendChild(path);
+
+  // arrowhead at the end
+  const ang = Math.atan2(y2 - (horizontal ? y2 : my), x2 - (horizontal ? mx : x2));
+  const ah = 7;
+  const ax1 = x2 - ah * Math.cos(ang - Math.PI/6);
+  const ay1 = y2 - ah * Math.sin(ang - Math.PI/6);
+  const ax2 = x2 - ah * Math.cos(ang + Math.PI/6);
+  const ay2 = y2 - ah * Math.sin(ang + Math.PI/6);
+  const head = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  head.setAttribute('d', `M ${x2} ${y2} L ${ax1} ${ay1} M ${x2} ${y2} L ${ax2} ${ay2}`);
+  head.setAttribute('class', 'arrow-path ' + colorClass);
+  head.style.opacity = '0';
+  svg.appendChild(head);
+
+  // animate path drawing
+  const len = path.getTotalLength();
+  path.style.strokeDasharray = len;
+  path.style.strokeDashoffset = len;
+  requestAnimationFrame(() => {
+    path.style.transition = 'stroke-dashoffset .6s ease';
+    path.style.strokeDashoffset = '0';
+  });
+  setTimeout(() => { head.style.transition = 'opacity .2s'; head.style.opacity = '1'; }, 550);
+}
+
+function resetExample(ex) {
+  ex.current = 0;
+  ex.steps.forEach(step => {
+    step.highlights.forEach(h => {
+      const el = document.getElementById(h.id);
+      el.className = 'hl';
+    });
+    document.getElementById(step.tip).classList.remove('revealed');
+  });
+  document.getElementById(ex.svg).innerHTML = '';
+  updateCounter(ex);
+}
+
+function nextStep(ex) {
+  if (ex.current >= ex.steps.length) return;
+  revealStep(ex, ex.current);
+  ex.current++;
+  updateCounter(ex);
+}
+
+Object.values(examples).forEach(ex => {
+  document.getElementById(ex.next).addEventListener('click', () => nextStep(ex));
+  document.getElementById(ex.reset).addEventListener('click', () => resetExample(ex));
+  updateCounter(ex);
+});
+
+/* ── redraw arrows on resize ── */
+function redrawAll() {
+  Object.values(examples).forEach(ex => {
+    const svg = document.getElementById(ex.svg);
+    svg.innerHTML = '';
+    for (let i = 0; i < ex.current; i++) {
+      const step = ex.steps[i];
+      step.highlights.forEach(h => {
+        drawArrow(ex.svg, ex.grid, h.id, step.tip, step.color);
+      });
+    }
+  });
+}
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(redrawAll, 150);
+});
+</script>
+</body>
+</html>
