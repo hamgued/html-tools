@@ -6,196 +6,508 @@
 <title>EAP Tools Hub — Hamid Guedra</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f2f4f7;
-  --surface: #ffffff;
-  --border: #dde1ea;
-  --accent: #2a6fdb;
-  --accent2: #1a9e6e;
-  --text: #1a1e2e;
-  --muted: #6b7280;
-  --card-bg: #ffffff;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 10% 10%, rgba(42,111,219,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(26,158,110,0.04) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  position: relative;
-  z-index: 1;
-}
-header {
-  padding: 4rem 0 2rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 3rem;
-}
-.header-inner {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-.logo-area h1 {
-  font-family: 'Sora', sans-serif;
-  font-size: clamp(2rem, 5vw, 3.4rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-}
-.logo-area h1 span { color: var(--accent); }
-.logo-area p {
-  margin-top: 0.6rem;
-  color: var(--muted);
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.author-badge { font-size: 0.85rem; color: var(--muted); text-align: right; }
-.author-badge a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  :root {
+    --bg: #f2f4f7;
+    --surface: #ffffff;
+    --border: #dde1ea;
+    --accent: #2a6fdb;
+    --accent2: #1a9e6e;
+    --text: #1a1e2e;
+    --muted: #6b7280;
+    --card-bg: #ffffff;
+  }
 
-.section-label {
-  font-size: 0.7rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--muted);
-  margin-bottom: 1.2rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-.section-label span {
-  background: var(--accent);
-  color: #ffffff;
-  padding: 0.15em 0.55em;
-  border-radius: 2px;
-  margin-right: 0.5rem;
-  font-weight: 700;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.2rem;
-  margin-bottom: 3.5rem;
-}
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1.6rem 1.8rem;
-  text-decoration: none;
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
-}
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
-}
-.card-icon { font-size: 1.4rem; }
-.card-title { font-family: 'Sora', sans-serif; font-size: 1.05rem; font-weight: 700; }
-.card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
-.card-tag {
-  margin-top: auto;
-  padding-top: 0.8rem;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent2);
-  opacity: 0.7;
-}
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 10% 10%, rgba(42,111,219,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(26,158,110,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-/* Digital Writing */
-.section-label span { background: var(--accent); }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
 
+  /* Header */
+  header {
+    padding: 4rem 0 2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .logo-area h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .logo-area h1 span {
+    color: var(--accent);
+  }
+
+  .logo-area p {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .author-badge {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .author-badge a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(232,201,122,0.3);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .author-badge a:hover {
+    color: #f5dfa0;
+    border-color: var(--accent);
+  }
+
+  /* Category label */
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label span {
+    background: var(--accent);
+    color: #ffffff;
+    padding: 0.15em 0.55em;
+    border-radius: 2px;
+    margin-right: 0.5rem;
+    font-weight: 700;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 3.5rem;
+  }
+
+  /* Card */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.6rem 1.8rem;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.25s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(42,111,219,0.3);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  }
+
+  .card:hover::before {
+    transform: scaleY(1);
+  }
+
+  .card-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+
+  .card-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .card-tag {
+    margin-top: auto;
+    padding-top: 0.8rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    opacity: 0.7;
+  }
+
+  /* Blue accent variant */
+  .card.blue::before { background: var(--accent2); }
+  .card.blue:hover { border-color: rgba(26,158,110,0.3); }
+  .card.blue .card-tag { color: var(--accent2); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  header, .section-label, .card {
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.10s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.20s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
+  .card:nth-child(6) { animation-delay: 0.30s; }
+
+  @media (max-width: 600px) {
+    header { padding: 2.5rem 0 1.5rem; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+    .author-badge { text-align: left; }
+  }
 </style>
 </head>
-
 <body>
+
 <div class="container">
 
-<!-- Digital Writing -->
-<div class="section-label"><span>🌐</span> Digital Writing</div>
-<div class="grid">
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <h1>EAP <span>Tools</span> Hub</h1>
+        <p>Academic English &amp; AI Writing Resources</p>
+      </div>
+      <div class="author-badge">
+        Designed by<br>
+        <a href="https://www.linkedin.com/in/hagu1/" target="_blank" rel="noopener">Hamid Guedra</a>
+      </div>
+    </div>
+  </header>
 
-<a class="card" href="capstone project step by step.html">
-  <div class="card-icon">🧭</div>
-  <div class="card-title">Capstone Project — Step by Step</div>
-  <div class="card-desc">
-    Guided, incremental walkthrough of the capstone project process.<br>
-    <span style="color:var(--muted);font-size:0.78rem;">
-      📘 Course: Writing for Digital Media
-    </span>
-  </div>
-  <div class="card-tag">Academic · Project</div>
-</a>
-  
-<a class="card" href="capstone_project_guide_wdm.html">
-  <div class="card-icon">🎓</div>
-  <div class="card-title">Capstone Project Guide — WDM</div>
-  <div class="card-desc">
-    Structured guide for completing a capstone project.<br>
-    <span style="color:var(--muted);font-size:0.78rem;">📘 Course: Writing for Digital Media</span>
-  </div>
-  <div class="card-tag">Academic · Project</div>
-</a>
+  <!-- AI Writing Tools -->
+  <div class="section-label"><span>AI</span> AI Writing Tools</div>
+  <div class="grid">
 
-<a class="card" href="capstone project step by step.html">
-  <div class="card-icon">🧭</div>
-  <div class="card-title">Capstone Project — Step by Step</div>
-  <div class="card-desc">
-    Guided, incremental walkthrough of the capstone project process.<br>
-    <span style="color:var(--muted);font-size:0.78rem;">📘 Course: Writing for Digital Media</span>
-  </div>
-  <div class="card-tag">Academic · Project</div>
-</a>
+    <a class="card" href="Ethical AI Writing Assistant Hamid Guedra.html">
+      <div class="card-icon">🤖</div>
+      <div class="card-title">Ethical AI Writing Assistant</div>
+      <div class="card-desc">Guidance on using AI tools responsibly in academic writing contexts.</div>
+      <div class="card-tag">AI · Ethics</div>
+    </a>
 
-<a class="card" href="nngroup_readings_guide.html">
-  <div class="card-icon">📖</div>
-  <div class="card-title">Web Writing Readings Guide</div>
-  <div class="card-desc">
-    18 Nielsen Norman Group articles with summaries, quizzes, and a glossary.<br>
-    <span style="color:var(--muted);font-size:0.78rem;">📘 Course: Writing for Digital Media</span>
-  </div>
-  <div class="card-tag">Reading · Web Writing</div>
-</a>
+    <a class="card" href="ai use _ red _ green scenarios.html">
+      <div class="card-icon">🚦</div>
+      <div class="card-title">AI Use — Red &amp; Green Scenarios</div>
+      <div class="card-desc">Interactive scenarios to distinguish appropriate and inappropriate AI use.</div>
+      <div class="card-tag">AI · Scenarios</div>
+    </a>
 
-</div>
-</div>
+    <a class="card" href="ai_traffic_lights_tool Hamid Guedra.html">
+      <div class="card-icon">🔴</div>
+      <div class="card-title">AI Traffic Lights Tool</div>
+      <div class="card-desc">Visual traffic-light framework for evaluating AI assistance in writing tasks.</div>
+      <div class="card-tag">AI · Framework</div>
+    </a>
+
+    <a class="card" href="human-ai-writing_quiz tool Hamid Guedra.html">
+      <div class="card-icon">❓</div>
+      <div class="card-title">Human–AI Writing Quiz</div>
+      <div class="card-desc">Test your ability to distinguish between human-written and AI-generated text.</div>
+      <div class="card-tag">AI · Quiz</div>
+    </a>
+
+    <a class="card" href="human-ai-writing_quiz.html">
+      <div class="card-icon">🧩</div>
+      <div class="card-title">Human–AI Writing Quiz (Core)</div>
+      <div class="card-desc">Standalone quiz for identifying human vs AI-generated writing samples.</div>
+      <div class="card-tag">AI · Quiz</div>
+    </a>
+
+    <a class="card" href="human-ai-writing_scenario tool Hamid Guedra....html">
+      <div class="card-icon">📝</div>
+      <div class="card-title">Human–AI Writing Scenarios (Full)</div>
+      <div class="card-desc">Extended scenario-based tool for exploring human–AI writing boundaries.</div>
+      <div class="card-tag">AI · Scenarios</div>
+    </a>
+
+    <a class="card" href="human-ai-writing_scenario.html">
+      <div class="card-icon">📄</div>
+      <div class="card-title">Human–AI Writing Scenario</div>
+      <div class="card-desc">Core scenario tool examining the interplay between human and AI authorship.</div>
+      <div class="card-tag">AI · Writing</div>
+    </a>
+
+    <a class="card" href="english_ai_tool.html">
+      <div class="card-icon">🧠</div>
+      <div class="card-title">English AI Tool</div>
+      <div class="card-desc">An interactive AI-powered tool for learning about AI in English.</div>
+      <div class="card-tag">AI · English</div>
+    </a>
+
+    <a class="card" href="prompt_builder.html">
+      <div class="card-icon">⚙️</div>
+      <div class="card-title">Prompt Builder</div>
+      <div class="card-desc">Step-by-step tool for constructing effective prompts for AI writing tasks.</div>
+      <div class="card-tag">AI · Prompting</div>
+    </a>
+
+    <a class="card" href="thinking_with_ai_interactive.html">
+      <div class="card-icon">💡</div>
+      <div class="card-title">Thinking with AI — Interactive</div>
+      <div class="card-desc">Interactive activities exploring how to think critically alongside AI tools.</div>
+      <div class="card-tag">AI · Critical Thinking</div>
+    </a>
+
+  </div>
+
+  <!-- Academic Writing -->
+  <div class="section-label"><span>✍</span> Academic Writing</div>
+  <div class="grid">
+
+    <a class="card blue" href="analyzing_reporting_verbs.html">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Analyzing Reporting Verbs</div>
+      <div class="card-desc">Explore how reporting verbs signal stance and attitude in academic texts.</div>
+      <div class="card-tag">Grammar · Academic</div>
+    </a>
+
+    <a class="card blue" href="reporting_verbs_master.html">
+      <div class="card-icon">📚</div>
+      <div class="card-title">Reporting Verbs Master</div>
+      <div class="card-desc">Comprehensive reference and practice tool for reporting verbs in EAP.</div>
+      <div class="card-tag">Grammar · Reference</div>
+    </a>
+
+    <a class="card blue" href="reporting verbs_ with answer key.html">
+      <div class="card-icon">✅</div>
+      <div class="card-title">Reporting Verbs — Answer Key</div>
+      <div class="card-desc">Exercises on reporting verbs with full answer key for self-study.</div>
+      <div class="card-tag">Grammar · Practice</div>
+    </a>
+
+    <a class="card blue" href="definitions_weak_strong_author.html">
+      <div class="card-icon">💬</div>
+      <div class="card-title">Definitions: Weak &amp; Strong Author Voice</div>
+      <div class="card-desc">Understand the spectrum of authorial presence in academic writing.</div>
+      <div class="card-tag">Voice · EAP</div>
+    </a>
+
+    <a class="card blue" href="citation-conventions-tool.html">
+      <div class="card-icon">📎</div>
+      <div class="card-title">Citation Conventions — Interactive</div>
+      <div class="card-desc">Click-through tool showing weak vs strong citations and how punctuation changes with citation range.</div>
+      <div class="card-tag">Citations · EAP</div>
+    </a>
+
+    <a class="card blue" href="rubric_scoring.html">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Rubric Scoring</div>
+      <div class="card-desc">Interactive rubric tool for evaluating and scoring academic writing tasks.</div>
+      <div class="card-tag">Assessment</div>
+    </a>
+
+    <a class="card blue" href="thesis_guide_tool.html">
+      <div class="card-icon">📓</div>
+      <div class="card-title">LAB Thesis Guidebook Tool</div>
+      <div class="card-desc">Interactive tool to learn LAB referencing.</div>
+      <div class="card-tag">Reference · Academic</div>
+    </a>
+
+    <a class="card blue" href="thesis-tense-guide.html">
+      <div class="card-icon">🕰️</div>
+      <div class="card-title">Thesis Tense Guide</div>
+      <div class="card-desc">Interactive guide to choosing the correct verb tenses across thesis sections.</div>
+      <div class="card-tag">Grammar · Thesis Writing</div>
+    </a>
+
+    <a class="card blue" href="signposting.html">
+      <div class="card-icon">🪧</div>
+      <div class="card-title">Signposting in Academic Writing</div>
+      <div class="card-desc">Interactive tool for practising signposting language to guide readers through academic texts.</div>
+      <div class="card-tag">Grammar · Cohesion</div>
+    </a>
+
+    <a class="card blue" href="cars-model-explorer.html">
+      <div class="card-icon">🗺️</div>
+      <div class="card-title">CARS Model Explorer</div>
+      <div class="card-desc">Interactive guide to Swales' three-move model for writing strong research paper introductions.</div>
+      <div class="card-tag">Research Writing · Introductions</div>
+    </a>
+
+  </div>
+
+  <!-- Business English -->
+  <div class="section-label"><span>💼</span> Business English</div>
+  <div class="grid">
+
+    <a class="card" href="business model canvas.html">
+      <div class="card-icon">🗂️</div>
+      <div class="card-title">Business Model Canvas</div>
+      <div class="card-desc">Interactive canvas for analysing and presenting business models in English.</div>
+      <div class="card-tag">Business · ESP</div>
+    </a>
+
+    <a class="card" href="business vocabulary_levels of formality.html">
+      <div class="card-icon">🎩</div>
+      <div class="card-title">Business Vocabulary — Levels of Formality</div>
+      <div class="card-desc">Compare formal, neutral, and informal registers across business vocabulary.</div>
+      <div class="card-tag">Vocabulary · Register</div>
+    </a>
+
+    <a class="card" href="report_assignment_guide_business.html">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Report Assignment Guide — Business</div>
+      <div class="card-desc">Step-by-step guide for planning and writing business report assignments.</div>
+      <div class="card-tag">Business · Report Writing</div>
+    </a>
+
+    <a class="card" href="business_plan_report_instructions.html">
+      <div class="card-icon">📑</div>
+      <div class="card-title">Business Plan Report Instructions</div>
+      <div class="card-desc">Clear instructions and guidelines for writing a business plan report assignment.</div>
+      <div class="card-tag">Business · Report Writing</div>
+    </a>
+
+    <a class="card" href="report_assignment_guide_business_IT.html">
+      <div class="card-icon">💻</div>
+      <div class="card-title">Report Assignment Guide — Business IT</div>
+      <div class="card-desc">Tailored report writing guidance for Business IT contexts and assignments.</div>
+      <div class="card-tag">Business IT · Report Writing</div>
+    </a>
+
+    <a class="card" href="business_plan_report_instructions_EFB.html">
+      <div class="card-icon">📑</div>
+      <div class="card-title">Business Plan Report Instructions — EFB</div>
+      <div class="card-desc">Instructions and guidelines for writing a business plan report assignment for EFB.</div>
+      <div class="card-tag">Business · Report Writing</div>
+    </a>
+
+    <a class="card" href="job_interview_explorer_EFB.html">
+      <div class="card-icon">🎤</div>
+      <div class="card-title">Job Interview Explorer — EFB</div>
+      <div class="card-desc">Interactive tool for practising and exploring job interview language and strategies.</div>
+      <div class="card-tag">Business · Speaking</div>
+    </a>
+
+    <a class="card" href="email_writing_explorer_EFB.html">
+      <div class="card-icon">✉️</div>
+      <div class="card-title">Email Writing Explorer — EFB</div>
+      <div class="card-desc">Interactive tool for practising professional email writing conventions and language for EFB.</div>
+      <div class="card-tag">Business · Writing</div>
+    </a>
+
+
+  </div>
+
+  <!-- Online Writing -->
+  <div class="section-label"><span>🌐</span> Digital Writing</div>
+  <div class="grid">
+
+    <a class="card" href="capstone_project_guide_wdm.html">
+      <div class="card-icon">🎓</div>
+      <div class="card-title">Capstone Project Guide — WDM</div>
+      <div class="card-desc">Structured guide for completing a capstone project.<br><span style="color:var(--muted);font-size:0.78rem;">📘 Course: Writing for Digital Media</span></div>
+      <div class="card-tag">Academic · Project</div>
+    </a>
+
+    <a class="card" href="nngroup_readings_guide.html">
+      <div class="card-icon">📖</div>
+      <div class="card-title">Web Writing Readings Guide</div>
+      <div class="card-desc">18 Nielsen Norman Group articles with summaries, quizzes, and a 40-term glossary.<br><span style="color:var(--muted);font-size:0.78rem;">📘 Course: Writing for Digital Media</span></div>
+      <div class="card-tag">Reading · Web Writing</div>
+    </a>
+
+  </div>
+
+</div><!-- /container -->
 
 <footer>
   <div class="container">
-    © <span id="yr"></span> <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> — EAP & AI Writing Tools
+    &copy; <span id="yr"></span>
+    <a href="https://www.linkedin.com/in/hagu1/" target="_blank" rel="noopener">Hamid Guedra</a>
+    — EAP &amp; AI Writing Tools
   </div>
 </footer>
 
 <script>
-document.getElementById('yr').textContent = new Date().getFullYear();
+  document.getElementById('yr').textContent = new Date().getFullYear();
 </script>
-
 </body>
 </html>
-``
