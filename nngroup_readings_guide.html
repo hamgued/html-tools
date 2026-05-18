@@ -195,7 +195,7 @@ body {
   margin: 0 auto;
   padding: 40px 24px 80px;
 }
-.content-col { max-width: 860px; }
+.content-col { max-width: 860px; margin: 0 auto; }
 
 /* ── SECTION LABEL ── */
 .sec-label {
@@ -430,7 +430,7 @@ body {
       <span class="pill">18 articles<span class="pill-tip">All freely available on nngroup.com</span></span>
       <span class="pill">~76 pages<span class="pill-tip">Estimated total reading volume</span></span>
       <span class="pill">~5 hours<span class="pill-tip">Estimated reading time</span></span>
-      <span class="pill">3 quizzes<span class="pill-tip">One per reading group</span></span>
+      <span class="pill">4 quizzes<span class="pill-tip">One per reading group</span></span>
       <span class="pill">40 key terms<span class="pill-tip">Searchable glossary with simple definitions</span></span>
     </div>
     <p class="hero-credit">Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> (Language Centre, <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a>) · Generated with Claude Sonnet 4.6</p>
@@ -766,7 +766,7 @@ All articles are free to read at <strong>nngroup.com</strong>. Click any reading
 <div class="wrapper">
 <div class="content-col">
 <p class="sec-label">Knowledge Checks</p>
-<p style="font-size:15px;color:var(--lab-grey-mid);margin-bottom:16px">Three short quizzes — one per reading group. Try each after you have read those articles. You can retake any quiz as many times as you like.</p>
+<p style="font-size:15px;color:var(--lab-grey-mid);margin-bottom:16px">Four short quizzes — one per reading group. Try each after you have read those articles. You can retake any quiz as many times as you like.</p>
 
 <div class="accord" id="qz1accord">
 <div class="accord-head" onclick="handleAccord(this)">
@@ -790,6 +790,14 @@ All articles are free to read at <strong>nngroup.com</strong>. Click any reading
 <span class="accord-chev">▾</span>
 </div>
 <div class="accord-body"><div id="quizC"></div></div>
+</div>
+
+<div class="accord" id="qz4accord">
+<div class="accord-head" onclick="handleAccord(this)">
+<div class="accord-title">🌐 Quiz D — Writing for specific page types (Readings 16–18)</div>
+<span class="accord-chev">▾</span>
+</div>
+<div class="accord-body"><div id="quizD"></div></div>
 </div>
 
 <div class="back-to-top"><button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button></div>
@@ -905,10 +913,16 @@ C: [
 { q: "According to the four dimensions of tone of voice, which of these is NOT one of the four dimensions?", source: "Reading 13 — Four Dimensions of Tone of Voice", opts: ["Humour","Formality","Clarity","Respectfulness"], correct: 2, fb: "Correct! The four dimensions are humour, formality, respectfulness, and enthusiasm. Clarity is important in web writing, but it is not one of the four tone dimensions — it is more of a general writing principle." },
 { q: "What does 'front-loading' mean in web writing?", source: "Reading 14 — Headings Are Pick-Up Lines", opts: ["Adding an introduction paragraph before every heading","Placing the most important word or idea at the very beginning of a heading or sentence","Putting images at the top of every page","Writing the conclusion of a page before the introduction"], correct: 1, fb: "Correct! Front-loading means putting the key word first. For example, 'Delivery options: next day and standard' front-loads 'Delivery options'. This ensures readers who scan just the first few words still get the main message." },
 { q: "According to the research on About Us pages, what do users primarily look for?", source: "Reading 15 — About Us Information on Websites", opts: ["The company's financial information and annual reports","A list of all employees and their job titles","Who the organisation is, what they do, and whether they are trustworthy and authentic","The technical specifications of the company's products"], correct: 2, fb: "Correct! Users visit About Us pages to establish trust and understand the organisation. They want to know: who are you, what do you actually do, are you reliable, and why should I choose you? Authenticity is especially important — users compare the About Us page with external reviews." },
+],
+D: [
+{ q: "According to Amy Schade's research, what percentage of failed online purchase tasks were caused by incomplete or unclear product descriptions?", source: "Reading 16 — 3 Tips for Better Product Descriptions", opts: ["About 5%","About 10%","About 20%","About 40%"], correct: 2, fb: "Correct! 20% of all task failures in Nielsen's e-commerce studies were attributed to incomplete or unclear product information. Users who can't find the answer to their question will often leave and find a competitor." },
+{ q: "What is the core difference between user-centric and maker-centric language?", source: "Reading 17 — User-centric vs. Maker-centric Language", opts: ["User-centric language is shorter; maker-centric is more detailed","User-centric language uses simpler words; maker-centric uses technical terms","User-centric language explains benefits to the reader; maker-centric lists product features and internal jargon","User-centric language is used online; maker-centric is used in print"], correct: 2, fb: "Correct! Maker-centric language describes what a product has (features, branded terms, technical specs). User-centric language explains what it does for the reader — the benefit. For example, 'Aegis® antimicrobial treatment' is maker-centric; 'keeps your shoes fresh longer' is user-centric." },
+{ q: "According to the homepage design research, what is the single most important job of a homepage?", source: "Reading 18 — Homepage Design: 5 Fundamental Principles", opts: ["To display the company's latest news and social media activity","To list every product and service the company offers","To tell visitors who you are, what you offer, and why it matters — quickly","To showcase customer testimonials and reviews"], correct: 2, fb: "Correct! A homepage has one job: orient visitors fast. It must communicate identity, value, and direction before users lose patience and leave. Everything else — news, testimonials, detailed content — is secondary." },
+{ q: "Which of the following is an example of user-centric language for a hiking boot?", source: "Reading 17 — User-centric vs. Maker-centric Language", opts: ["Features Ortholite® footbed technology and Aegis® antimicrobial treatment","Advanced outsole with 5mm lug depth and multi-directional grip pattern","Comfortable washable insole that keeps your feet fresh on long hikes","Constructed with proprietary DWR-coated mesh upper and TPU heel counter"], correct: 2, fb: "Correct! 'Comfortable washable insole that keeps your feet fresh' speaks directly to the reader's experience. The other options list technical features or branded terms that most users cannot interpret without extra research." },
 ]
 };
 
-const quizState = { A:{i:0,score:0}, B:{i:0,score:0}, C:{i:0,score:0} };
+const quizState = { A:{i:0,score:0}, B:{i:0,score:0}, C:{i:0,score:0}, D:{i:0,score:0} };
 function initQuiz(id) { quizState[id]={i:0,score:0}; renderQ(id); }
 function renderQ(id) {
   const s=quizState[id], qs=quizData[id], el=document.getElementById('quiz'+id);
@@ -939,7 +953,7 @@ function answerQ(id,chosen) {
   document.getElementById('next_'+id).style.display='inline-block';
 }
 function nextQ(id) { quizState[id].i++; renderQ(id); }
-initQuiz('A'); initQuiz('B'); initQuiz('C');
+initQuiz('A'); initQuiz('B'); initQuiz('C'); initQuiz('D');
 </script>
 </body>
 </html>
