@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Spectrum of Writing — AI & Academic Integrity</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lab-blue:#0046ad;
+  --lab-blue-light:#e8f0fe;
+  --lab-black:#1a1a1a;
+  --lab-white:#ffffff;
+  --lab-grey-mid:#555555;
+  --lab-grey-light:#f5f5f5;
+  --lab-grey-border:#e0e0e0;
+  --lab-footer-bg:#1a1a1a;
+  --lab-footer-text:#cccccc;
+
+  --green:#057a55; --green-light:#def7ec;
+  --red:#dc2626;   --red-light:#fee2e2;
+  --yellow:#c27803; --yellow-light:#fdf6b2;
+
+  /* Spectrum scale — content-meaningful, human → AI */
+  --lvl1:#057a55; --lvl1-text:#ffffff;
+  --lvl2:#65a30d; --lvl2-text:#ffffff;
+  --lvl3:#c27803; --lvl3-text:#ffffff;
+  --lvl4:#ea580c; --lvl4-text:#ffffff;
+  --lvl5:#dc2626; --lvl5-text:#ffffff;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'DM Sans','Helvetica Neue',Arial,sans-serif;
+  color:var(--lab-black);
+  background:var(--lab-grey-light);
+  line-height:1.5;
+}
+a{color:var(--lab-blue);}
+a:hover{text-decoration:underline;}
+
+/* Header */
+.site-header{
+  background:var(--lab-white);
+  border-bottom:1px solid var(--lab-grey-border);
+  position:sticky;top:0;z-index:10;
+}
+.site-header .inner{
+  max-width:1200px;margin:0 auto;padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.brand{font-weight:700;font-size:1rem;color:var(--lab-black);}
+.credit{font-size:0.875rem;color:var(--lab-grey-mid);}
+
+/* Hero */
+.hero{background:var(--lab-blue);color:var(--lab-white);}
+.hero .inner{max-width:1200px;margin:0 auto;padding:48px 24px;}
+.hero h1{font-size:2.5rem;font-weight:700;margin:0 0 8px;}
+.hero .sub{font-size:1.125rem;max-width:42rem;margin:0 0 6px;}
+.hero .gen{font-size:0.875rem;opacity:0.85;margin:0;}
+.hero .gen a{color:var(--lab-white);text-decoration:underline;}
+
+/* Tabs */
+.tabs-bar{
+  max-width:1200px;margin:0 auto;background:var(--lab-white);
+  display:flex;border-bottom:1px solid var(--lab-grey-border);
+}
+.tab-btn{
+  flex:1;padding:16px;text-align:center;font-weight:700;font-size:0.95rem;
+  background:transparent;color:var(--lab-grey-mid);border:none;border-bottom:3px solid transparent;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+  font-family:inherit;
+}
+.tab-btn.active{color:var(--lab-blue);border-bottom-color:var(--lab-blue);background:var(--lab-blue-light);}
+
+/* Content shell */
+.content{max-width:1200px;margin:0 auto;background:var(--lab-white);padding:40px 24px 56px;}
+@media(min-width:768px){.content{padding:64px 40px 72px;}}
+h2{font-size:1.75rem;font-weight:700;margin:0;}
+h3{font-size:1.25rem;font-weight:700;margin:0;}
+.label{font-size:0.875rem;font-weight:700;text-transform:uppercase;color:var(--lab-grey-mid);letter-spacing:0.05em;}
+
+/* Explore layout */
+.explore-grid{display:flex;flex-direction:column;gap:32px;}
+@media(min-width:768px){.explore-grid{flex-direction:row;}}
+.level-col{display:flex;flex-direction:column;gap:8px;}
+@media(min-width:768px){.level-col{width:33.333%;}.detail-col{width:66.667%;}}
+
+.level-btn{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:16px;border:2px solid transparent;border-radius:12px;cursor:pointer;text-align:left;
+  font-family:inherit;color:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,0.06);
+  transition:transform 0.2s ease, box-shadow 0.2s ease;
+}
+.level-btn:hover{transform:scale(1.01);}
+.level-btn .lvl-label{font-weight:700;font-size:1.05rem;}
+.level-btn .lvl-icon{background:rgba(255,255,255,0.2);padding:8px;display:flex;border-radius:9999px;}
+.level-btn.selected{
+  border-color:#1e293b;
+  box-shadow:0 4px 6px -1px rgba(0,0,0,0.12),0 2px 4px -2px rgba(0,0,0,0.12);
+  transform:scale(1.02);
+}
+.level-btn .selected-tag{
+  display:none;font-size:0.7rem;font-weight:500;margin-top:4px;
+  background:rgba(0,0,0,0.25);padding:2px 10px;border-radius:9999px;width:max-content;
+}
+.level-btn.selected .selected-tag{display:inline-block;}
+
+.detail-card{
+  border:1px solid var(--lab-grey-border);background:var(--lab-grey-light);
+  padding:24px;height:100%;
+}
+@media(min-width:768px){.detail-card{padding:32px;}}
+.detail-head{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.detail-head .d-icon{padding:12px;color:#fff;display:flex;}
+.status-pill{
+  display:inline-block;font-weight:700;font-size:0.8rem;padding:3px 8px;border:1px solid;margin-top:4px;
+}
+.status-good{background:var(--green-light);color:var(--green);border-color:#a7e3c8;}
+.status-warn{background:var(--yellow-light);color:var(--yellow);border-color:#f3e08a;}
+.status-bad{background:var(--red-light);color:var(--red);border-color:#f3b4b4;}
+.detail-section{margin-bottom:24px;}
+.detail-section .def{font-size:1.125rem;font-weight:500;color:var(--lab-black);margin:4px 0 0;}
+.detail-section p{margin:4px 0 0;color:var(--lab-grey-mid);}
+.warn-box{
+  background:var(--red-light);border-left:4px solid var(--red);padding:16px;
+  display:flex;align-items:flex-start;gap:12px;margin-bottom:24px;
+}
+.warn-box svg{color:var(--red);flex-shrink:0;margin-top:2px;}
+.warn-box p{margin:0;color:#991b1b;font-size:0.9rem;font-weight:500;}
+.prompt-box{background:var(--lab-white);border:1px solid var(--lab-grey-border);padding:16px;}
+.prompt-box .ph{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.prompt-box .ph svg{color:var(--lab-blue);}
+.prompt-box .ph h4{margin:0;font-size:0.8rem;font-weight:700;text-transform:uppercase;color:var(--lab-blue);}
+.prompt-box .pt{
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.875rem;color:var(--lab-grey-mid);
+  background:var(--lab-grey-light);border:1px solid var(--lab-grey-border);padding:12px;font-style:italic;margin:0;
+}
+
+.inspired{
+  text-align:center;color:var(--lab-grey-mid);font-size:0.875rem;
+  margin-top:32px;border-top:1px solid var(--lab-grey-border);padding-top:24px;
+}
+.inspired p{margin:0;}
+
+/* Quiz */
+.quiz-wrap{max-width:768px;margin:0 auto;}
+.quiz-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.score-pill{font-size:0.875rem;font-weight:500;background:var(--lab-blue-light);color:var(--lab-blue);padding:4px 12px;}
+.quiz-card{background:var(--lab-white);border:1px solid var(--lab-grey-border);padding:32px;margin-bottom:32px;}
+.student-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.avatar{
+  width:40px;height:40px;background:var(--lab-grey-light);border:1px solid var(--lab-grey-border);
+  display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--lab-grey-mid);
+}
+.action-text{font-size:1.125rem;color:var(--lab-black);margin:0 0 24px;}
+.quiz-divider{border-top:1px solid var(--lab-grey-border);padding-top:24px;}
+.prompt-q{font-weight:500;margin:0 0 16px;display:flex;align-items:center;gap:8px;}
+.opts{display:grid;grid-template-columns:1fr;gap:12px;}
+@media(min-width:560px){.opts{grid-template-columns:1fr 1fr;}}
+.opt-btn{
+  padding:12px;border:1px solid var(--lab-grey-border);background:var(--lab-white);
+  cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;font-family:inherit;
+  font-size:0.875rem;font-weight:500;color:var(--lab-grey-mid);
+}
+.opt-btn:hover{border-color:var(--lab-blue);background:var(--lab-blue-light);}
+.swatch{width:12px;height:12px;flex-shrink:0;}
+.feedback{grid-column:1/-1;padding:16px;border:1px solid;}
+.feedback.success{background:var(--green-light);border-color:#a7e3c8;color:#0a5a40;}
+.feedback.error{background:var(--red-light);border-color:#f3b4b4;color:#991b1b;}
+.feedback .fhead{display:flex;align-items:flex-start;gap:12px;}
+.feedback .ftitle{font-weight:700;font-size:1.05rem;margin:0 0 4px;}
+.feedback p{margin:0;}
+.btn-primary{
+  margin-top:16px;background:var(--lab-blue);color:#fff;border:none;padding:10px 20px;
+  font-weight:700;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:0.95rem;
+}
+.btn-primary:hover{background:#003a8f;}
+
+.quiz-done{text-align:center;padding:48px 24px;background:var(--lab-white);border:1px solid var(--lab-grey-border);}
+.quiz-done .circle{display:inline-flex;padding:16px;background:var(--lab-blue-light);color:var(--lab-blue);margin-bottom:16px;}
+.quiz-done h2{margin-bottom:8px;}
+.quiz-done .score-line{color:var(--lab-grey-mid);margin:0 0 24px;}
+.takeaway{max-width:480px;margin:0 auto 32px;text-align:left;background:var(--lab-grey-light);border:1px solid var(--lab-grey-border);padding:24px;}
+.takeaway h4{margin:0 0 8px;font-weight:700;}
+.takeaway p{margin:0;font-size:0.9rem;color:var(--lab-grey-mid);}
+
+/* Footer */
+.site-footer{background:var(--lab-footer-bg);color:var(--lab-footer-text);}
+.site-footer .inner{max-width:1200px;margin:0 auto;padding:32px 24px;font-size:0.875rem;}
+.site-footer a{color:#fff;}
+
+.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <span class="brand">The Spectrum of Writing</span>
+    <span class="credit">Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a> (Language Centre, <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a>)</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="inner">
+    <h1>AI &amp; Academic Integrity</h1>
+    <p class="sub">A guide for students to understand the boundaries between human writing and AI generation.</p>
+    <p class="gen">(Generated with Claude Opus 4.8)</p>
+  </div>
+</section>
+
+<nav class="tabs-bar">
+  <button class="tab-btn active" data-tab="explore" id="tab-explore">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+    Explore the Spectrum
+  </button>
+  <button class="tab-btn" data-tab="quiz" id="tab-quiz">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+    Scenario Challenge
+  </button>
+</nav>
+
+<main class="content">
+
+  <!-- EXPLORE -->
+  <div id="panel-explore">
+    <div class="explore-grid">
+      <div class="level-col">
+        <h3 class="label" style="margin-bottom:8px;">Select a Level</h3>
+        <div id="level-list"></div>
+      </div>
+      <div class="detail-col">
+        <div class="detail-card" id="detail-card"></div>
+      </div>
+    </div>
+    <div class="inspired">
+      <p>Inspired by <a href="https://www.linkedin.com/in/jimomahonymtu/" target="_blank">Jim O&rsquo;Mahony</a> and <a href="https://jamkstudent-my.sharepoint.com/personal/ville_arvio_jamk_fi/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fville%5Farvio%5Fjamk%5Ffi%2FDocuments%2FJaetut%20%2D%20public%20%28CC%2DBY%29%2FLAgAI%20%2D%20public%20%28CC%2DBY%29&ga=1" target="_blank">Ville Arvio</a>&rsquo;s GenAI hy&ouml;dynt&auml;misen tasot (presented at ITK2025).</p>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="panel-quiz" class="hidden">
+    <div class="quiz-wrap" id="quiz-wrap"></div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank">Hamid Guedra</a>, Language Centre,
+    <a href="https://lab.fi/en" target="_blank">LAB University of Applied Sciences</a> /
+    <a href="https://www.lut.fi/en" target="_blank">LUT University</a>.
+    Generated with Claude Opus 4.8.
+  </div>
+</footer>
+
+<script>
+// ---- Inline icon markup ----
+const ICONS = {
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>',
+  bot:'<rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line>',
+  scale:'<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path>',
+  alert:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>',
+  info:'<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>',
+  check:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>',
+  x:'<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>',
+  chevron:'<polyline points="9 18 15 12 9 6"></polyline>'
+};
+function svg(name,size){return '<svg xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+ICONS[name]+'</svg>';}
+
+// ---- DATA ----
+const spectrumLevels = [
+  {id:1,label:"100% Human Only",cssColor:"var(--lvl1)",statusClass:"status-good",
+   definition:"Written by the author with no significant use of AI (except basic proofreading).",
+   context:"Typical of many professional, academic, and creative writing contexts.",
+   universityStatus:"Highly Recommended",icon:"user",
+   examplePrompt:"Proofread for spelling, punctuation, and grammar. List errors using bullet points. Respect authorial voice. Do not rewrite."},
+  {id:2,label:"75% Human | 25% AI",cssColor:"var(--lvl2)",statusClass:"status-good",
+   definition:"Written by the author with some AI support (e.g., feedback and basic proofreading).",
+   context:"Typical of some professional and academic writing contexts.",
+   universityStatus:"Acceptable (Cite usage)",icon:"user",
+   examplePrompt:"Proofread for spelling, punctuation, and grammar. Provide feedback on clarity, coherence, and transitions. Do not rewrite."},
+  {id:3,label:"50% Human | 50% AI",cssColor:"var(--lvl3)",statusClass:"status-warn",
+   definition:"Written by the author in collaboration with AI (AI generated ideas, extensive feedback, rewriting large parts).",
+   context:"Typical of professional writing and advertising copy.",
+   universityStatus:"Avoid / Grey Area",warning:"Generally, avoid writing like this at university.",icon:"scale",
+   examplePrompt:"Rewrite this text to improve clarity, coherence, and engagement. Maintain the original meaning."},
+  {id:4,label:"25% Human | 75% AI",cssColor:"var(--lvl4)",statusClass:"status-bad",
+   definition:"Largely written by AI. The author checked content and made some changes.",
+   context:"Typical of commercial writing and junk mail.",
+   universityStatus:"Academic Misconduct",warning:"NOT acceptable for university coursework.",icon:"bot",
+   examplePrompt:"Generate a complete paragraph about Topic X. Include examples and cite sources."},
+  {id:5,label:"100% AI Only",cssColor:"var(--lvl5)",statusClass:"status-bad",
+   definition:"Written completely by AI and copied without changes.",
+   context:"Typical of junk mail writing.",
+   universityStatus:"Academic Misconduct",warning:"NOT acceptable. Considered plagiarism/misconduct.",icon:"bot",
+   examplePrompt:"Write an essay on Topic X. Ensure it includes an introduction, body paragraphs, and conclusion."}
+];
+
+const quizScenarios = [
+  {id:1,student:"Yuki",action:"Yuki writes her essay draft completely by herself. She then pastes it into an AI tool and asks it to 'Find grammatical errors and list them.' She fixes the errors herself.",validLevels:[1],explanation:"This is 100% Human-led. The AI is only acting as a proofreader, not a writer. This is standard academic practice."},
+  {id:2,student:"Ahmed",action:"Ahmed asks an AI to 'Write a 500-word introduction about climate change.' He reads it, changes a few adjectives, and submits it.",validLevels:[4,5],explanation:"This falls into the Red/Orange zone (mostly AI). Even if he changed a few words, the core intellectual work was done by AI. This is Academic Misconduct."},
+  {id:3,student:"Maria",action:"Maria writes her main arguments. She feels her sentences are clunky, so she asks AI to 'Rewrite these paragraphs to sound more academic.' She uses the AI output verbatim.",validLevels:[3],explanation:"This is the 50/50 Yellow zone. While the ideas were Maria's, the actual writing is AI's. In most universities, this is not acceptable because you are not demonstrating your own writing ability."},
+  {id:4,student:"Li",action:"Li writes his essay. He asks AI to critique his logic and point out weak arguments. He reads the feedback, thinks about it, and then rewrites the sections himself.",validLevels:[2],explanation:"This is the 75/25 Green/Lime zone. AI is used as a tutor or peer reviewer, but the final writing is done by the human. This is usually acceptable (often with acknowledgement)."},
+  {id:5,student:"Sarah",action:"Sarah is running late. She asks an AI to write her conclusion. She likes it, but manually rewrites about 30% of the sentences to make it sound more like her style.",validLevels:[4],explanation:"This is the 25% Human | 75% AI (Orange) zone. Even though she rewrote parts, the structure and initial generation were AI. This is generally considered academic misconduct."},
+  {id:6,student:"Tom",action:"Tom writes his entire essay himself. He then asks an AI, 'What are three key academic sources I might have missed regarding this topic?' He reads those papers and adds citations manually.",validLevels:[1,2],explanation:"This is the Green/Lime zone. Tom is using AI as a research assistant, not a writer. As long as he reads the actual papers, this is excellent use of the tool."},
+  {id:7,student:"Jessica",action:"Jessica copies the essay prompt directly into ChatGPT. She copies the output and submits it immediately because the deadline is in 5 minutes.",validLevels:[5],explanation:"This is the 100% AI (Red) zone. This is a clear-cut case of plagiarism and academic misconduct."},
+  {id:8,student:"David",action:"David writes detailed bullet points for every paragraph. He feeds these bullets into an AI and asks it to 'Turn these into full, cohesive paragraphs.' He lightly edits the flow before submitting.",validLevels:[3],explanation:"This is the 50/50 (Yellow) zone. While the ideas are David's, the articulation is AI's. This usually violates university policies because you aren't doing the work of academic writing."},
+  {id:9,student:"Aisha",action:"Aisha turns off her internet and writes her essay in a notebook. She types it up afterwards and uses a standard dictionary to check spelling.",validLevels:[1],explanation:"This is 100% Human Only. No generative AI was used at any stage. This is the traditional method of academic writing."},
+  {id:10,student:"Kevin",action:"Kevin writes his essay but struggles with the title. He asks AI to 'Generate 10 catchy titles for an essay about Roman history.' He picks one and uses it.",validLevels:[1,2],explanation:"This is the Green/Lime zone. Using AI for brainstorming small elements like titles (while writing the content yourself) is generally acceptable, though checking your specific course policy is always wise."}
+];
+
+// ---- STATE ----
+let selectedLevelId = 1;
+let qIndex = 0, score = 0, feedback = null, quizComplete = false;
+
+// ---- TABS ----
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById('panel-explore').classList.toggle('hidden', tab!=='explore');
+    document.getElementById('panel-quiz').classList.toggle('hidden', tab!=='quiz');
+  });
+});
+
+// ---- EXPLORE ----
+function renderLevelList(){
+  const list = document.getElementById('level-list');
+  list.innerHTML = '';
+  spectrumLevels.forEach(function(lvl){
+    const b = document.createElement('button');
+    b.className = 'level-btn'+(lvl.id===selectedLevelId?' selected':'');
+    b.style.background = lvl.cssColor;
+    b.innerHTML =
+      '<div><span class="lvl-label">'+lvl.label+'</span><br><span class="selected-tag">Selected</span></div>'+
+      '<span class="lvl-icon">'+svg(lvl.icon,20)+'</span>';
+    b.addEventListener('click',function(){selectedLevelId=lvl.id;renderLevelList();renderDetail();});
+    list.appendChild(b);
+  });
+}
+function renderDetail(){
+  const lvl = spectrumLevels.find(l=>l.id===selectedLevelId);
+  let html =
+    '<div class="detail-head">'+
+      '<div class="d-icon" style="background:'+lvl.cssColor+'">'+svg(lvl.icon,32)+'</div>'+
+      '<div><h2>'+lvl.label+'</h2><span class="status-pill '+lvl.statusClass+'">'+lvl.universityStatus+'</span></div>'+
+    '</div>'+
+    '<div class="detail-section"><h4 class="label">Definition</h4><p class="def">'+lvl.definition+'</p></div>';
+  if(lvl.warning){
+    html += '<div class="warn-box">'+svg('alert',20)+'<p>'+lvl.warning+'</p></div>';
+  }
+  html +=
+    '<div class="detail-section"><h4 class="label">Typical Context</h4><p>'+lvl.context+'</p></div>'+
+    '<div class="prompt-box"><div class="ph">'+svg('bot',16)+'<h4>Example AI Prompt</h4></div>'+
+      '<p class="pt">&ldquo;'+lvl.examplePrompt+'&rdquo;</p></div>';
+  document.getElementById('detail-card').innerHTML = html;
+}
+
+// ---- QUIZ ----
+function renderQuiz(){
+  const wrap = document.getElementById('quiz-wrap');
+  if(quizComplete){
+    wrap.innerHTML =
+      '<div class="quiz-done">'+
+        '<div class="circle">'+svg('check',48)+'</div>'+
+        '<h2>Quiz Complete!</h2>'+
+        '<p class="score-line">You scored '+score+' out of '+quizScenarios.length+'</p>'+
+        '<div class="takeaway"><h4>Key Takeaway:</h4><p>In an EAP context, sticking to the <strong>Green</strong> and <strong>Lime</strong> zones (100% Human or Human-Led with AI feedback) is usually safe. The <strong>Yellow</strong> zone is risky, and <strong>Orange/Red</strong> zones usually result in Academic Misconduct charges.</p></div>'+
+        '<button class="btn-primary" id="restart">Try Again</button>'+
+      '</div>';
+    document.getElementById('restart').addEventListener('click',function(){
+      qIndex=0;score=0;feedback=null;quizComplete=false;renderQuiz();
+    });
+    return;
+  }
+  const q = quizScenarios[qIndex];
+  let opts;
+  if(!feedback){
+    opts = '<div class="opts">'+spectrumLevels.map(function(lvl){
+      return '<button class="opt-btn" data-id="'+lvl.id+'"><span class="swatch" style="background:'+lvl.cssColor+'"></span>'+lvl.label+'</button>';
+    }).join('')+'</div>';
+  } else {
+    opts =
+      '<div class="opts"><div class="feedback '+feedback.type+'">'+
+        '<div class="fhead">'+svg(feedback.type==='success'?'check':'x',22)+
+          '<div><p class="ftitle">'+(feedback.type==='success'?'That is Correct!':'Not quite.')+'</p><p>'+feedback.msg+'</p></div>'+
+        '</div>'+
+        '<button class="btn-primary" id="next">Next Scenario '+svg('chevron',16)+'</button>'+
+      '</div></div>';
+  }
+  wrap.innerHTML =
+    '<div class="quiz-top">'+
+      '<span class="label">Scenario '+(qIndex+1)+' of '+quizScenarios.length+'</span>'+
+      '<span class="score-pill">Score: '+score+'</span>'+
+    '</div>'+
+    '<div class="quiz-card">'+
+      '<div class="student-head"><div class="avatar">'+q.student[0]+'</div><h3>'+q.student+"'s Strategy</h3></div>"+
+      '<p class="action-text">'+q.action+'</p>'+
+      '<div class="quiz-divider">'+
+        '<p class="prompt-q">'+svg('info',18)+'Based on the spectrum, categorize this behavior:</p>'+
+        opts+
+      '</div>'+
+    '</div>';
+
+  if(!feedback){
+    wrap.querySelectorAll('.opt-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        const id = parseInt(btn.dataset.id,10);
+        const valid = q.validLevels.includes(id);
+        if(valid){score++;feedback={type:'success',msg:'Correct! '+q.explanation};}
+        else{feedback={type:'error',msg:'Incorrect. '+q.explanation};}
+        renderQuiz();
+      });
+    });
+  } else {
+    document.getElementById('next').addEventListener('click',function(){
+      feedback=null;
+      if(qIndex<quizScenarios.length-1){qIndex++;}else{quizComplete=true;}
+      renderQuiz();
+    });
+  }
+}
+
+// ---- INIT ----
+renderLevelList();
+renderDetail();
+renderQuiz();
+</script>
+</body>
+</html>
